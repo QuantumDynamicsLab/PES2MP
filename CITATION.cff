@@ -4,6 +4,8 @@ authors:
   - family-names: Kushwaha
     given-names: Apoorv
     orcid: https://orcid.org/0000-0002-8288-4086
-title: apoorv-kushwaha/PES2MP: Initial Release
-version: v1.0.0
-date-released: 2023-07-01
+  - family-names: Dhilip Kumar
+    given-names: T. J. 
+    orcid: https://orcid.org/0000-0002-1208-4112
+title: QuantumDynamicsLab/PES2MP
+version: v1.0.3
