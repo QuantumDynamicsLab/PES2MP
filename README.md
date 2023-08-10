@@ -1,20 +1,3 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8103787.svg)](https://doi.org/10.5281/zenodo.8103787) <br>
-Contact: dhilip@iitrpr.ac.in
-
-```diff
-# Software citation
-@software{apoorv_kushwaha_2023_8103787,
-  author       = {Apoorv Kushwaha, T. J. Dhilip Kumar},
-  title        = {apoorv-kushwaha/PES2MP: Initial Release},
-  month        = jul,
-  year         = 2023,
-  publisher    = {Zenodo},
-  version      = {v1.0.0},
-  doi          = {10.5281/zenodo.8103787},
-  url          = {https://doi.org/10.5281/zenodo.8103787}
-}
-```
-
 # PES2MP (Potential Energy Surface Mapping to Multipole Expansion Series)
 ## Multipole expansion
 2D and 4D multipole expansion code (using Legendre polynomials and Spherical Harmonics respectively) 
