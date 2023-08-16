@@ -1,0 +1,1 @@
+{'layers': (128, 128, 128), 'morse_transform': {'morse': False}, 'pip': {'pip': False}, 'scale_X': {'activation': 'tanh', 'scale_X': 'std'}, 'scale_y': 'mm11', 'lr': 0.8}
