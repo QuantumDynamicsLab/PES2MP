@@ -44,7 +44,16 @@ _Uses pyshtools for calculating spherical harmonics_
 4D PES (Two Rigid Rotors)<br />
 <img src="https://github.com/apoorv-kushwaha/Multipole/blob/main/jac_final.png" width="500">
 
-Link: [Upcoming Link]() 
+Link: [Upcoming!]() 
+
+
+```diff
+# Article citation for 4D code: multipole expansion of 4D Potential Energy Surface
+
+! bibliography: Upcoming.bib
+```
+
+Manual: [Upcoming !]() 
 
 ```diff
 # Software citation
@@ -62,8 +71,3 @@ Link: [Upcoming Link]()
 }
 ```
 
-```diff
-# Article citation for 4D code: multipole expansion of 4D Potential Energy Surface
-
-! bibliography: Upcoming.bib
-```
