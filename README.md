@@ -2,7 +2,6 @@
 Contact: dhilip@iitrpr.ac.in
 
 # PES2MP (Potential Energy Surface Mapping to Multipole Expansion Series)
-## Multipole expansion
 2D and 4D multipole expansion code (using [Legendre polynomials](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.legendre.html) and [Spherical Harmonics](https://shtools.github.io/SHTOOLS/) respectively) 
 for fitting PES into radial coefficients is provided as jupyter-notebook files. <br />
 
