@@ -20,10 +20,11 @@ Currently limited to rigid rotor - atom (2D) and rigid rotor - rigid rotor (4D) 
 
 For any queries contact [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) cc: (mailto:kushwaha.apoorv@gmail.com)<br />
 
-### File 1: 2D_multipole_inv.ipynb
+### 2D PES (Atom - Rigid Rotor collision)
+File 2: CODE_2_PES2MP_2D.ipynb <br />
 _Uses [[scipy.special]](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.legendre.html) for Legendre coefficient_
 
-2D PES (Atom - Rigid Rotor collision)<br />
+
 <img src="https://github.com/apoorv-kushwaha/Multipole/blob/main/jacobi22.png" width="250">
 
 Link: [[Link to paper: See Supplementary Information]](https://doi.org/10.1002/qua.27007) 
@@ -45,12 +46,12 @@ Link: [[Link to paper: See Supplementary Information]](https://doi.org/10.1002/q
 }
 ```
 
-### File 2: Use 4D_SF_expansion.ipynb
+### 4D PES (Two Rigid Rotors) 
 
 _Uses [[pyshtools]](https://shtools.github.io/SHTOOLS/) for calculating spherical harmonics_
 **(need separate installation: Instructions are provided in jupyter-notebook file)<br />**
 
-4D PES (Two Rigid Rotors)<br />
+File 2: CODE_2_PES2MP_4D.ipynb <br />
 <img src="https://github.com/apoorv-kushwaha/Multipole/blob/main/jac_final.png" width="500">
 
 Link: [[Link to paper: See Supplementary Information]](https://doi.org/10.1063/5.0161335) 
