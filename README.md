@@ -7,9 +7,9 @@ Contact: dhilip@iitrpr.ac.in
 for fitting PES into radial coefficients is provided as jupyter-notebook files. <br />
 
 ### Update V2
-3. Code 0-1 are for splining/augmenting data using ML package [PESLearn](https://github.com/CCQC/PES-Learn)
-4. Code 2 and 3 are for fitting PES to radial coefficients and vice-versa (to calculate fitting error.)
-5. Code 4 is a template to fit radial coefficients into molscat readable functions.
+-  Code 0-1 are for splining/augmenting data using ML package [PESLearn](https://github.com/CCQC/PES-Learn)
+-  Code 2 and 3 are for fitting PES to radial coefficients and vice-versa (to calculate fitting error.)
+-  Code 4 is a template to fit radial coefficients into molscat readable functions.
 
 ### V1
 * The original code has been broken into 4 parts.
