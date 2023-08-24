@@ -6,13 +6,13 @@ Contact: dhilip@iitrpr.ac.in
 for fitting PES into radial coefficients is provided as jupyter-notebook files. <br />
 
 ### Update V2
--  Code 0-1 are for splining/augmenting data using ML package [PESLearn](https://github.com/CCQC/PES-Learn)
--  Code 2 and 3 are for fitting PES to radial coefficients and vice-versa (to calculate fitting error.)
+-  Code 0-1 are for splining/augmenting data using ML package [PESLearn](https://github.com/CCQC/PES-Learn),
+-  Code 2 and 3 are for fitting PES to radial coefficients and vice-versa (to calculate fitting error),
 -  Code 4 is a template to fit radial coefficients into molscat readable functions.
 
 ### V1
-* The old codes published in Supplementary Information *(links to articles are provided below)* can be accessed via following [link](https://github.com/apoorv-kushwaha/PES2MP/)
-* The original code has been broken into 4 parts.
+* The original code has been broken into 5 parts (Code_0-5),
+* The old codes published in Supplementary Information *(links to articles are provided below)* can be accessed via following [link](https://github.com/apoorv-kushwaha/PES2MP/).
 
 Both codes use least square fit (achieved by taking the pseudo-inverse of Legendre/Spherical-Harmonics coefficients stored in a 2D matrix).<br />
 Currently limited to rigid rotor - atom (2D) and rigid rotor - rigid rotor (4D) collision
