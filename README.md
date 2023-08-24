@@ -51,13 +51,22 @@ _Uses [[pyshtools]](https://shtools.github.io/SHTOOLS/) for calculating spherica
 4D PES (Two Rigid Rotors)<br />
 <img src="https://github.com/apoorv-kushwaha/Multipole/blob/main/jac_final.png" width="500">
 
-Link: [Upcoming!]() 
-
+Link: [[Link to paper: See Supplementary Information]](https://doi.org/10.1063/5.0161335) 
 
 ```diff
 # Article citation for 4D code: multipole expansion of 4D Potential Energy Surface
-
-! bibliography: Upcoming.bib
+@article{Kushwaha2023Aug,
+	author = {Kushwaha, Apoorv and Dhilip Kumar, T. J.},
+	title = {{4D potential energy surface of NCCN{\textendash}H2 collision: Rotational dynamics by p-H2 and o-H2 at interstellar temperatures}},
+	journal = {J. Chem. Phys.},
+	volume = {159},
+	number = {7},
+	year = {2023},
+	month = aug,
+	issn = {0021-9606},
+	publisher = {AIP Publishing},
+	doi = {10.1063/5.0161335}
+}
 ```
 
 Manual: [Upcoming !]() 
