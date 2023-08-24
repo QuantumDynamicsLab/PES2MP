@@ -6,7 +6,7 @@ Contact: dhilip@iitrpr.ac.in
 2D and 4D multipole expansion code (using [Legendre polynomials](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.legendre.html) and [Spherical Harmonics](https://shtools.github.io/SHTOOLS/) respectively) 
 for fitting PES into radial coefficients is provided as jupyter-notebook files. <br />
 
-## Update V2bullets 
+## Update V2
 1. The original code has been broken into 4 parts.
 2. The old codes published in Supplementary Information can be accessed via following [link](https://github.com/apoorv-kushwaha/PES2MP/)
 3. Code 0-1 are for splining/augmenting data using ML package [PESLearn](https://github.com/CCQC/PES-Learn)
