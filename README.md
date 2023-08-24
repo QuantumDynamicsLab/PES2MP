@@ -11,8 +11,8 @@ for fitting PES into radial coefficients is provided as jupyter-notebook files. 
 -  Code 4 is a template to fit radial coefficients into molscat readable functions.
 
 ### V1
-* The original code has been broken into 4 parts.
 * The old codes published in Supplementary Information *(links to articles are provided below)* can be accessed via following [link](https://github.com/apoorv-kushwaha/PES2MP/)
+* The original code has been broken into 4 parts.
 
 Both codes use least square fit (achieved by taking the pseudo-inverse of Legendre/Spherical-Harmonics coefficients stored in a 2D matrix).<br />
 Currently limited to rigid rotor - atom (2D) and rigid rotor - rigid rotor (4D) collision
