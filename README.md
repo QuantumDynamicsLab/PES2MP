@@ -3,8 +3,15 @@ Contact: dhilip@iitrpr.ac.in
 
 # PES2MP (Potential Energy Surface Mapping to Multipole Expansion Series)
 ## Multipole expansion
-2D and 4D multipole expansion code (using Legendre polynomials and Spherical Harmonics respectively) 
+2D and 4D multipole expansion code (using [[Legendre polynomials]](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.legendre.html) and [[Spherical Harmonics]]([https://github.com/apoorv-kushwaha/PES2MP](https://shtools.github.io/SHTOOLS/) respectively) 
 for fitting PES into radial coefficients is provided as jupyter-notebook files. <br />
+
+## Update V2bullets 
+1. The original code has been broken into 4 parts.
+2. The old codes published in Supplementary Information can be accessed via following [[link]](https://github.com/apoorv-kushwaha/PES2MP/)
+3. Code 0-1 are for splining/augmenting data using ML package [PESLearn](https://github.com/CCQC/PES-Learn)
+4. Code 2 and 3 are for fitting PES to radial coefficients and vice-versa (to calculate fitting error.)
+5. Code 4 is a template to fit radial coefficients into molscat readable functions. 
 
 Both codes use least square fit (achieved by taking the pseudo-inverse of Legendre/Spherical-Harmonics coefficients stored in a 2D matrix).<br />
 Currently limited to rigid rotor - atom (2D) and rigid rotor - rigid rotor (4D) collision
@@ -12,7 +19,7 @@ Currently limited to rigid rotor - atom (2D) and rigid rotor - rigid rotor (4D) 
 For any queries contact [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) cc: (mailto:kushwaha.apoorv@gmail.com)<br />
 
 ### File 1: 2D_multipole_inv.ipynb
-_Uses scipy.special for Legendre coefficient_
+_Uses [[scipy.special]](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.legendre.html) for Legendre coefficient_
 
 2D PES (Atom - Rigid Rotor collision)<br />
 <img src="https://github.com/apoorv-kushwaha/Multipole/blob/main/jacobi22.png" width="250">
@@ -38,7 +45,7 @@ Link: [[Link to paper: See Supplementary Information]](https://doi.org/10.1002/q
 
 ### File 2: Use 4D_SF_expansion.ipynb
 
-_Uses pyshtools for calculating spherical harmonics_
+_Uses [[pyshtools]](https://shtools.github.io/SHTOOLS/) for calculating spherical harmonics_
 **(need separate installation: Instructions are provided in jupyter-notebook file)<br />**
 
 4D PES (Two Rigid Rotors)<br />
