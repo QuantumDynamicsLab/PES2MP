@@ -2,9 +2,12 @@
 Contact: dhilip@iitrpr.ac.in
 
 # PES2MP (Potential Energy Surface Mapping to Multipole Expansion Series)
-2D and 4D multipole expansion code (using [Legendre polynomials](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.legendre.html) and [Spherical Harmonics](https://shtools.github.io/SHTOOLS/) respectively) 
-for fitting PES into radial coefficients is provided as jupyter-notebook files. Both codes (for 2D/4D PES) use least square fit (achieved by taking the pseudo-inverse of Legendre/Spherical-Harmonics coefficients respectively which is saved as a 2D numpy matrix for future use).
-The code is currently limited to rigid rotor - atom (2D) and rigid rotor - rigid rotor (4D) collision. For theoretical details please follow the paper $${\color{lightgreen}N. Sathyamurthy, “Computational fitting of ab initio potential energy surfaces,” _Comput. Phys. Rep._ 3, 1–69 (1985).}$$[@](https://doi.org/10.1016/0167-7977(85)90007-3)
+2D and 4D multipole expansion code (using [Legendre polynomials](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.legendre.html) and [Spherical Harmonics](https://shtools.github.io/SHTOOLS/) respectively) for fitting PES into radial coefficients is provided as jupyter-notebook files.<br>
+Both codes (2D/4D) use least squares fit (achieved by taking the pseudo-inverse of Legendre/Spherical-Harmonics coefficients, which is saved as a 2D numpy matrix for future use). The codes are useful while studying collisional :boom: dynamics of two species. Such collisions are paticulary important for studying rotational dynamics of one or both species at cold :snowflake: and ultracold :snowman: temperatures. 
+
+
+The code is currently limited to rigid rotor - atom (2D) and rigid rotor - rigid rotor (4D) collision. For theoretical details please follow the paper ```N. Sathyamurthy, “Computational fitting of ab initio potential energy surfaces,” _Comput. Phys. Rep._ 3, 1–69 (1985).``` [link :monocle_face:](https://doi.org/10.1016/0167-7977(85)90007-3)
+
 
 For any queries contact [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) cc: (mailto:kushwaha.apoorv@gmail.com)<br />  <br />
 
@@ -70,7 +73,8 @@ Link: [[Link to paper: See Supplementary Information]](https://doi.org/10.1063/5
 }
 ```
 
-Manual: [Upcoming !]() 
+
+Manual: :book: [Upcoming !]() 
 ```diff
 - Under Preparation
 ```
