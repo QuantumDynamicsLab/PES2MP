@@ -9,7 +9,7 @@ Both codes (2D/4D) use least squares fit, achieved by taking the pseudo-inverse 
 The code is currently limited to rigid rotor - atom (2D) and rigid rotor - rigid rotor (4D) collision. For theoretical details please follow the paper ```N. Sathyamurthy, “Computational fitting of ab initio potential energy surfaces,” _Comput. Phys. Rep._ 3, 1–69 (1985).``` [link :monocle_face:](https://doi.org/10.1016/0167-7977(85)90007-3)
 
 
-For any queries :envelope: [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) cc: (mailto:kushwaha.apoorv@gmail.com)<br />  <br />
+For any queries :envelope: [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) cc: [Apoorv Kushwaha](mailto:kushwaha.apoorv@gmail.com)<br />  <br />
 
 ### Update V2
 -  Code 0-1 are for augmenting PES data using ML package [PESLearn](https://github.com/CCQC/PES-Learn),
