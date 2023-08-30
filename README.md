@@ -3,7 +3,10 @@ Contact: dhilip@iitrpr.ac.in
 
 # PES2MP (Potential Energy Surface Mapping to Multipole Expansion Series)
 2D and 4D multipole expansion code (using [Legendre polynomials](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.legendre.html) and [Spherical Harmonics](https://shtools.github.io/SHTOOLS/) respectively) 
-for fitting PES into radial coefficients is provided as jupyter-notebook files. <br />
+for fitting PES into radial coefficients is provided as jupyter-notebook files. Both codes (for 2D/4D PES) use least square fit (achieved by taking the pseudo-inverse of Legendre/Spherical-Harmonics coefficients respectively which is saved as a 2D numpy matrix for future use).
+The code is currently limited to rigid rotor - atom (2D) and rigid rotor - rigid rotor (4D) collision. For theoretical details please follow the paper ```diff + N. Sathyamurthy, “Computational fitting of ab initio potential energy surfaces,” _Comput. Phys. Rep._ 3, 1–69 (1985).[Link](https://doi.org/10.1016/0167-7977(85)90007-3)```
+
+For any queries contact [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) cc: (mailto:kushwaha.apoorv@gmail.com)<br />  <br />
 
 ### Update V2
 -  Code 0-1 are for splining/augmenting data using ML package [PESLearn](https://github.com/CCQC/PES-Learn),
@@ -14,10 +17,6 @@ for fitting PES into radial coefficients is provided as jupyter-notebook files. 
 * The original code has been broken into 5 parts (Code_0-5),
 * The old codes published in Supplementary Information *(links to articles are provided below)* can be accessed via following [link](https://github.com/apoorv-kushwaha/PES2MP/).
 
-Both codes use least square fit (achieved by taking the pseudo-inverse of Legendre/Spherical-Harmonics coefficients stored in a 2D matrix).<br />
-Currently limited to rigid rotor - atom (2D) and rigid rotor - rigid rotor (4D) collision
-
-For any queries contact [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) cc: (mailto:kushwaha.apoorv@gmail.com)<br />
 
 ### 2D PES (Atom - Rigid Rotor collision)
 File 2: CODE_2_PES2MP_2D.ipynb <br />
