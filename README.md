@@ -13,7 +13,7 @@ For any queries :envelope: [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) 
 
 <details open><summary>Installation Instructions:</summary>
 
-The makefiles are tested on Linux and MacOS. The quick install files do not use conda as solving environments can take hours, instead, it uses pip. However, all 4 files create separate environments and can be run without creating clashes with each other. To understand more [read :snake:](https://www.anaconda.com/blog/understanding-and-improving-condas-performance)
+The makefiles (inside `make_scripts folder`) are tested on Linux and MacOS. The quick install files do not use `conda install` (where solving environments can take hours), instead, it uses `python -m pip`. However, all 4 files create separate environments and can be run without clashing with each other. To understand more [read :snake:](https://www.anaconda.com/blog/understanding-and-improving-condas-performance)
 
 #### Install Anaconda 
 - Install anaconda
