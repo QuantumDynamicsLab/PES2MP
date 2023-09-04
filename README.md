@@ -11,31 +11,39 @@ The code is currently limited to rigid rotor - atom (2D) and rigid rotor - rigid
 
 For any queries :envelope: [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) cc: [Apoorv Kushwaha](mailto:kushwaha.apoorv@gmail.com)<br />  <br />
 
-<details>
-	
-<summary> Installation Instructions: <summary> 
-	
+<details open><summary>Installation Instructions:</summary>
+
+The makefiles are tested on Linux and MacOS. The quick install files do not use conda as solving environments can take hours, instead, it uses pip. However, all 4 files create separate environments and can be run without creating clashes with each other. To understand more read [:snake:](https://www.anaconda.com/blog/understanding-and-improving-condas-performance)
+
+#### Install Anaconda 
 - Install anaconda
-- Open conda prompt<br /><br />
-_**For code 0-1 requiring PES-Learn library**_
+- Open conda prompt<br />
+#### For code 0-1: (requiring PES-Learn library that uses python3.6)
 - run ``chmod +x install_peslearn.sh`` or ``chmod +x install_peslearn_quick.sh`` {See manual for more information}
-- run ``./install_pes2mp.sh``<br /><br />
-  _**For code 2-4**_
+- run ``./install_pes2mp.sh``<br />
+#### For code 2-4:
 - run ``chmod +x install_pes2mp.sh`` or ``chmod +x install_pes2mp_quick.sh`` {See manual for more information}
-- run ``./install_pes2mp.sh``
-	
-<details>
+- run ``./install_pes2mp.sh`` 
+  </details>
 
-<details>
+<details open><summary>Running PES2MP: </summary>
 	
-<summary> Running PES2MP: <summary> 	
 ### Running PES2MP
-Since 
+Since the ML model generating library `PES-Learn` uses python 3.6 separate environments are created to aviod clashes and error. 
+After installing both files (quick or non-quick versions as it suits). 
 
-<details>
+#### For code 0-1: 
+- run ``conda activate peslearn`` or `peslearn-quick` for the pip (quick) installed version
+- run ``jupyter-notebook ``
+#### For code 2-4: 
+- run ``conda activate pes2mp`` or `pes2mp-quick` for the pip (quick) installed version
+- run ``jupyter-notebook ``
 
-<details>
-<summary> Update History: <summary> 	
+:warning: The ML generating jupyter files (CODE 0-1) requires python 3.6 and cannot be installed with pyshtools. Make sure to run each part in correct environment. 
+  </details>
+
+<details><summary>Update History: </summary>
+
 ### Update V2
 -  Code 0-1 are for augmenting PES data using ML package [PESLearn](https://github.com/CCQC/PES-Learn),
 -  Code 2 and 3 are for fitting PES to radial coefficients and vice-versa (to calculate fitting error),
@@ -45,12 +53,11 @@ Since
 * The original code has been broken into 5 parts (Code_0-5),
 * The old codes published in Supplementary Information *(links to articles are provided below)* can be accessed via following [link](https://github.com/apoorv-kushwaha/PES2MP/).
 
-
+  </details>
 ### 2D PES (Atom - Rigid Rotor collision)
 File 2: CODE_2_PES2MP_2D.ipynb <br />
 _Uses [[scipy.special]](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.legendre.html) for Legendre coefficient_
 
-<details>
 
 <img src="https://github.com/apoorv-kushwaha/Multipole/blob/main/jacobi22.png" width="250">
 
