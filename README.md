@@ -11,7 +11,7 @@ The code is currently limited to rigid rotor - atom (2D) and rigid rotor - rigid
 
 For any queries :envelope: [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) cc: [Apoorv Kushwaha](mailto:kushwaha.apoorv@gmail.com)<br />  <br />
 
-<details open><summary>Installation Instructions:</summary>
+<details><summary>Installation Instructions:</summary>
 
 The makefiles (inside `make_scripts folder`) are tested on Linux and MacOS. The quick install files do not use `conda install` (where solving environments can take hours), instead, it uses `python -m pip`. However, all 4 files create separate environments and can be run without clashing with each other. To understand more [read :snake:](https://www.anaconda.com/blog/understanding-and-improving-condas-performance)
 
@@ -26,7 +26,7 @@ The makefiles (inside `make_scripts folder`) are tested on Linux and MacOS. The 
 - run ``./install_pes2mp.sh`` 
   </details>
 
-<details open><summary>Running PES2MP: </summary>
+<details><summary>Running PES2MP: </summary>
 	
 ### Running PES2MP
 Since the ML model generating library `PES-Learn` uses python 3.6 separate environments are created to aviod clashes and error. 
@@ -55,6 +55,9 @@ Use `peslearn environment` for CODE 0-1 and `pes2mp environment` for the rest of
 * The old codes published in Supplementary Information *(links to articles are provided below)* can be accessed via following [link](https://github.com/apoorv-kushwaha/PES2MP/).
 
   </details>
+
+<details open><summary>2D PES (Atom - Rigid Rotor collision): </summary>
+	
 ### 2D PES (Atom - Rigid Rotor collision)
 File 2: CODE_2_PES2MP_2D.ipynb <br />
 _Uses [[scipy.special]](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.legendre.html) for Legendre coefficient_
@@ -80,6 +83,9 @@ Link: [[Link to paper: See Supplementary Information]](https://doi.org/10.1002/q
 	doi = {10.1002/qua.27007}
 }
 ```
+  </details>
+
+<details open><summary>4D PES (Rigid Rotor - Rigid Rotor collision): </summary>
 
 ### 4D PES (Two Rigid Rotors) 
 
@@ -107,7 +113,9 @@ Link: [[Link to paper: See Supplementary Information]](https://doi.org/10.1063/5
 }
 ```
 
+  </details>
 
+ 
 Manual: :book: [Upcoming !]() 
 ```diff
 - Under Preparation
