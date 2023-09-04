@@ -33,10 +33,10 @@ Since the ML model generating library `PES-Learn` uses python 3.6 separate envir
 After installing both files (quick or non-quick versions as it suits). 
 
 #### For code 0-1: 
-- run ``conda activate peslearn`` or `peslearn-quick` for the pip (quick) installed version
+- run ``conda activate peslearn`` or `peslearn_quick` for the pip (quick) installed version
 - run ``jupyter-notebook ``
 #### For code 2-4: 
-- run ``conda activate pes2mp`` or `pes2mp-quick` for the pip (quick) installed version
+- run ``conda activate pes2mp`` or `pes2mp_quick` for the pip (quick) installed version
 - run ``jupyter-notebook ``
 
 :warning: The ML generating jupyter files (CODE 0-1) requires python 3.6 and cannot be installed with pyshtools. Make sure to run each part in correct environment. 
