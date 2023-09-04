@@ -51,7 +51,7 @@ Use `peslearn environment` for CODE 0-1 and `pes2mp environment` for the rest of
 -  Code 4 is a template to fit radial coefficients into molscat readable functions.
 
 ### V1
-* The original code has been broken into 5 parts (Code_0-5),
+* The original code has been broken into 5 parts (Code_0-4),
 * The old codes published in Supplementary Information *(links to articles are provided below)* can be accessed via following [link](https://github.com/apoorv-kushwaha/PES2MP/).
 
   </details>
