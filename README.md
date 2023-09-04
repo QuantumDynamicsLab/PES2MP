@@ -11,6 +11,31 @@ The code is currently limited to rigid rotor - atom (2D) and rigid rotor - rigid
 
 For any queries :envelope: [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) cc: [Apoorv Kushwaha](mailto:kushwaha.apoorv@gmail.com)<br />  <br />
 
+<details>
+	
+<summary> Installation Instructions: <summary> 
+	
+- Install anaconda
+- Open conda prompt<br /><br />
+_**For code 0-1 requiring PES-Learn library**_
+- run ``chmod +x install_peslearn.sh`` or ``chmod +x install_peslearn_quick.sh`` {See manual for more information}
+- run ``./install_pes2mp.sh``<br /><br />
+  _**For code 2-4**_
+- run ``chmod +x install_pes2mp.sh`` or ``chmod +x install_pes2mp_quick.sh`` {See manual for more information}
+- run ``./install_pes2mp.sh``
+	
+<details>
+
+<details>
+	
+<summary> Running PES2MP: <summary> 	
+### Running PES2MP
+Since 
+
+<details>
+
+<details>
+<summary> Update History: <summary> 	
 ### Update V2
 -  Code 0-1 are for augmenting PES data using ML package [PESLearn](https://github.com/CCQC/PES-Learn),
 -  Code 2 and 3 are for fitting PES to radial coefficients and vice-versa (to calculate fitting error),
@@ -25,6 +50,7 @@ For any queries :envelope: [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) 
 File 2: CODE_2_PES2MP_2D.ipynb <br />
 _Uses [[scipy.special]](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.legendre.html) for Legendre coefficient_
 
+<details>
 
 <img src="https://github.com/apoorv-kushwaha/Multipole/blob/main/jacobi22.png" width="250">
 
