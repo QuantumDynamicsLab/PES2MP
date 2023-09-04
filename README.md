@@ -39,7 +39,8 @@ After installing both files (quick or non-quick versions as it suits).
 - run ``conda activate pes2mp`` or `pes2mp_quick` for the pip (quick) installed version
 - run ``jupyter-notebook ``
 
-:warning: The ML generating jupyter files (CODE 0-1) requires python 3.6 and cannot be installed with pyshtools. Make sure to run each part in correct environment. 
+:warning: The ML generating jupyter files (CODE 0-1) requires python 3.6 and cannot be installed with pyshtools (4D CODE 2 and 3). 
+Use `peslearn environment` for CODE 0-1 and `pes2mp environment` for the rest of the codes. 
   </details>
 
 <details><summary>Update History: </summary>
