@@ -19,11 +19,11 @@ The makefiles (inside `make_scripts folder`) are tested on Linux and MacOS. The 
 - Install anaconda
 - Open conda prompt<br />
 #### For code 0-1: (requiring PES-Learn library that uses python3.6)
-- run ``chmod +x install_peslearn.sh`` or ``chmod +x install_peslearn_quick.sh`` {See manual for more information}
-- run ``./install_pes2mp.sh``<br />
+- run ``chmod +x install_peslearn_quick.sh`` (recommended) or ``chmod +x install_peslearn.sh`` {See manual for more information}
+- run ``./install_peslearn_quick.sh``<br />
 #### For code 2-4:
-- run ``chmod +x install_pes2mp.sh`` or ``chmod +x install_pes2mp_quick.sh`` {See manual for more information}
-- run ``./install_pes2mp.sh`` 
+- run ``chmod +x install_pes2mp_quick.sh`` (recommended) or ``chmod +x install_pes2mp.sh`` {See manual for more information}
+- run ``./install_pes2mp_quick.sh`` 
   </details>
 
 <details><summary>Running PES2MP: </summary>
@@ -33,18 +33,20 @@ Since the ML model generating library `PES-Learn` uses python 3.6 separate envir
 After installing both files (quick or non-quick versions as it suits). 
 
 #### For code 0-1: 
-- run ``conda activate peslearn`` or `peslearn_quick` for the pip (quick) installed version
+- run ``conda activate peslearn_quick`` or `peslearn` for the conda installed version
 - run ``jupyter-notebook ``
 #### For code 2-4: 
-- run ``conda activate pes2mp`` or `pes2mp_quick` for the pip (quick) installed version
+- run ``conda activate pes2mp_quick`` or `pes2mp` for the conda installed version
 - run ``jupyter-notebook ``
 
 :warning: The ML generating jupyter files (CODE 0-1) requires python 3.6 and cannot be installed with pyshtools (4D CODE 2 and 3). 
-Use `peslearn environment` for CODE 0-1 and `pes2mp environment` for the rest of the codes. 
+Use `peslearn_quick environment` for CODE 0-1 and `pes2mp_quick environment` for the rest of the codes. 
   </details>
 
 <details><summary>Update History: </summary>
-
+### Update 2023.1.0
+-  ! Upcoming !
+	
 ### Update V2
 -  Code 0-1 are for augmenting PES data using ML package [PESLearn](https://github.com/CCQC/PES-Learn),
 -  Code 2 and 3 are for fitting PES to radial coefficients and vice-versa (to calculate fitting error),
