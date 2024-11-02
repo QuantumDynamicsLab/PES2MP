@@ -20,7 +20,7 @@ Both codes (2D/4D) use least squares fit, achieved by taking the pseudo-inverse 
 The code is currently limited to rigid rotor - atom (2D) and rigid rotor - rigid rotor (4D) collision. For theoretical details please follow the paper ```N. Sathyamurthy, “Computational fitting of ab initio potential energy surfaces,” _Comput. Phys. Rep._ 3, 1–69 (1985).``` [link :monocle_face:](https://doi.org/10.1016/0167-7977(85)90007-3)
 
 ## Curve fit :: Fit 1D PES and/or radial terms into analytical expression.
-The radial terms (vΛ) can be fitted into a series of power/exponential functions provided with the pes2mp package or user-defined function for complex fit. Extrapolation schemes (R−6/R−4/R−3/R−x etc.) are also available with plots (optional). After fitting the PES into MOLSCAT readable functions, the PES can be recreated (with a residual plot) to verify whether a good fit is obtained or not.
+The radial terms ($V_\Lambda$) can be fitted into a series of power/exponential functions provided with the pes2mp package or user-defined function for complex fit. Extrapolation schemes ($R^{−6}/R^{−4}/R^{−3}/R^{−x}$ etc.) are also available with plots (optional). After fitting the PES into MOLSCAT readable functions, the PES can be recreated (with a residual plot) to verify whether a good fit is obtained or not.
 
 ## MOLSCAT readable output :: Available for general-purpose version of POTENL subroutine
 The curve fit produces an output which is MOLSCAT readable for direct utilization in &potl block. The feature is available in a general-purpose version of the subroutine POTENL of MOLSCAT 2020. The same can be utilized to calculate cross- sections for rotational (de-)excitation of two colliding species at cold and ultracold temperatures.
