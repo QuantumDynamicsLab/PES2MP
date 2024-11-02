@@ -830,7 +830,7 @@ def psi4_input_2D(inp,RR1_psi4):
         F2D_geom += '''{}         {{:.6f}}           0.000000        {{:.6f}}'''.format(inp.RR2_atoms[0])
     else:
         F2D_geom += "{} {} \n-- \n".format(inp.Charge[2],inp.Multiplicity[2])
-        F2D_geom += " {} {} \n".format(inp.Charge[0],inp.Multiplicity[0])
+        #F2D_geom += " {} {} \n".format(inp.Charge[0],inp.Multiplicity[0])
         RR1_psi4_xyz = psi4.core.Molecule.save_string_xyz(RR1_psi4)
         F2D_geom += RR1_psi4_xyz
         F2D_geom += "-- \n {} {} \n".format(inp.Charge[1],inp.Multiplicity[1])

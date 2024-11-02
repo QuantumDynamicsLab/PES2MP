@@ -3,17 +3,28 @@
 """
 Created on Tue Nov 14 15:28:43 2023
 
-@author: Apoorv Kushwaha, Pooja Chahal, Habit Tatin & Dr. T. J. Dhilip Kumar
+@author: Apoorv Kushwaha, Pooja Chahal, Habit Tatin & Prof. T. J. Dhilip Kumar
 
-main file for PES2MP package (to debug --> refer manual)
+main file for PES2MP package (to debug/modify --> refer manual)
 This program:
  (*) imports necessary libraries
  (*) creates required folders
- (*) calculates and moves respective Rigid Rotor(s) (RR) to COM.
- (*) generates input coordinates (R, θ_n)
- (*) generates PES using Psi4 (for rough estimation)
- (*) generates input files for external caluclation (Molpro/Gaussian)
- (*)
+ (*) PESGen:
+     (*) calculates and moves respective Rigid Rotor(s) (RR) to COM.
+     (*) generates PES using Psi4 internally (for rough estimation)
+     (*) generates input files by transforming Jacobi coordinates (R, θ_n) to XYZ
+     (*) auxillary scripts are provided for external calculations (Molpro/Gaussian) and collecting results
+ (*) PESPlot:
+     (*) Plots 1D/2D and 4D PES using (a) R vs E plots and (b) polar plots
+ (*) NNGen:
+     (*) Can generate NN model for augmenting PES2MP
+     (*) Can handle N inputs and M outputs with PES and non-PES data
+ (*) MPExp:
+     (*) Does Multipole expansion of 2D and 4D PES
+     (*) 2D PES is expanded using Legendre polynomials and 4D using Spherical Harmonics
+     (*) Also performs inverse fitting after analytical fitting to print residual errors.
+ (*) AnaFit:
+     (*) Uses analytical expressions for fitting either PES or V Lambda terms.
 """
 
 # general libraries
@@ -66,6 +77,9 @@ f.write('\n \n /data and /project folders created.')
 #     print('/data/ ; /psi4_PES_data/ ; /scratch/ folders created.')
 #     sys.stdout = original_stdout # Reset the standard output to its original value
 
+# The program checks for job type in the input file uses series of if-else
+# commands to execute the task inside the jobtype.
+
 try:
     inp.Create_PES_input
 except:
@@ -78,7 +92,7 @@ else:
 
 ###############################################################################
 ###############################################################################
-############################# PES Plot ########################################
+########################## PES Generation #####################################
 ###############################################################################
 ###############################################################################
 
