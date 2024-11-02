@@ -26,7 +26,7 @@ The radial terms ($V_\Lambda$) can be fitted into a series of power/exponential 
 The curve fit produces an output which is MOLSCAT readable for direct utilization in &potl block. The feature is available in a general-purpose version of the subroutine POTENL of MOLSCAT 2020. The same can be utilized to calculate cross- sections for rotational (de-)excitation of two colliding species at cold and ultracold temperatures.
 
 ## Plots :: Plot PES, residual and curve fits.
-PES plots are available as 1D (R vs E) and polar (R,θ vs E). For 2D/4D PES, certain angle combinations can be chosen for plots to prevent cluttering. Residual (error) plots can be automatically generated for NN/radial-terms generated PES. The curve fit with various functions can also be visualized along with any extrapolation function (if used). Apart from these, many other relevant plots are also provided for NN module.
+PES plots are available as 1D (R vs E) and polar (R, $\theta$ vs E). For 2D/4D PES, certain angle combinations can be chosen for plots to prevent cluttering. Residual (error) plots can be automatically generated for NN/radial-terms generated PES. The curve fit with various functions can also be visualized along with any extrapolation function (if used). Apart from these, many other relevant plots are also provided for NN module.
 
 For any queries :envelope: [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) cc: [Apoorv Kushwaha](mailto:kushwaha.apoorv@gmail.com)<br />  <br />
 
