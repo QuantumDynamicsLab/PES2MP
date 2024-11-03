@@ -3,7 +3,7 @@
 """
 Created on Tue Nov 14 15:28:43 2023
 
-@author: Apoorv Kushwaha, Pooja Chahal, Habit Tatin & Dr. T. J. Dhilip Kumar
+@author: Apoorv Kushwaha, Pooja Chahal, Habit Tatin & Prof. T. J. Dhilip Kumar
 
 This is the driver file for PES2MP containing most of the functions.
 The changes to PES tamplate can be done directly here.
