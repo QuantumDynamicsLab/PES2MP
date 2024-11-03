@@ -599,7 +599,7 @@ if PESGen == True:
                 try:
                     R_ii = R[j]     # radial  coordinate
                     # Rigid rotor (RR) lies on Z axis (no rotation of RR : no projection)
-                    psi4.set_output_file(psi4_data+'{:.2f}.out'.format(R_ii), False) # sets output file location
+                    psi4.core.set_output_file(psi4_data+'{:.2f}.out'.format(R_ii), False) # sets output file location
                     F1D_mol = psi4.geometry(F1D_geom.format(R_ii))
                     psi4_inp = psi4.core.Molecule.create_psi4_string_from_molecule(F1D_mol)
 
@@ -609,22 +609,24 @@ if PESGen == True:
                     else:
                         ecp[j] = psi4.energy(inp.psi4_method_basis, bsse_type= inp.psi4_bsse,
                                              return_total_data=True, molecule=F1D_mol)
-                    os.remove(psi4_data+'{:.2f}.log'.format(R_ii)) # removing log file (too large)
-                    psi4.core.clean()
                 except:
                     print("\n\n")
                     print ("Failed coordinate : (R = %.2f) \n" % (R_ii) )
                     f1.write("Failed coordinate : (R = %.2f) \n" % (R_ii) )
-                    os.remove(psi4_data+'{:.2f}.log'.format(R_ii)) # removing log file
+                    # replace 'pass' with 'raise' to show error ! to debug code
+                    pass
+                finally:
+                    psi4.core.close_outfile()
+                    try:
+                        os.remove(psi4_data+'{:.2f}.log'.format(R_ii)) # removing log file (too large)
+                    except:
+                        pass
                     psi4.core.clean()
                     psi4.core.clean_variables()
                     psi4.core.clean_options()
                     psi4.core.clean_timers()
                     for fx in os.listdir(scratch_dir):        # removing remaining files after psi4 clean()
                         os.remove(os.path.join(scratch_dir, fx))
-                    # replace 'pass' with 'raise' to show error ! to debug code
-                    pass
-
             #####################################################################################################################
             # coordinates for calculating E_inf ( to convert energies to cm-1 )
             R_inf         = inp.R_inf
@@ -634,7 +636,7 @@ if PESGen == True:
             # print("\n Geometry at infinity: \n ", F1D_geom.format(R_inf))
             f.write("\n Geometry at infinity: \n ")
             f.write("R = {}".format(R_inf))
-            psi4.set_output_file(psi4_data+'E_Inf.out',False) # sets output file location
+            psi4.core.set_output_file(psi4_data+'E_Inf.out',False) # sets output file location
             F1D_mol_inf = psi4.geometry(F1D_geom.format(R_inf))
             psi4.set_options({'reference': inp.psi4_reference,'freeze_core': inp.psi4_Frozen_Core})
             try:
@@ -643,7 +645,7 @@ if PESGen == True:
                 else:
                     ecp_inf = psi4.energy(inp.psi4_method_basis, bsse_type= inp.psi4_bsse,
                                           return_total_data=True, molecule=F1D_mol_inf)
-                os.remove(psi4_data+'E_Inf.log') # removing log file
+                #os.remove(psi4_data+'E_Inf.log') # removing log file
                 psi4.core.clean()
             except:
                 print('E infinity convergence failed! using last converged energy')
@@ -700,7 +702,7 @@ if PESGen == True:
                     gamma = A[j,1]     # angular coordinate
                     # Rigid rotor (RR) lies on Z axis (no rotation of RR : no projection)
                     R_x, R_z = driver.proj2D (R, gamma)
-                    psi4.set_output_file(psi4_data+'{:.2f}_{:d}.out'.format(R,int(gamma)), False) # sets output file location
+                    psi4.core.set_output_file(psi4_data+'{:.2f}_{:d}.out'.format(R,int(gamma)), False) # sets output file location
 
                     F2D_mol = psi4.geometry(F2D_geom.format(R_x, R_z))
                     psi4.set_options({'reference': inp.psi4_reference,'freeze_core': inp.psi4_Frozen_Core})
@@ -709,21 +711,23 @@ if PESGen == True:
                     else:
                         ecp[j] = psi4.energy(inp.psi4_method_basis, bsse_type= inp.psi4_bsse,
                                              return_total_data=True, molecule=F2D_mol)
-                    os.remove(psi4_data+'{:.2f}_{:d}.log'.format(R,int(gamma))) # removing log file (too large)
-                    psi4.core.clean()
                 except:
                     print ("Failed coordinate : (R = %.2f, theta = %d ) \n" % (A[j,0], A[j,1]) )
                     f1.write("Failed coordinate : (R = %.2f, theta = %d ) \n" % (A[j,0], A[j,1]) )
-                    os.remove(psi4_data+'{:.2f}_{:d}.log'.format(R,int(gamma))) # removing log file
+                    # replace 'pass' with 'raise' to show error ! to debug code
+                    pass
+                finally:
+                    psi4.core.close_outfile()
+                    try:
+                        os.remove(psi4_data+'{:.2f}_{:d}.log'.format(R,int(gamma))) # removing log file
+                    except:
+                        pass
                     psi4.core.clean()
                     psi4.core.clean_variables()
                     psi4.core.clean_options()
                     psi4.core.clean_timers()
                     for fx in os.listdir(scratch_dir):        # removing remaining files after psi4 clean()
                         os.remove(os.path.join(scratch_dir, fx))
-                    # replace 'pass' with 'raise' to show error ! to debug code
-                    pass
-
             #####################################################################################################################
             # coordinates for calculating E_inf ( to convert energies to cm-1 )
             R_inf         = inp.R_inf
@@ -735,7 +739,7 @@ if PESGen == True:
             # print("\n Geometry at infinity: \n ", F2D_geom.format(R_x_inf, R_z_inf))
             f.write("\n Geometry at infinity: \n ")
             f.write("R = {}\n Theta = {}\n".format(R_inf,ang_inf))
-            psi4.set_output_file(psi4_data+'E_Inf.out',False) # sets output file location
+            psi4.core.set_output_file(psi4_data+'E_Inf.out',False) # sets output file location
             F2D_mol_inf = psi4.geometry(F2D_geom.format(R_x, R_z))
             psi4.set_options({'reference': inp.psi4_reference,'freeze_core': inp.psi4_Frozen_Core})
             try:
@@ -744,7 +748,7 @@ if PESGen == True:
                 else:
                     ecp_inf = psi4.energy(inp.psi4_method_basis, bsse_type= inp.psi4_bsse,
                                           return_total_data=True, molecule=F2D_mol_inf)
-                os.remove(psi4_data+'E_Inf.log') # removing log file
+                #os.remove(psi4_data+'E_Inf.log') # removing log file
                 psi4.core.clean()
             except:
                 print('E infinity convergence failed! using last converged energy')
@@ -803,7 +807,7 @@ if PESGen == True:
                     theta2 = A[j,2]                        # angular coordinate theta2
                     theta1 = A[j,3]                        # angular coordinate theta1
                     RR_mat = driver.proj4D (R, phi, theta2, theta1, RR1_COM_len, RR2_COM_len)   # calling 4D projection function
-                    psi4.set_output_file(psi4_data+'{:.2f}_{:d}_{:d}_{:d}.out'.format(R,int(phi),int(theta2),int(theta1)),
+                    psi4.core.set_output_file(psi4_data+'{:.2f}_{:d}_{:d}_{:d}.out'.format(R,int(phi),int(theta2),int(theta1)),
                                          False) # sets output file location
                     F4D_mol = psi4.geometry(F4D_geom.format(*RR_mat))
                     psi4.set_options({'reference': inp.psi4_reference,'freeze_core': inp.psi4_Frozen_Core})
@@ -812,25 +816,23 @@ if PESGen == True:
                     else:
                         ecp[j] = psi4.energy(inp.psi4_method_basis, bsse_type= inp.psi4_bsse,
                                              return_total_data=True, molecule=F4D_mol)
-                    os.remove(psi4_data+'{:.2f}_{:d}_{:d}_{:d}.log'.format(R,int(phi),int(theta2),int(theta1))) # removing log file (too large)
-                    psi4.core.clean()                        # removing scratch files using psi4 clean() utility
-                    for fx in os.listdir(scratch_dir):        # removing remaining files after psi4 clean()
-                        os.remove(os.path.join(scratch_dir, fx))
-
-
                 except:
                     print ("Failed coordinate : (R = %.2f, phi = %d, theta2= %d, theta1= %d ) \n" % (A[j,0], A[j,1], A[j,2], A[j,3]) )
                     f1.write("Failed coordinate : (R = %.2f, phi = %d, theta2= %d, theta1= %d ) \n" % (A[j,0], A[j,1], A[j,2], A[j,3]) )
-                    os.remove(psi4_data+'{:.2f}_{:d}_{:d}_{:d}.log'.format(R,int(phi),int(theta2),int(theta1))) # removing log file
-                    psi4.core.clean()                        # removing scratch files using psi4 clean() utility
+                    # replace 'pass' with 'raise' to show error ! to debug code
+                    pass
+                finally:
+                    psi4.core.close_outfile()
+                    try:
+                        os.remove(psi4_data+'{:.2f}_{:d}_{:d}_{:d}.log'.format(R,int(phi),int(theta2),int(theta1))) # removing log file
+                    except:
+                        pass
+                    psi4.core.clean()
                     psi4.core.clean_variables()
                     psi4.core.clean_options()
                     psi4.core.clean_timers()
                     for fx in os.listdir(scratch_dir):        # removing remaining files after psi4 clean()
                         os.remove(os.path.join(scratch_dir, fx))
-                    # replace 'pass' with 'raise' to show error ! to debug code
-                    pass
-
             #####################################################################################################################
             # coordinates for calculating E_inf ( to convert energies to cm-1 )
             R_inf         = inp.R_inf
@@ -845,7 +847,7 @@ if PESGen == True:
             # print("\n Geometry at infinity: \n ", F4D_geom.format(*RR_mat_inf))
             f.write("\n Geometry at infinity: \n ")
             f.write(" R = {}\n Phi = {}\n Theta 2 = {}\n Theta 1 = {}\n".format(R_inf,phi_inf, theta2_inf, theta1_inf))
-            psi4.set_output_file(psi4_data+'E_Inf.out',False) # sets output file location
+            psi4.core.set_output_file(psi4_data+'E_Inf.out',False) # sets output file location
             psi4.set_options({'reference': inp.psi4_reference,'freeze_core': inp.psi4_Frozen_Core})
             try:
                 if inp.psi4_bsse == None:
@@ -853,7 +855,7 @@ if PESGen == True:
                 else:
                     ecp_inf = psi4.energy(inp.psi4_method_basis, bsse_type= inp.psi4_bsse,
                                           return_total_data=True, molecule=F4D_mol_inf)
-                os.remove(psi4_data+'E_Inf.log') # removing log file
+                #os.remove(psi4_data+'E_Inf.log') # removing log file
                 psi4.core.clean()
             except:
                 print('E infinity convergence failed! using last converged energy')
