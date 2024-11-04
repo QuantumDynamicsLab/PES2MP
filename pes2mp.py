@@ -560,11 +560,18 @@ if PESGen == True:
 ################################################################################
 #Important:
 
-#Try/Except block (in Psi4 - for rough PES calculation):
+#Try/Except/Finally block (in Psi4 - for rough PES calculation):
 #Use 'pass' to ignore failed calculations (only store data points that converge)
 #Use 'raise' to show error ! --> to debug code
 ################################################################################
-    if inp.Run_psi4:
+    try:
+        inp.Run_psi4
+    except:
+        Run_psi4 = False
+    else:
+        Run_psi4 = inp.Run_psi4
+
+    if Run_psi4:
         direct_plot = True
         psi4_int = out_data + 'psi4_PES_data/'           # directory for psi4 data
         psi4_data = psi4_int + 'data/'           # directory for psi4 data
