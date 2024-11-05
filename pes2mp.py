@@ -515,7 +515,7 @@ if PESGen == True:
             FxD_geom_psi4 = driver.psi4_input_2D(inp,RR1_psi4)
             Psi4_custom_template += FxD_geom_psi4
             Psi4_custom_template += '}}'
-            Psi4_custom_template += '\nR = {:.4f} \n Theta = {:.4f}\n'
+            Psi4_custom_template += '\nR = {:.4f} \nTheta = {:.4f}\n'
             Psi4_custom_template += inp.psi4_ext
             for j in tqdm(range (len(A))):    # python loop to generate PES
                 R     = A[j,0]     # radial  coordinate
@@ -2456,7 +2456,7 @@ if FnFit:
             df_inp = pd.read_csv(out_data+inp.filename,header=None,sep=inp.sep,names=['R','E'])
 
             if E_Hartree == True:
-                df_inp[2] = (df_inp[2] - E_inf)*219474.63             # convert to cm-1
+                df_inp['E'] = (df_inp['E'] - E_inf)*219474.63             # convert to cm-1
                 #df_inp.to_csv(FnFit_data+'psi4_FnFit_cm.dat', index=None, header=None,sep=',')
             print(df_inp)
             df_inp.to_csv(FnFit_data+'Original_PES_sort_cm.dat', index=None, header=None,sep=',')    # save sorted PES
@@ -2590,7 +2590,7 @@ if FnFit:
             df_inp = pd.read_csv(out_data+inp.filename,header=None,sep=inp.sep,names=['R','th','E'])
 
             if E_Hartree == True:
-                df_inp[2] = (df_inp[2] - E_inf)*219474.63             # convert to cm-1
+                df_inp['E'] = (df_inp['E'] - E_inf)*219474.63             # convert to cm-1
                 #df_inp.to_csv(FnFit_data+'psi4_FnFit_cm.dat', index=None, header=None,sep=',')
 
             df_inp.sort_values(by = ['th','R'], inplace=True, ascending = True)
