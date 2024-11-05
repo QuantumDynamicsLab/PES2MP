@@ -78,7 +78,7 @@ set reference rhf
 En = energy('scf', bsse_type='cp',return_total_data=True)
 
 # Clean Table
-print('%.4f\t%.4f%.12f'%(R, Theta, En))
+print('%.4f\t%.4f\t%.12f'%(R, Theta, En))
 
 """
 #------------------------------------------------------------------------------#
