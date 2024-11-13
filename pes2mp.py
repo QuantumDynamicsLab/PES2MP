@@ -2490,8 +2490,23 @@ if FnFit:
         #        df_z = df_res.pivot(index=df_res.columns[0], columns=[df_res.columns[1],df_res.columns[2],df_res.columns[3]], values=df_res.columns[4])
         #    else:
         #        print("Incorrect PES_typ. Must be either '2D' or '4D'.")
+
+        df_inp = pd.read_csv(out_data+inp.filename,header=None,sep=inp.sep)
+        df_inp = df_inp.apply(pd.to_numeric, errors='coerce')
+        print(df_inp.head(5))
+
+        print("\n If your input dataframe contain 'HEADER' like R, theta, E, etc, it should be visible on 1st row and must be removed. \n")
+
+        df_choice2 = int(input("\n Do you want to remove 1st row ! (0= No, 1= Yes) : "))
+        if (df_choice2 == 1):
+            df_inp.drop(index=df_inp.index[0], axis=0, inplace=True)
+            print("Header column removed! The new dataframe is: \n")
+            print(df_inp.head(5))
+        else:
+            print("No header input. The dataframe remains same: \n ")
+
         if inp.PES_typ == '1D':
-            df_inp = pd.read_csv(out_data+inp.filename,header=None,sep=inp.sep,names=['R','E'])
+            df_inp.columns = ['R', 'E']
 
             if E_Hartree == True:
                 df_inp['E'] = (df_inp['E'] - E_inf)*219474.63             # convert to cm-1
@@ -2577,8 +2592,17 @@ if FnFit:
 
             gmodel = Model(inp.fnfit_custom) # using lmfit
             params = gmodel.make_params()
-            for keyi in range (len(params.keys())):
-                params.add(list(params.keys())[keyi], value=inp.initial_val[keyi])
+
+            try:
+                inp.lower_bounds
+                inp.upper_bounds
+            except:
+                for keyi in range (len(params.keys())):
+                    params.add(list(params.keys())[keyi], value=inp.initial_val[keyi])
+            else:
+                for keyi in range(len(params.keys())):
+                    params.add(list(params.keys())[keyi], value=inp.initial_val[keyi], \
+                                min=inp.lower_bounds[keyi], max=inp.upper_bounds[keyi])
 
             result = gmodel.fit(y_dummy[strt:]*scale_Energy, params, x=x_dummy[strt:]*scale_R) # Final Optimization
 
@@ -2590,7 +2614,7 @@ if FnFit:
             # predicted energies in original range (for Residual Plots)
             predicted_energiesR = inp.fnfit_custom(x_dummy*scale_R, *best_vals)/scale_Energy
 
-            print("Potential at initial R value: ", E[0])
+            print("Potential at initial R value: ", predicted_energies[0])
 
             print(result.best_values)
             f.write("Best Coefficients: \n")
@@ -2625,7 +2649,7 @@ if FnFit:
             np.savetxt(out_data+"Fnfit_PES.dat", final_data, delimiter=",",fmt='%.2f,%.16f')
 
         elif inp.PES_typ == '2D':
-            df_inp = pd.read_csv(out_data+inp.filename,header=None,sep=inp.sep,names=['R','th','E'])
+            df_inp.columns = ['R', 'theta', 'E']
 
             if E_Hartree == True:
                 df_inp['E'] = (df_inp['E'] - E_inf)*219474.63             # convert to cm-1
@@ -2777,8 +2801,16 @@ if FnFit:
 
                 params = gmodel.make_params()
                 #print(type(list(params.keys())[0]))
-                for keyi in range (len(params.keys())):
-                    params.add(list(params.keys())[keyi], value=inp.initial_val[keyi])
+                try:
+                    inp.lower_bounds
+                    inp.upper_bounds
+                except:
+                    for keyi in range (len(params.keys())):
+                        params.add(list(params.keys())[keyi], value=inp.initial_val[keyi])
+                else:
+                    for keyi in range(len(params.keys())):
+                        params.add(list(params.keys())[keyi], value=inp.initial_val[keyi], \
+                                    min=inp.lower_bounds[keyi], max=inp.upper_bounds[keyi])
                 #print(params)
                 #y_eval = gmodel.eval(params, x=x_dummy[strt:])
 
@@ -2827,7 +2859,7 @@ if FnFit:
             np.savetxt(out_data+"Fnfit_PES.dat", final_data, delimiter=",",fmt='%.2f,%.2f,%.16f')
 
         elif inp.PES_typ == '4D':
-            df_inp = pd.read_csv(out_data+inp.filename,header=None,sep=inp.sep,names=['R','phi','th2','th1','E'])
+            df_inp.columns = ['R', 'phi', 'theta2', 'theta1', 'E']
 
             if E_Hartree == True:
                 df_inp['E'] = (df_inp['E'] - E_inf)*219474.63             # convert to cm-1
@@ -2961,8 +2993,16 @@ if FnFit:
                 gmodel = Model(inp.fnfit_custom) # using lmfit
 
                 params = gmodel.make_params()
-                for keyi in range (len(params.keys())):
-                    params.add(list(params.keys())[keyi], value=inp.initial_val[keyi])
+                try:
+                    inp.lower_bounds
+                    inp.upper_bounds
+                except:
+                    for keyi in range (len(params.keys())):
+                        params.add(list(params.keys())[keyi], value=inp.initial_val[keyi])
+                else:
+                    for keyi in range(len(params.keys())):
+                        params.add(list(params.keys())[keyi], value=inp.initial_val[keyi], \
+                                    min=inp.lower_bounds[keyi], max=inp.upper_bounds[keyi])
 
                 result = gmodel.fit(y_dummy[strt:]*scale_Energy, params, x=x_dummy[strt:]*scale_R) # Final Optimization
 
