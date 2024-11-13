@@ -1064,9 +1064,15 @@ def plot_1D (df_out1,z1_3d,out_plots, inp, x):
         plt.legend(loc="lower right")             # legend location
     else:
         plt.legend(loc=inp.legend_loc)
-    elim = df_out1[df_out1.columns[x]].min()
-    e_lim = elim + (elim/10)
-    plt.ylim(e_lim,-e_lim)                                 # y limit
+
+    try:
+        inp.E_lim
+    except:
+        elim = df_out1[df_out1.columns[x]].min()
+        e_lim = elim + (elim/10)
+        plt.ylim(e_lim,-e_lim)                             # Fix upper/lower energy limit for plots (keep symmetric)
+    else:
+        plt.ylim(inp.E_lim[0],inp.E_lim[1])
     #l_lim = z1_3d[z1_3d.columns[0]].min()
     plt.xlim(inp.R_lim[0], inp.R_lim[1])                   # x limit
     # plt.savefig(out_plots+'Combined_ang_plots.eps', format='eps')  # save combined figure

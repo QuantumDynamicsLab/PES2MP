@@ -945,7 +945,6 @@ if (direct_plot == True or Plot_PES == True):
         print("Check and remove unconverged coordinates/energies in !",out_data+inp.PES_filename_cm)
         input("Satisfied! Press Enter to continue...")
         df_out1 = pd.read_csv(out_data+inp.PES_filename_cm,sep='\s+')
-
     else:
         print('\nPlotting PES from external output. ')
         f.write('\nPlotting PES from external output. ')
@@ -954,11 +953,33 @@ if (direct_plot == True or Plot_PES == True):
         except:
             print('\nUsing default path and project name')
             f.write('\nUsing default path and project name')
-            Plot_folder = out_data
+            Plot_folder = out_data + 'input_files/'
         else:
             print('\nExternal folder path provided!')
             f.write('\nExternal folder path provided!')
-        df_out1 = pd.read_csv(Plot_folder+inp.PES_filename_cm,sep=inp.sep)
+        df_out1 = pd.read_csv(Plot_folder+inp.PES_filename_cm,sep=inp.sep,header=None)
+        df_out1 = df_out1.apply(pd.to_numeric, errors='coerce')
+        print(df_out1.head(5))
+
+        print("\n If your input dataframe contain 'HEADER' like R, theta, E, etc, it should be visible on 1st row and must be removed. \n")
+
+        df_choice2 = int(input("\n Do you want to remove 1st row ! (0= No, 1= Yes) : "))
+        if (df_choice2 == 1):
+            df_out1.drop(index=df_out1.index[0], axis=0, inplace=True)
+            print("Header column removed! The new dataframe is: \n")
+            print(df_out1.head(5))
+        else:
+            print("No header input. The dataframe remains same: \n ")
+
+        try:
+            inp.E_inf
+        except:
+            E_Hartree = False
+            E_inf = 0.00
+        else:
+            E_Hartree = True
+            E_inf = inp.E_inf
+
         coll_1D = False
         coll_2D = False
         coll_4D = False
@@ -966,15 +987,32 @@ if (direct_plot == True or Plot_PES == True):
         if len(df_out1.axes[1]) == 2:
             print('\n 1D coll. Columns must be in order: R and E')
             coll_1D = True
+            if E_Hartree == True:
+                df_out1[1] = (df_out1[1] - E_inf)*219474.63             # convert to cm-1
+                df_out1.to_csv(out_data+'pes_cm_1D.dat', index=None, header=None,sep=',')    # save V_lam coefficients to file separated by comma
+            df_out1.columns = ['R', 'E']
+
         elif len(df_out1.axes[1]) == 3:
             print('\n 2D coll. Columns must be in order: R, theta and E')
             coll_2D = True
+            if E_Hartree == True:
+                df_out1[2] = (df_out1[2] - E_inf)*219474.63             # convert to cm-1
+                df_out1.to_csv(out_data+'pes_cm_2D.dat', index=None, header=None,sep=',')    # save V_lam coefficients to file separated by comma
+            df_out1.columns = ['R', 'theta', 'E']
+
         elif len(df_out1.axes[1]) == 5:
             print('\n 4D coll. Columns must be in order R, phi, th2, th1 and E')
             coll_4D = True
+            if E_Hartree == True:
+                df_out1[4] = (df_out1[4] - E_inf)*219474.63             # convert to cm-1
+                df_out1.to_csv(out_data+'pes_cm_4D.dat', index=None, header=None,sep=',')    # save V_lam coefficients to file separated by comma
+            df_out1.columns = ['R', 'phi', 'theta2', 'theta1', 'E']
+
         else:
             print('Invalid dataframe column number: Must be 2, 3 or 5.')
             print('Current dataframe has {} columns'.format(df_out1.axes[1]))
+            print(df_out1.head(5))
+            driver.exit_program()
 
     print(df_out1.head(5))
     f.write ('\nInput file read! \nPrinting first 5 values of dataframe! \n\n')
