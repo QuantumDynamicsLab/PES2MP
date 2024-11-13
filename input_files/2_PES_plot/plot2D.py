@@ -4,8 +4,8 @@
 ############################ Plot External PES #################################
 ################################################################################
 Plot_PES = True
-Proj_name = 'pesgen2D'  # Project name (Path:/current-folder/Projects/Proj_name)
-PES_filename_cm  = "psi4_PES.dat"     # Enter Filename (Energies in cm-1)
+Proj_name = 'C2_He'  # Project name (Path:/current-folder/Projects/Proj_name)
+PES_filename_cm  = "PES.dat"     # Enter Filename (Energies in cm-1)
 
 # plot parameters
 sep    = '\s+'   # data separation: ',' comma, '\t' tab, '\s+' multiple spaces
@@ -18,6 +18,8 @@ R_lim  = [2,8]   # R limit for plots in Angstroms (lower limit for 1D plot only)
 thetax  = [0,30,60,90]       # 2D (theta)
 
 ########################### Optional Commands ##################################
+E_inf = -78.698190719292      # define E_infinity (Asymptotic Energy R@Inf)
+################################################################################
 # By default the energy levels are chosen automatically to preserve features ###
 # and the default ste size is 0.1. This can be changed using below commands  ###
 ################################################################################
