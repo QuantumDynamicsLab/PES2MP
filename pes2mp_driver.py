@@ -1674,28 +1674,51 @@ def create_TrainableActivation():
             return instance
     return TrainableActivation
 
+#-----------------------------------------------------------------------------#
+##############################################################################################
+# A more constrained trainable function with minima (Warning: may cause HE region to invert!)
+##############################################################################################
+# def create_CustomDecayLayer():
+#     import tensorflow as tf
+#     from tensorflow.keras.layers import Layer
+#     class CustomDecayLayer(Layer):
+#         def __init__(self, **kwargs):
+#             #import tensorflow as tf
+#             from tensorflow.keras.constraints import NonNeg
+#             super(CustomDecayLayer, self).__init__(**kwargs)
+#             # Define trainable parameters u and v
+#             self.u = tf.Variable(initial_value=10.0, trainable=True, dtype=tf.float32, name="u",constraint=NonNeg())
+#             self.v = tf.Variable(initial_value=100.0, trainable=True, dtype=tf.float32, name="v",constraint=NonNeg())
+#             self.a = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32, name="a",constraint=NonNeg())
+#             self.b = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32, name="b",constraint=NonNeg())
+#             self.c = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32, name="c",constraint=NonNeg())
+#             #self.u = self.add_weight(shape=(1,), initializer='ones', trainable=True, name="u",constraint=NonNeg())
+#             #self.v = self.add_weight(shape=(1,), initializer='ones', trainable=True, name="v",constraint=NonNeg())
+#         def call(self, inputs):
+#             #import tensorflow as tf
+#             x = inputs
+#             modx = tf.abs(self.u * x)
+#             return self.v * tf.exp(-self.a * modx) * ((1 / (self.b * modx)) - self.c * modx) # EDM function
+#             #return self.v * tf.exp(-modx) / (modx)  # EDM function
+#     return CustomDecayLayer
+###################################################################################
+# trainable slater-reciprocal and slater-reciprocal-log function (change if needed)
+###################################################################################
 def create_CustomDecayLayer():
     import tensorflow as tf
     from tensorflow.keras.layers import Layer
     class CustomDecayLayer(Layer):
         def __init__(self, **kwargs):
-            #import tensorflow as tf
             from tensorflow.keras.constraints import NonNeg
             super(CustomDecayLayer, self).__init__(**kwargs)
-            # Define trainable parameters u and v
-            self.u = tf.Variable(initial_value=10.0, trainable=True, dtype=tf.float32, name="u",constraint=NonNeg())
-            self.v = tf.Variable(initial_value=100.0, trainable=True, dtype=tf.float32, name="v",constraint=NonNeg())
+            # Define trainable parameters a, b and c
             self.a = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32, name="a",constraint=NonNeg())
             self.b = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32, name="b",constraint=NonNeg())
-            self.c = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32, name="c",constraint=NonNeg())
-            #self.u = self.add_weight(shape=(1,), initializer='ones', trainable=True, name="u",constraint=NonNeg())
-            #self.v = self.add_weight(shape=(1,), initializer='ones', trainable=True, name="v",constraint=NonNeg())
+            self.c = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32, name="c",constraint=None)
         def call(self, inputs):
-            #import tensorflow as tf
             x = inputs
-            modx = tf.abs(self.u * x)
-            return self.v * tf.exp(-self.a * modx) * ((1 / (self.b * modx)) - self.c * modx) # EDM function
-            #return self.v * tf.exp(-modx) / (modx)  # EDM function
+            #return ( self.a * tf.exp( -self.b * (x - self.c) ) ) / (x*x) # simple slater-reciprocal function (no minima)
+            return ( - self.a * tf.exp(-self.b * x))*tf.math.log(self.c*x)/(x) # coupled slater-reciprocal-log with minima
     return CustomDecayLayer
 #-----------------------------------------------------------------------------#
 
@@ -1712,18 +1735,22 @@ def create_ND_model(hp, input_dim, num_outputs):
     get_custom_objects().update({'gaussian': TrainableActivation(name='Gaussian', activation_type='Gaussian'),
                                  'ngelu': TrainableActivation(name='NGelu', activation_type='NGelu')})
 
-    deep_l = [32,64,128]
-    hidd_l = [2,4,8]
-    bran_l = [2,3,4]         # branches (num X)
+    bran_l = [2,4]         # number of branches (each with hidden layers coupled with other branches)
+    hidd_l = [2,4,6]       # number of hidden layer (between input and output) per branch
+    deep_l = [32,64,128]   # number of units per layer
+
+    # bran_l = [4]         # Optimized parameters! Works with most systems (Use to save time!)
+    # hidd_l = [4]
+    # deep_l = [64]
 
     # Define the input (R and theta)
     inputs = Input(shape=(input_dim,), name='input_layer')  # input_dim = 2 for R and theta
     R = inputs[:, 0:1]  # Radial component R
-    x = CustomDecayLayer()(R)      # custom trainable decay function with minima
+    x = CustomDecayLayer()(R)      # custom trainable decay function
     # direct functions
-    #x = (1/R)                     # flexible decay function
-    #x = (tf.exp(-R) / (R))        # moderate decay function
-    #x = (tf.exp((1/R) - R)) / (R) # very rigid decayfunction
+    #x = (1/R)                     # reciprocal function
+    #x = (tf.exp(-R) / (R))        # moderately flexible decay function
+    #x = (tf.exp((1/R) - R)) / (R) # very rigid decay function
     #x = (tf.exp(-R))*(1/(R) - R)  # custom decay function with minima
 
     units_pl = hp.Choice(f'units', deep_l)
@@ -1759,9 +1786,9 @@ def create_generic_model(hp, input_dim, num_outputs):
     from tensorflow.keras.models import Model
     from tensorflow.keras.layers import Input, Dense, Concatenate
 
-    deep_l = [32,64,128]
-    hidd_l = [2,4,8]
-    bran_l = [2,3,4]         # branches (num X)
+    bran_l = [2,4]         # number of branches (each with hidden layers coupled with other branches)
+    hidd_l = [2,4,6]       # number of hidden layer (between input and output) per branch
+    deep_l = [32,64,128]   # number of units per layer
 
     # Define the input (R and theta)
     inputs = Input(shape=(input_dim,), name='input_layer')  # input_dim

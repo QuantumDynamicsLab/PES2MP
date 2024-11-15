@@ -1666,7 +1666,7 @@ if NNGen:
         print("Finding optimum hyper-parameters for model {}!".format(mod_i))
         #print(X_train, Y_train)
         tuner.search(X_train, Y_train,                      # Running tuner
-                     epochs=1000, # Fixed number of epochs for tuning
+                     epochs=500, # Fixed number of epochs for tuning
                      batch_size=batch_size_input,  # Fixed batch size for tuning
                      validation_data = (X_val, Y_val))
 
@@ -1816,7 +1816,7 @@ if NNGen:
         concatenated_output = Concatenate()(base_outputs)
         output = Dense(output_shape, activation='linear', use_bias=False, kernel_constraint=NonNeg())(concatenated_output)
         model = Model(inputs, output)
-        optimizer_instance = tf.keras.optimizers.Adam(learning_rate=1e-4,amsgrad=True)
+        optimizer_instance = tf.keras.optimizers.Adam(amsgrad=True) # learning_rate=1e-4 (include if deviations)
         model.compile(optimizer=optimizer_instance, loss='huber', metrics=['mae'])
         return model
 
@@ -2399,6 +2399,20 @@ if FnFit:
 
         print("\nSaving V_lam raw coefficients at location: {} ".format(out_data))
 
+        try:
+            inp.Pair_fns
+        except:
+            Pair_fns = False
+        else:
+            Pair_fns = inp.Pair_fns
+
+        try:
+            inp.N_Opt
+        except:
+            N_Opt = False
+        else:
+            N_Opt = inp.N_Opt
+
         if inp.Print_raw:
             mol_file0 = open(out_data+"RAW_POT_custom.txt", "w")
             mol_file0.write(str(Mp_coeff_E0))
@@ -2418,7 +2432,7 @@ if FnFit:
         Str3 += '\nNTERM  = ' + '{},'.format(N_Efn)*(lm)
         Str3 += '\nNPOWER = ' + '0,'*N_Efn*lm
         Str3 += '\nA = \n'
-        if inp.N_Opt == True:
+        if N_Opt == True:
             for i in range (lm):
                 Strlm3 = ''
                 for k in range (N_Efn):
@@ -2434,7 +2448,7 @@ if FnFit:
             for i in range (lm):
                 Strlm3 = ''
                 for k in range (N_Efn):
-                    if inp.Pair_fns == False:
+                    if Pair_fns == False:
                         Strlm3 += str(Mp_coeff_E0[i][k]*A_sgn[k]) + ','
                     else:
                         Strlm3 += str(Mp_coeff_E0[i][k]) + ','
@@ -2649,7 +2663,7 @@ if FnFit:
             np.savetxt(out_data+"Fnfit_PES.dat", final_data, delimiter=",",fmt='%.2f,%.16f')
 
         elif inp.PES_typ == '2D':
-            df_inp.columns = ['R', 'theta', 'E']
+            df_inp.columns = ['R', 'th', 'E']
 
             if E_Hartree == True:
                 df_inp['E'] = (df_inp['E'] - E_inf)*219474.63             # convert to cm-1
@@ -2859,7 +2873,7 @@ if FnFit:
             np.savetxt(out_data+"Fnfit_PES.dat", final_data, delimiter=",",fmt='%.2f,%.2f,%.16f')
 
         elif inp.PES_typ == '4D':
-            df_inp.columns = ['R', 'phi', 'theta2', 'theta1', 'E']
+            df_inp.columns = ['R', 'phi', 'th2', 'th1', 'E']
 
             if E_Hartree == True:
                 df_inp['E'] = (df_inp['E'] - E_inf)*219474.63             # convert to cm-1
