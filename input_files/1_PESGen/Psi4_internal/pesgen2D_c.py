@@ -17,8 +17,6 @@ Multiplicity     = [1, 1, 1] # multiplicity of [atom 1, atom 2, whole system]
 #------------------------------------------------------------------------------#
 # create rough (hf/cc-pvdz) PES internally (Set parameters below)
 Run_psi4                         = True      # run internal rough calculation?
-# create input files for external calculation of PES
-Create_Psi4_custom_input_files   = True      # Custom Psi4 input
 #------------------------------------------------------------------------------#
 # Psi4 internal calculation
 R_lim = [2,8]      # Enter R limit [start,end] in Angstroms(Rough PES!)
@@ -60,26 +58,5 @@ theta_2D_inf       = 90                 # Angular Coordinate for E_infinity
 PES_filename       = "psi4_PES.dat"     # PES output file (in Hartree)
 PES_filename_cm    = "psi4_PES_cm.dat"  # PES output file (in cm-1)
 thetax             = [0,30,60,90]       # Angles to be plotted (R vs E plot)
-
-#------------------------------------------------------------------------------#
-#------------    If Create_Psi4_custom_input_files == True)   -----------------#
-#------------------------------------------------------------------------------#
-# See templates for more examples
-psi4_bsse          = 'cp'      # counterpoise : 'cp' or None (update same below)
-
-psi4_ext = """
-
-memory 2 GB
-set_num_threads(16)
-
-set basis cc-pvdz
-set reference rhf
-# For psi4_bsse = None use | En = energy('scf')
-En = energy('scf', bsse_type='cp',return_total_data=True)
-
-# Clean Table
-print('%.4f\t%.4f\t%.12f'%(R, Theta, En))
-
-"""
 #------------------------------------------------------------------------------#
 ################################################################################
