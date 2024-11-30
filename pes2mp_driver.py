@@ -1714,7 +1714,7 @@ def create_CustomDecayLayer():
             # Define trainable parameters a, b and c
             self.a = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32, name="a",constraint=NonNeg())
             self.b = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32, name="b",constraint=NonNeg())
-            self.c = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32, name="c",constraint=None)
+            self.c = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32, name="c",constraint=NonNeg())
         def call(self, inputs):
             x = inputs
             #return ( self.a * tf.exp( -self.b * (x - self.c) ) ) / (x*x) # simple slater-reciprocal function (no minima)
@@ -1735,13 +1735,13 @@ def create_ND_model(hp, input_dim, num_outputs):
     get_custom_objects().update({'gaussian': TrainableActivation(name='Gaussian', activation_type='Gaussian'),
                                  'ngelu': TrainableActivation(name='NGelu', activation_type='NGelu')})
 
-    bran_l = [2,4]         # number of branches (each with hidden layers coupled with other branches)
-    hidd_l = [2,4,6]       # number of hidden layer (between input and output) per branch
     deep_l = [32,64,128]   # number of units per layer
+    hidd_l = [2,4,6]       # number of hidden layer (between input and output) per branch
+    bran_l = [2,4]         # number of branches (each with hidden layers coupled with other branches)
 
-    # bran_l = [4]         # Optimized parameters! Works with most systems (Use to save time!)
+    # deep_l = [64]        # Optimized parameters! Works with most systems (Use to save time in keras-tuner!)
     # hidd_l = [4]
-    # deep_l = [64]
+    # bran_l = [4]
 
     # Define the input (R and theta)
     inputs = Input(shape=(input_dim,), name='input_layer')  # input_dim = 2 for R and theta
@@ -1786,9 +1786,9 @@ def create_generic_model(hp, input_dim, num_outputs):
     from tensorflow.keras.models import Model
     from tensorflow.keras.layers import Input, Dense, Concatenate
 
-    bran_l = [2,4]         # number of branches (each with hidden layers coupled with other branches)
-    hidd_l = [2,4,6]       # number of hidden layer (between input and output) per branch
     deep_l = [32,64,128]   # number of units per layer
+    hidd_l = [2,4,6]       # number of hidden layer (between input and output) per branch
+    bran_l = [2,4]         # number of branches (each with hidden layers coupled with other branches)
 
     # Define the input (R and theta)
     inputs = Input(shape=(input_dim,), name='input_layer')  # input_dim

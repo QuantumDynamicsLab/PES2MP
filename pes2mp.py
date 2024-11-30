@@ -1724,6 +1724,8 @@ if NNGen:
         # Save metrics ! Test, Val, Combined
         test_loss, test_mae = model.evaluate(X_test, Y_test)
         print("test_loss = {:.4f} , test_mae = {:.4f} \n".format(test_loss, test_mae))
+        #f.write("Model {} : test_loss = {:.4f} , test_mae = {:.4f} \n".format(mod_i, test_loss, test_mae))
+
         # Make predictions with residual plot for test dataset.
         predictions_scaled = model.predict(X_test)
         # Inverse transform to original scale
@@ -1740,6 +1742,8 @@ if NNGen:
         # Save metrics ! Test, Val, Combined
         full_loss, full_mae = model.evaluate(X_min, X_min)
         print("full_loss = {:.4f} , full_mae = {:.4f} \n".format(full_loss, full_mae))
+        f.write("Model {} : full_loss = {:.4f} , full_mae = {:.4f} \n".format(mod_i, full_loss, full_mae))
+
         driver.plot_residuals(y_original, predictions, final_NN_data_modi,'Residuals_min', fmt=inp.fmt)
 
         if HE_train == True:
@@ -1803,7 +1807,7 @@ if NNGen:
     batch_size_input = len(X_train_en)
 
     from tensorflow.keras.models import Model
-    from tensorflow.keras.layers import Input, Dense, Concatenate
+    from tensorflow.keras.layers import Input, Dense, Concatenate, Average
     from tensorflow.keras.constraints import NonNeg
 
     def finetuning_model_ensemble(input_shape, output_shape, base_models):
@@ -1814,6 +1818,8 @@ if NNGen:
 
         base_outputs = [base_model(inputs) for base_model in base_models]
         concatenated_output = Concatenate()(base_outputs)
+        averaged_output = Average()(base_outputs)
+        concatenated_output = Concatenate()([concatenated_output,averaged_output])
         output = Dense(output_shape, activation='linear', use_bias=False, kernel_constraint=NonNeg())(concatenated_output)
         model = Model(inputs, output)
         optimizer_instance = tf.keras.optimizers.Adam(amsgrad=True) # learning_rate=1e-4 (include if deviations)
@@ -1826,7 +1832,7 @@ if NNGen:
 
     #fit the model
     early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_mae', mode='min', \
-                                    verbose=1, patience=500, restore_best_weights=True)
+                                    verbose=1, patience=100, restore_best_weights=True)
 
     from tqdm.keras import TqdmCallback
     tqdm_prog = TqdmCallback(verbose=1)
@@ -1838,11 +1844,17 @@ if NNGen:
 
     test_loss_en, test_mae_en = model_en.evaluate(X_test_en, Y_test_en)
     print("test_loss = {:.4f} , test_mae = {:.4f} \n".format(test_loss_en, test_mae_en))
+    #f.write("Fine Tuning: test_loss = {:.4f} , test_mae = {:.4f} \n".format(full_loss, full_mae))
 
     # Saving Final model
     final_NN_data_en = final_NN_data + 'Ensemble_tuned/' # directory for TF NN model and other files
     if not os.path.exists(final_NN_data_en):
         os.makedirs(final_NN_data_en)
+
+    # plot graph
+    plot_model(model_en, to_file=final_NN_data_en+f'ensemble_model_architecture.{inp.fmt}', \
+                show_shapes=True,show_layer_names=False,
+                show_layer_activations=True)
 
     driver.plot_loss_and_mae(history_f_en.history, final_NN_data_en, 'loss', inp.fmt)
     driver.plot_loss_and_mae(history_f_en.history, final_NN_data_en, 'mae', inp.fmt)
@@ -1861,8 +1873,17 @@ if NNGen:
     predictions = target_scaler.inverse_transform(predictions_scaled)
     y_original = target_scaler.inverse_transform(Y_min)
     # Save metrics ! Test, Val, Combined
-    full_loss, full_mae = model.evaluate(X_min, X_min)
+    full_loss, full_mae = model_en.evaluate(X_min, X_min)
     print("full_loss = {:.4f} , full_mae = {:.4f} \n".format(full_loss, full_mae))
+    f.write("Fine Tuning: full_loss = {:.4f} , full_mae = {:.4f} \n".format(full_loss, full_mae))
+
+    #updated_weights = model_en.get_layer('ensemble_weights').weights[0].numpy()
+    #print("Final ensemble weights:", updated_weights)
+    #f.write("Final ensemble weights:\n")
+    #f.write(", ".join(map(str, updated_weights)))
+    #f.write("\n")
+
+
     driver.plot_residuals(y_original, predictions, final_NN_data_en,'Residuals_min_en', fmt=inp.fmt)
 
     if HE_train == True:
