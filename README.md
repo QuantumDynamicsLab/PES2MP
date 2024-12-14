@@ -55,9 +55,16 @@ The program can be run by keeping the input file (e.g. pesgen1D.py)
 - run ``conda activate pes2mp`` or `conda activate pes2mp_quick` depending on installation
 - run ``python3 pes2mp.py pesgen1D ``
 #### Shorter execution (requires one-time update of bashrc): 
-- open bashrc in Ubuntu (or bash_profile in MacOS) and add  ``pes2mp ()
-{python3 pes2mp.py $1
-}`` at end of file. Save and exit.
+- Open bashrc in Ubuntu (or bash_profile in MacOS)
+- Add  ``pes2mp (){python3 pes2mp.py $1`` at end of file.
+- Save and exit.
 - The command for running PES2MP will now be ``pes2mp pesgen1D ``
+### Run External calculations and auxillary scripts:
+- #### Running bash scripts
+- `$ chmod +x run_test .sh`
+- `$ ./ run_test .sh `
+- #### Running python scripts
+- `$ conda activate pes2mp # or pes2mp_q`
+- `$ python3 python_script .sh`
 
 
