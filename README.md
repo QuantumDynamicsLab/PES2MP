@@ -33,8 +33,8 @@ PES plots are available as 1D (R vs E) and polar (R, $\theta$ vs E). For 2D/4D P
 For any queries :envelope: [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) cc: [Apoorv Kushwaha](mailto:kushwaha.apoorv@gmail.com)<br />  <br />
 
 Additional details about PES Generation, NN fitting, MP Expansion, and Scattering calculations can be found here: <br />
-2D collision: Benchmarking C<sub>2</sub>-He and NCCN-He  [:monocle_face:](https://doi.org/10.1002/qua.27007), PO<sup>+</sup>-He [:monocle_face:](https://doi.org/10.1093/mnras/stad1735)   <br />
-4D collision: NCCN-H<sub>2</sub>  [:monocle_face:](https://doi.org/10.1063/5.0161335), CNCN-H<sub>2</sub>  [:monocle_face:](https://doi.org/10.1063/5.0220608), C<sub>4</sub>-H<sub>2</sub>  [:monocle_face:](http://doi.org/10.1039/d3cp05424a), C<sub>5</sub>-H<sub>2</sub>  [:monocle_face:](https://doi.org/10.1063/5.0235976), PO<sup>+</sup>-H<sub>2</sub> [:monocle_face:](https://doi.org/10.1093/mnras/stae2166)   <br />
+2D collision: [Benchmarking C<sub>2</sub>-He and NCCN-He :monocle_face:](https://doi.org/10.1002/qua.27007), [PO<sup>+</sup>-He :monocle_face:](https://doi.org/10.1093/mnras/stad1735)   <br />
+4D collision: [NCCN-H<sub>2</sub> :monocle_face:](https://doi.org/10.1063/5.0161335), [CNCN-H<sub>2</sub> :monocle_face:](https://doi.org/10.1063/5.0220608), [C<sub>4</sub>-H<sub>2</sub> :monocle_face:](http://doi.org/10.1039/d3cp05424a), [C<sub>5</sub>-H<sub>2</sub> :monocle_face:](https://doi.org/10.1063/5.0235976), [PO<sup>+</sup>-H<sub>2</sub> :monocle_face:](https://doi.org/10.1093/mnras/stae2166)   <br />
 
 
 <details><summary>Installation Instructions:</summary>
