@@ -5,10 +5,22 @@ import math;
 
 j = int(1) # counter for file name (Do not change)
 
-################################################################################
-# Find input parameters at the end
-# Either enter &POTL values directly or read from 'MOLSCAT_POT.txt' file
-################################################################################
+#########################################################################################################
+#                                   Find input parameters at the end                                    #
+#-------------------------------------------------------------------------------------------------------#
+# Either enter &POTL values directly or read from 'MOLSCAT_POT.txt' file (recommended and implemented)  #
+# mxlam is the maximum number of radial terms which will be printed when MP_Exp code is executed        #
+# set steps parameter carefully (always test for convergence) [add if-else block as needed]             #
+# if jtotu automatic convergence (-1) fails(usually at high energies), manually set to high values      #
+# set maxmimum rotational basis for rigid rotor of interest using j1max (always test for convergence)   #
+#                                                                                                       #
+# P0 para H2                    (J2 = 0)    i.e j2min=0, j2max=0, j2step=2                              #
+# P2 para H2 with extra basis   (J2 = 0,2)  i.e j2min=0, j2max=2, j2step=2                              #
+# O1 ortho H2                   (J2 = 1)    i.e j2min=1, j2max=1, j2step=2                              #
+# O1 ortho H2 with extra basis  (J2 = 1,3)  i.e j2min=1, j2max=3, j2step=2                              #
+#                                                                                                       #
+# other parameters can be found in MOLSCAT's manual                                                     #ß
+#########################################################################################################
 
 # function for creating Molscat input files
 def loop(start,fin,step,j):
@@ -24,13 +36,20 @@ def loop(start,fin,step,j):
         f1= open("%d" %(j),"w+")
         potf = open("MOLSCAT_POT.txt", "r+") # POT: reads potential from 'MOLSCAT_POT.txt' file
 
-        f1.write('  &input ured = 1.94051, nnrg=1,energy=%.4f\n' %(i* step))
-        f1.write('   intflg=8, steps=20, rmin=1.5, rmax=25.0, BCYOMN=10000, \n')
+        f1.write('  &input ured = 1.94051, nnrg=1, energy=%.4f\n' %(i* step))
+
+        if (i*steps < 10):
+            f1.write('   intflg=8, steps=100, rmin=1.5, rmax=50.0, BCYOMN=10000, \n')
+        elif ( (i*steps > 10) and (i*steps < 30) ):
+            f1.write('   intflg=8, steps=50, rmin=1.5, rmax=50.0, BCYOMN=10000, \n')
+        else:
+            f1.write('   intflg=8, steps=20, rmin=1.5, rmax=50.0, BCYOMN=10000, \n')
+
         f1.write("   label='H2-cncn system', jtotu = -1, \n")
         f1.write('   prntlv=1, isigpr=1, LASTIN = 1,\n')
         f1.write('/ \n')
 
-        f1.write(' &basis itype=3,  j1max=21,j2min=0,j2max=2,j2step=2 \n')
+        f1.write(' &basis itype=3,  j1max=37, j2min=0, j2max=2, j2step=2 \n')
         f1.write('    be= 0.1726,60.853,\n')
         f1.write('/ \n')
         f1.write(' &potl rm=1.0, epsil=1.0, mxlam=174, \n')
