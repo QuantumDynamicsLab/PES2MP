@@ -32,6 +32,11 @@ PES plots are available as 1D (R vs E) and polar (R, $\theta$ vs E). For 2D/4D P
 
 For any queries :envelope: [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) cc: [Apoorv Kushwaha](mailto:kushwaha.apoorv@gmail.com)<br />  <br />
 
+Additional details about PES Generation, NN fitting, MP Expansion, and Scattering calculations can be found here: <br />
+2D collision: Benchmarking C<sub>2</sub>-He and NCCN-He collision  [link :monocle_face:](https://doi.org/10.1002/qua.27007), PO<sup>+</sup>-He [link :monocle_face:](https://doi.org/10.1093/mnras/stad1735)   <br />
+4D collision: NCCN-H<sub>2</sub> collision  [link :monocle_face:](https://doi.org/10.1063/5.0161335), CNCN-H<sub>2</sub> collision  [link :monocle_face:](https://doi.org/10.1063/5.0220608), PO<sup>+</sup>-H<sub>2</sub> [link :monocle_face:](https://doi.org/10.1093/mnras/stae2166), Csub>4</sub>-H<sub>2</sub> collision  [link :monocle_face:](http://doi.org/10.1039/d3cp05424a), Csub>5</sub>-H<sub>2</sub> collision  [link :monocle_face:](https://doi.org/10.1063/5.0235976)   <br />
+
+
 <details><summary>Installation Instructions:</summary>
 
 The makefiles (inside the `make_scripts folder`) are tested on Linux and MacOS. The quick install file does not use `conda install` (where solving environments can take hours), instead, it uses `python -m pip`. However, all 4 files create separate environments and can be run without clashing with each other. To understand more [read :snake:](https://www.anaconda.com/blog/understanding-and-improving-condas-performance)
