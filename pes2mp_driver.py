@@ -1717,8 +1717,9 @@ def create_CustomDecayLayer():
             self.c = tf.Variable(initial_value=1.0, trainable=True, dtype=tf.float32, name="c",constraint=NonNeg())
         def call(self, inputs):
             x = inputs
-            #return ( self.a * tf.exp( -self.b * (x - self.c) ) ) / (x*x) # simple slater-reciprocal function (no minima)
-            return ( - self.a * tf.exp(-self.b * x))*tf.math.log(self.c*x)/(x) # coupled slater-reciprocal-log with minima
+            #return ( self.a * tf.exp( -self.b * x + self.c) ) ) / (x) # slater-reciprocal (Amplified Decay function) (no minima)
+            #return ( - self.a * tf.exp(-self.b * x))*tf.math.log(self.c*x)/(x) # coupled slater-reciprocal-log (has a minima)
+            return ( self.a * tf.exp( -self.b * (x - self.c) ) ) / (x) # Amplified Decay function with shift
     return CustomDecayLayer
 #-----------------------------------------------------------------------------#
 
@@ -1736,7 +1737,7 @@ def create_ND_model(hp, input_dim, num_outputs):
                                  'ngelu': TrainableActivation(name='NGelu', activation_type='NGelu')})
 
     deep_l = [32,64,128]   # number of units per layer
-    hidd_l = [2,4,6]       # number of hidden layer (between input and output) per branch
+    hidd_l = [2,3,4]       # number of hidden layer (between input and output) per branch
     bran_l = [2,4]         # number of branches (each with hidden layers coupled with other branches)
 
     # deep_l = [64]        # Optimized parameters! Works with most systems (Use to save time in keras-tuner!)
@@ -1787,7 +1788,7 @@ def create_generic_model(hp, input_dim, num_outputs):
     from tensorflow.keras.layers import Input, Dense, Concatenate
 
     deep_l = [32,64,128]   # number of units per layer
-    hidd_l = [2,4,6]       # number of hidden layer (between input and output) per branch
+    hidd_l = [2,3,4]       # number of hidden layer (between input and output) per branch
     bran_l = [2,4]         # number of branches (each with hidden layers coupled with other branches)
 
     # Define the input (R and theta)

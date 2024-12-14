@@ -1474,7 +1474,7 @@ if NNGen:
         f.write('Seed for random skitlearn split of training, testing and validation dataset: {} \n'.format(seed_inp))
         stratify_val = 1
     elif Split_Choice_minima == 2 or 3:
-        num_bins = int(input("Enter number of bins for (Each) Input (Suggestion: 4-5) : "))
+        num_bins = int(input("Enter number of bins for split (Suggestion: 3-5 [5(2D); 3(4D)] : "))
         seed_inp = None
         if (Split_Choice_minima == 2):
           stratify_val = 2
@@ -1727,7 +1727,8 @@ if NNGen:
         #f.write("Model {} : test_loss = {:.4f} , test_mae = {:.4f} \n".format(mod_i, test_loss, test_mae))
 
         # Make predictions with residual plot for test dataset.
-        predictions_scaled = model.predict(X_test)
+        predict_batch = 4096
+        predictions_scaled = model.predict(X_test, batch_size=predict_batch)
         # Inverse transform to original scale
         predictions = target_scaler.inverse_transform(predictions_scaled)
         y_original = target_scaler.inverse_transform(Y_test)
@@ -1736,7 +1737,7 @@ if NNGen:
         # Make predictions with residual plot for minimum E dataset.
         X_min  = np.concatenate([X_train_s0,  X_test_s0, X_val_s0],  axis=0)
         Y_min  = np.concatenate([Y_train_s0,  Y_test_s0, Y_val_s0],  axis=0)
-        predictions_scaled = model.predict(X_min)
+        predictions_scaled = model.predict(X_min, batch_size=predict_batch)
         predictions = target_scaler.inverse_transform(predictions_scaled)
         y_original = target_scaler.inverse_transform(Y_min)
         # Save metrics ! Test, Val, Combined
@@ -1750,7 +1751,7 @@ if NNGen:
             # Make predictions with residual plot for whole (minimum+HE) dataset.
             X_all  = np.concatenate([X_min, X_train_HE_s0, X_test_HE_s0, X_val_HE_s0],  axis=0)
             Y_all  = np.concatenate([Y_min, Y_train_HE_s0, Y_test_HE_s0, Y_val_HE_s0],  axis=0)
-            predictions_scaled = model.predict(X_all)
+            predictions_scaled = model.predict(X_all, batch_size=predict_batch)
             predictions = target_scaler.inverse_transform(predictions_scaled)
             y_original = target_scaler.inverse_transform(Y_all)
             driver.plot_residuals(y_original, predictions, final_NN_data_modi,'Residuals_all', fmt=inp.fmt)
@@ -1760,7 +1761,7 @@ if NNGen:
         print("\n Predicting based on input coordinates! \n")
         # save predicted value!
         X_aug_s = feature_scaler.transform(X_augmented)
-        Y_aug_s = model.predict(X_aug_s)
+        Y_aug_s = model.predict(X_aug_s, batch_size=predict_batch)
         Y_augmented = target_scaler.inverse_transform(Y_aug_s)
         # Combining input features and prediction
         AugmentedXY = np.c_[X_augmented,Y_augmented]
@@ -1863,13 +1864,13 @@ if NNGen:
     print("\n Saved final model at " + final_NN_data_en)
 
     # Make predictions
-    predictions_scaled_en = model_en.predict(X_test_en)
+    predictions_scaled_en = model_en.predict(X_test_en, batch_size=predict_batch)
     # Inverse transform to original scale
     predictions_en = target_scaler.inverse_transform(predictions_scaled_en)
     y_test_original_en = target_scaler.inverse_transform(Y_test_en)
     driver.plot_residuals(y_test_original_en, predictions_en, final_NN_data_en, 'Residuals_test_en', fmt=inp.fmt)
 
-    predictions_scaled = model_en.predict(X_min)
+    predictions_scaled = model_en.predict(X_min, batch_size=predict_batch)
     predictions = target_scaler.inverse_transform(predictions_scaled)
     y_original = target_scaler.inverse_transform(Y_min)
     # Save metrics ! Test, Val, Combined
@@ -1887,7 +1888,7 @@ if NNGen:
     driver.plot_residuals(y_original, predictions, final_NN_data_en,'Residuals_min_en', fmt=inp.fmt)
 
     if HE_train == True:
-        predictions_scaled = model_en.predict(X_all)
+        predictions_scaled = model_en.predict(X_all, batch_size=predict_batch)
         predictions = target_scaler.inverse_transform(predictions_scaled)
         y_original = target_scaler.inverse_transform(Y_all)
         driver.plot_residuals(y_original, predictions, final_NN_data_en,'Residuals_all_en', fmt=inp.fmt)
@@ -1897,7 +1898,7 @@ if NNGen:
     print("\n Predicting based on input coordinates! \n")
 
     X_aug_s = feature_scaler.transform(X_augmented)
-    Y_aug_s = model_en.predict(X_aug_s)
+    Y_aug_s = model_en.predict(X_aug_s, batch_size=predict_batch)
     Y_augmented = target_scaler.inverse_transform(Y_aug_s)
 
     AugmentedXY = np.c_[X_augmented,Y_augmented]
