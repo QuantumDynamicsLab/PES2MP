@@ -41,7 +41,7 @@ set_num_threads(16)
 
 set reference rhf
 
-En = energy('ccsd(t)/aug-cc-pv[tq5]z)
+En = energy('ccsd(t)/aug-cc-pv[tq5]z')
 
 # Comment Line | Print clean Table in bash (4D)
 print('%.4f\t%.4f\t%.4f\t%.4f\t%.12f'%(R, Phi, Theta2, Theta1, En))
