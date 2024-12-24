@@ -1,10 +1,13 @@
 #---------------------------------------------------------------------#
 # Just run the following instructions
 # Step 1: chmod +x run_psi4.sh
-# Step 2: ./run_psi4.sh > PES.dat
 # Done 
 # --> Psi4 input files are written to print PES directly in terminal
+#     The script saves it into the PES.dat file directly. 
 #     Therefore, no extraction of PES is needed!
+
+# For genaric batch file: ./run_psi4.sh > PES.dat
+
 #---------------------------------------------------------------------#
 
 
