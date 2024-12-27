@@ -5,15 +5,17 @@ import os
 
 path = os.getcwd()
 
-ct = 1
+##############################################################
 f1 = open("PES.dat" ,"w+")
 f2 = open("PES_err.dat" ,"w+")
 num_files = 6371
+##############################################################
 
+ct = 1
 pattern1=re.compile("R = ")
 pattern2 = re.compile("sum of fragments =")
 
-for i in range (1,num_files,1):
+for i in range (1,num_files+1,1):
     if (os.path.isfile("%d.out" %(i))):
         f= open("%d.out" %(i),"r")
         print("first file opened!")
