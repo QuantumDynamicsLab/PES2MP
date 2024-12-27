@@ -6,10 +6,18 @@ import os
 path = os.getcwd()
 
 ##############################################################
-f1 = open("PES.dat" ,"w+")
-f2 = open("PES_err.dat" ,"w+")
+PES_folder = path + '/Molpro_CP/'
+
+f1 = open(os.path.join(path, "PES.dat"), "w+")
+f2 = open(os.path.join(path, "PES_err.dat"), "w+")
+
 num_files = 6371
 ##############################################################
+
+# Change to the user-specified directory
+if os.path.isdir(PES_folder):
+    os.chdir(PES_folder)
+
 
 ct = 1
 pattern1=re.compile("R = ")
