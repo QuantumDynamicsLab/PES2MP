@@ -14,9 +14,12 @@ conda update -y psi4 -c conda-forge
 printf " \n Installing Other Dependies ---:  \n "
 conda install -y -c anaconda python
 python -m pip install --upgrade pip
-python -m pip install tensorflow keras-tuner pyshtools tqdm numpy pandas scipy sympy matplotlib tqdm scikit-learn jupyter spyder #lmfit pydot python-graphviz
+python -m pip install tensorflow keras-tuner pyshtools numpy pandas scipy sympy matplotlib tqdm scikit-learn jupyter spyder #lmfit pydot python-graphviz
 conda install -y -c lmfit pydot python-graphviz -c conda-forge 
 
+# optional d3/d4 dispersion correction for Psi4 (works with psithon)
+#conda install dftd3  -y -c psi4
+#conda install dftd4  -y -c psi4
 printf " \n ----**** PES2MP Quick ENVIRONMENT CREATED **** ---:  \n "
 
 ##################################################################################
