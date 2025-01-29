@@ -15,6 +15,7 @@ printf " \n Installing Other Dependies ---:  \n "
 conda install -y keras-tuner pyshtools tensorflow tqdm numpy pandas scipy sympy matplotlib scikit-learn jupyter spyder lmfit pydot python-graphviz -c conda-forge 
 
 # optional d3/d4 dispersion correction for Psi4 (works with psithon)
+# Refer https://github.com/dftd4/dftd4 and https://psicode.org/psi4manual/master/dftd3.html
 #conda install dftd3  -y -c psi4
 #conda install dftd4  -y -c psi4
 printf " \n ----**** PES2MP ENVIRONMENT CREATED **** ---:  \n "
