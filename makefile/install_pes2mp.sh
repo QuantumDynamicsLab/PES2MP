@@ -12,8 +12,11 @@ printf " \n Updating psi4 ---:  \n "
 conda update -y psi4 -c conda-forge
 
 printf " \n Installing Other Dependies ---:  \n "
-conda install -y keras-tuner pyshtools tensorflow tqdm numpy pandas scipy sympy matplotlib tqdm scikit-learn jupyter spyder lmfit pydot python-graphviz -c conda-forge 
-#conda install -y -c anaconda pydot 
+conda install -y keras-tuner pyshtools tensorflow tqdm numpy pandas scipy sympy matplotlib scikit-learn jupyter spyder lmfit pydot python-graphviz -c conda-forge 
+
+# optional d3/d4 dispersion correction for Psi4 (works with psithon)
+#conda install dftd3  -y -c psi4
+#conda install dftd4  -y -c psi4
 printf " \n ----**** PES2MP ENVIRONMENT CREATED **** ---:  \n "
 
 ##################################################################################
