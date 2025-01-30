@@ -19,8 +19,8 @@ conda install -y -c lmfit pydot python-graphviz -c conda-forge
 
 # optional d3/d4 dispersion correction for Psi4 (works with psithon)
 # Refer https://github.com/dftd4/dftd4 and https://psicode.org/psi4manual/master/dftd3.html
-#conda install dftd3  -y -c psi4
-#conda install dftd4  -y -c psi4
+#conda install dftd3  -y -c psi4   # or conda install dftd3-python  -y -c conda-forge 
+#conda install dftd4 dftd4-python -y -c conda-forge
 printf " \n ----**** PES2MP Quick ENVIRONMENT CREATED **** ---:  \n "
 
 ##################################################################################
