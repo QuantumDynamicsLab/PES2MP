@@ -1903,7 +1903,8 @@ if NNGen:
 
     AugmentedXY = np.c_[X_augmented,Y_augmented]
     np.savetxt(final_NN_data_en + 'Predicted_results.txt' , AugmentedXY, delimiter='\t', fmt='%.4f')
-
+    np.savetxt(out_data + 'NN_Predicted_results.txt' , AugmentedXY, delimiter='\t', fmt='%.4f')
+ 
 else:
     print(" \n NNGen = False : Skipping NN Model \n")
     f.write('\n NNGen = False : Skipping NN Model! \n ')
