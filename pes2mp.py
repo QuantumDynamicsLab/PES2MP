@@ -552,8 +552,8 @@ if PESGen == True:
         print(" \n Psi4 (custom) Input files Created! \n")
         f.write('\n Psi4 (custom) Input files Created! \n ')
     else:
-        print(" \n Create_MOLPRO_custom_input_files = False : Skipping Molpro (custom) Input! \n")
-        f.write('\n Create_MOLPRO_custom_input_files = False : Skipping Molpro (custom) Input! \n ')
+        print(" \n Create_MOLPRO_custom_input_files = False : Skipping Psi4 (custom) Input! \n")
+        f.write('\n Create_MOLPRO_custom_input_files = False : Skipping Psi4 (custom) Input! \n ')
 
 ################################################################################
 #----------------- Running Psi4 calculations internally------------------------#
