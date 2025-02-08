@@ -22,8 +22,9 @@ redm = 1.9354 # reduced mass in amu
 sigma_file = "sigma.dat"   # name of the (extracted) file containing cross-sections
 #--------------------------------------------------------------------------------#
 # File names for output (will contain rate coefficients till tmax)
-fr = f"k_py.dat"                  # output file using summation method
-fr_int = f"intk_py.dat"           # output file using scipy integration
+fr = f"k_py.dat"           # output rate file using summation method
+fr_int = f"intk_py.dat"    # output rate file using scipy integration
+sig_out = "sig_ij.csv"     # output cross-section file for selected transitions
 #--------------------------------------------------------------------------------#
 # transitions required! Set all_tr to false and select initial and final j
 all_tr = False    # calculate all transitions (not recommended: keep false)
@@ -192,4 +193,4 @@ np.savetxt(fr,arr,header=header_x,comments='')
 np.savetxt(fr_int,arr_int,header=header_x,comments='')
 
 df_list = pd.DataFrame({ i:pd.Series(value) for i, value in enumerate(arr_sigma) })
-df_list.to_csv('sig_ij.csv',header=header_y,index=False)
+df_list.to_csv(sig_out,header=header_y,index=False)
