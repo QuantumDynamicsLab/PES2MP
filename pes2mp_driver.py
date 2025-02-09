@@ -1733,8 +1733,9 @@ def create_ND_model(hp, input_dim, num_outputs):
 
     CustomDecayLayer =  create_CustomDecayLayer()
     TrainableActivation = create_TrainableActivation()
-    get_custom_objects().update({'gaussian': TrainableActivation(name='Gaussian', activation_type='Gaussian'),
-                                 'ngelu': TrainableActivation(name='NGelu', activation_type='NGelu')})
+    # Broken after 3.11.7 update
+    #get_custom_objects().update({'gaussian': TrainableActivation(name='Gaussian', activation_type='Gaussian'),
+    #                             'ngelu': TrainableActivation(name='NGelu', activation_type='NGelu')})
 
     deep_l = [32,64,128]   # number of units per layer
     hidd_l = [2,3,4]       # number of hidden layer (between input and output) per branch
@@ -1764,8 +1765,15 @@ def create_ND_model(hp, input_dim, num_outputs):
     hidden_layers = hp.Choice(f'hidden_layers', hidd_l)  # Number of hidden layers for R
     for h in range(hidden_layers):
         for i in range(0,branches,2):
-            globals()[f'x_th{i}'] = Dense(units_pl, activation='gaussian', use_bias=False)(combined)  # Gaussian activation
-            globals()[f'x_th{i+1}'] = Dense(units_pl, activation='ngelu', use_bias=False)(combined)  # Modified Gaussian Error activation
+            # Broken after 3.11.7 update
+            #globals()[f'x_th{i}'] = Dense(units_pl, activation='gaussian', use_bias=False)(combined)  # Gaussian activation
+            #globals()[f'x_th{i+1}'] = Dense(units_pl, activation='ngelu', use_bias=False)(combined)  # Modified Gaussian Error activation
+            # Applying newer fix (Tested up to 3.11.11)
+            temp = Dense(units_pl, activation=None, use_bias=False)(combined)
+            globals()[f'x_th{i}'] = TrainableActivation(name=f'Gaussian_{h}_{i}', activation_type='Gaussian')(temp)
+            
+            temp2 = Dense(units_pl, activation=None, use_bias=False)(combined)
+            globals()[f'x_th{i+1}'] = TrainableActivation(name=f'NGelu_{h}_{i+1}', activation_type='NGelu')(temp2)
         combined = Concatenate()([globals()[f'x_th{i}'] for i in range(branches)])
 
     for i in range(branches):
