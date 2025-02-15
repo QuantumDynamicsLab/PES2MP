@@ -4,6 +4,7 @@
 import re
 import os
 from tqdm import tqdm
+import platform
 
 # saving current directory to path
 path = os.getcwd()
@@ -57,8 +58,8 @@ for i in tqdm(range (ini,final+1,1)):
 newfile.close() 
 
 os.chdir(path)
-os.system("sed -i \'/^$/d\' {}".format(filename))
-
+sed_cmd = "sed -i '' '/^$/d' {}" if platform.system() == "Darwin" else "sed -i \'/^$/d\' {}"
+os.system(sed_cmd.format(filename))
 ################################################################
 ################# Extracting pair energy from last file ########
 ################################################################
@@ -91,8 +92,7 @@ else:
 newfile_PE.close() 
 
 os.chdir(path)
-os.system("sed -i \'/^$/d\' {}".format(filename_PE))
-
+os.system(sed_cmd.format(filename_PE))
 ##################################################################################
 
 
