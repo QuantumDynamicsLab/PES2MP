@@ -169,17 +169,23 @@ for i in tqdm(range (len(ji))):         # loop over j_i
     # rate by summation
     for tp in range (1,tmax+1,1):
         summ = 0.0
-        for i in range (n_mol):
-            expont = math.exp(-en_j[i]/(akboltz*tp))
-            summ += (cr_cm2[i]*en_j[i]*expont)
+        for ik in range (n_mol):
+            expont = math.exp(-en_j[ik]/(akboltz*tp))
+            summ += (cr_cm2[ik]*en_j[ik]*expont)
         rate[tp-1] = const[tp-1]*summ/avaga              # rate = (const*summ)/(mol-1)
     if ct1==0:
         arr = np.stack((temp, rate), axis=1)
-        arr_sigma = [energ, sigma]
+        if sub_E == True:
+            arr_sigma = [(energ-pair_E[ji[i]-1,1]), sigma]
+        else:
+            arr_sigma = [energ, sigma]
         ct1=1
     else:
         arr = np.c_[arr, rate]
-        arr_sigma += [energ, sigma]
+        if sub_E == True:
+            arr_sigma += [(energ-pair_E[ji[i]-1,1]), sigma]
+        else:
+            arr_sigma += [energ, sigma]
 
 
     # rate by integration
