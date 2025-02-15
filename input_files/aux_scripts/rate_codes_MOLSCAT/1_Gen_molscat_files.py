@@ -38,9 +38,9 @@ def loop(start,fin,step,j):
 
         f1.write('  &input ured = 1.94051, nnrg=1, energy=%.4f\n' %(i* step))
 
-        if (i*steps < 10):
+        if (i*stp < 10):
             f1.write('   intflg=8, steps=100, rmin=1.5, rmax=50.0, BCYOMN=10000, \n')
-        elif ( (i*steps > 10) and (i*steps < 30) ):
+        elif ( (i*stp > 10) and (i*stp < 30) ):
             f1.write('   intflg=8, steps=50, rmin=1.5, rmax=50.0, BCYOMN=10000, \n')
         else:
             f1.write('   intflg=8, steps=20, rmin=1.5, rmax=50.0, BCYOMN=10000, \n')
