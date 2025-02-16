@@ -78,7 +78,7 @@ pair_E = np.loadtxt("pair_E.dat")  # name for the file containing rotational ene
 ########################### Input parameters end ###################################
 ####################################################################################
 
-molout = np.loadtxt("sigma.dat", skiprows=1)   # file containing cross-sections
+molout = np.loadtxt(sigma_file, skiprows=1)   # file containing cross-sections
 
 akboltz = scipy.constants.Boltzmann    # boltzmann const in J K-1
 uamu = scipy.constants.physical_constants['unified atomic mass unit'][0]
@@ -124,16 +124,20 @@ header_x = 'T\t'
 header_y = []
 for i in range (len(ji)):
     header_y += ['E (cm-1)']
-    if subtract_1 == True:
+    if ( subtract_1 == True or (even_j1 == True and two_j2 == True) ):
+        i == 0 and print("\n Subtracting -1 from States to give J \n ")
         header_x += "%d->%d\t"%(ji[i]-1,jf[i]-1)
         header_y += ["%d->%d\t"%(ji[i]-1,jf[i]-1)] 
     elif even_j1 == True:
+        i == 0 and print("\n Subtracting -1 from States and doubling to give J \n ")
         header_x += "%d->%d\t"%((ji[i]-1)*2,(jf[i]-1)*2)
         header_y += ["%d->%d\t"%((ji[i]-1)*2,(jf[i]-1)*2)]
     elif two_j2 == True:
+        i == 0 and print("\n Subtracting -1 from States and halving to give J \n ")
         header_x += "%d->%d\t"%((ji[i]-1)/2,(jf[i]-1)/2)
         header_y += ["%d->%d\t"%((ji[i]-1)/2,(jf[i]-1)/2)]
     else:
+        i == 0 and print("\n Keeping States as it is: \n The resulting Quantum States (N) may or may not represent J \n ")
         header_x += "%d->%d\t"%(ji[i],jf[i])
         header_y += ["%d->%d\t"%(ji[i],jf[i])]
 ct1=0
