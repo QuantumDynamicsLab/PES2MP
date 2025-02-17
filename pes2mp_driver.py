@@ -56,10 +56,10 @@ def PES_handler(inp,coll_typ):
     except:
         print('Not using Isotopes for COM')
     else:
-        if len(inp.RR1_isotope_G) != len(inp.RR1_atoms):
-            lenerr('RR1_isotope_G', 'equal to RR1_atoms')
-        if len(inp.RR2_isotope_G) != len(inp.RR2_atoms):
-            lenerr('RR2_isotope_G', 'equal to RR2_atoms')
+        #if len(inp.RR1_isotope_G) != len(inp.RR1_atoms):
+        #    lenerr('RR1_isotope_G', 'equal to RR1_atoms')
+        #if len(inp.RR2_isotope_G) != len(inp.RR2_atoms):
+        #    lenerr('RR2_isotope_G', 'equal to RR2_atoms')
         if len(inp.RR1_isotope_mass) != len(inp.RR1_atoms):
             lenerr('RR1_isotope_mass', 'equal to RR1_atoms')
         if len(inp.RR2_isotope_mass) != len(inp.RR2_atoms):
