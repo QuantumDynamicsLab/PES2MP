@@ -207,13 +207,13 @@ if PESGen == True:
         f.write('\n Using isotopic substitution! \n')
         RR1_isotope_mass = inp.RR1_isotope_mass
         RR2_isotope_mass = inp.RR2_isotope_mass
-        RR1_isotope_G = inp.RR1_isotope_G
-        RR2_isotope_G = inp.RR2_isotope_G
+        #RR1_isotope_G = inp.RR1_isotope_G
+        #RR2_isotope_G = inp.RR2_isotope_G
     else:
         RR1_isotope_mass = [0] * len(inp.RR1_atoms)
         RR2_isotope_mass = [0] * len(inp.RR2_atoms)
-        RR1_isotope_G = [0] * len(inp.RR1_atoms)
-        RR2_isotope_G = [0] * len(inp.RR1_atoms)
+        #RR1_isotope_G = [0] * len(inp.RR1_atoms)
+        #RR2_isotope_G = [0] * len(inp.RR1_atoms)
 
 # Printing coordinates for 2D/4D rigid rotors and extracting COM coordinates
     if coll_1D:
