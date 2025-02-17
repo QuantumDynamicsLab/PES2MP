@@ -1963,6 +1963,16 @@ if MPExp:
 
             lm = inp.lam_max  # lambda max
             df_inp = pd.read_csv(out_data+inp.PES_filename_cm,header=None,sep=inp.sep)
+            df_inp = df_inp.apply(pd.to_numeric, errors='coerce')
+            print(df_inp.head(5))
+            print("\n If your input dataframe contain 'HEADER' like R, theta, E, etc, it should be visible on 1st row and must be removed. \n")
+            df_choice2 = int(input("\n Do you want to remove 1st row ! (0= No, 1= Yes) : "))
+            if (df_choice2 == 1):
+                df_inp.drop(index=df_inp.index[0], axis=0, inplace=True)
+                print("Header column removed! The new dataframe is: \n")
+                print(df_inp.head(5))
+            else:
+                print("No header input. The dataframe remains same: \n ")
 
             try:
                 inp.E_inf
@@ -2112,7 +2122,19 @@ if MPExp:
         import scipy as sp
         import time
         if Residuals == False :
-            df_inp = pd.read_csv(out_data+inp.PES_filename_cm,header=None,sep=inp.sep,names=['R','phi','th2','th1','E'])
+            df_inp = pd.read_csv(out_data+inp.PES_filename_cm,header=None,sep=inp.sep)
+            df_inp = df_inp.apply(pd.to_numeric, errors='coerce')
+            print(df_inp.head(5))
+            print("\n If your input dataframe contain 'HEADER' like R, theta, E, etc, it should be visible on 1st row and must be removed. \n")
+            df_choice2 = int(input("\n Do you want to remove 1st row ! (0= No, 1= Yes) : "))
+            if (df_choice2 == 1):
+                df_inp.drop(index=df_inp.index[0], axis=0, inplace=True)
+                print("Header column removed! The new dataframe is: \n")
+                print(df_inp.head(5))
+            else:
+                print("No header input. The dataframe remains same: \n ")
+            df_inp.columns = ['R','phi','th2','th1','E']
+
             try:
                 inp.E_inf
             except:
