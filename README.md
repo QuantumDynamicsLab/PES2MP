@@ -58,6 +58,16 @@ The makefiles (inside the `make_scripts folder`) are tested on Linux and MacOS. 
 ### Running PES2MP
 The program can be run by keeping the input file (e.g. pesgen1D.py) 
 
+- Step 1: Copy the PES2MP.py and PES2MP_driver.py files into a folder of your choice.
+- Step 2: Copy the input file that you want to execute (do not mix 1D/2D or 4D files)
+  
+  Users can keep multiple input files (within the same folder) with the same 'Project_name' (the variable is set inside the input files) to execute them in sequence such as
+  - (a) PES Generation
+  - (b) Optional: NN Augmentation and PES plotting
+  - (c) Optional: Fitting PES into a Function
+  - (d) Multipole Expansion of PES, and
+  - (e) fitting Radial Terms into a function (this automatically gives &POTL file for the functions to be used in MOLSCAT). 
+
 #### Direct execution:
 - run ``conda activate pes2mp`` or `conda activate pes2mp_quick` depending on installation
 - run ``python3 pes2mp.py pesgen1D ``
