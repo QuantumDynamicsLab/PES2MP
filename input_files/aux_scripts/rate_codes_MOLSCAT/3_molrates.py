@@ -38,17 +38,21 @@ jf = np.arange(1,4,1)     # 1 to 3      [1,2,3]
 
 # For He and H2 (P0: J=0 and O1: J=1) set    subtract_1 = True and even_j = False
 # Only for case: H2 (P2) i.e. (J=0,2) set    subtract_1 = False and even_j = True
-###################################################################################
-# IF UNSURE | KEEP THESE FALSE (WILL USE MOLSCAT LABELS WHICH CAN BE CHANGED LATER)
-###################################################################################
+
+#--------------------------------------------------------------------------------#
 # change label (x-1) to convert 1 to 0 and so on. (He and 1 rotational state of H2)
-subtract_1 = True         # 1-->0, 2-->1 , 3-->2, etc...
-
+subtract_1 = False       # 1-->0, 2-->1 , 3-->2, etc...
+#--------------------------------------------------------------------------------#
+# Special Cases
+#--------------------------------------------------------------------------------#
 # For cases when only even states are present for cases with I=0 like C2, C3 etc. 
-even_j1    = False        # 1-->0, 2-->2 , 3-->4, etc...
-
+# Subtracting -1 from States and doubling to give J (Keep subtract_1 = False)
+even_j1    = True        # 1-->0, 2-->2 , 3-->4, etc...
+#--------------------------------------------------------------------------------#
 # change label (x-1)/2) (case where 2 rotational state of H2 are included in basis)
-two_j2     = False        # 1-->0, 2-->2 , 3-->4, etc...
+# Subtracting -1 from States and halving to give J (Keep subtract_1 = False)
+two_j2     = False       # 1-->0, 2-->2 , 3-->4, etc...
+#--------------------------------------------------------------------------------#
 
 #--------------------------------------------------------------------------------#
 # subtract energy: take relative energy for (de-excitation transitions)
