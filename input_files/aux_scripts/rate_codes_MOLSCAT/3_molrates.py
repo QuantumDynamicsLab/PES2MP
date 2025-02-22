@@ -144,13 +144,19 @@ ct1=0
 ct2=0
 for i in tqdm(range (len(ji))):         # loop over j_i
     ctt=0
+    # Check for existing transitions in molout
+    transition_found = False
     for k in range (len(molout)):   # loop over input file rows
         if (int(molout[k,5]) == ji[i] and int(molout[k,4]) == jf[i]):
+            transition_found = True
             if ctt==0:
                 molout_i = molout[k]
                 ctt=1
             else:
                 molout_i = np.vstack([molout_i, molout[k]])
+    if not transition_found:
+        raise ValueError(f"Transition {ji[i]}->{jf[i]} does not exist in {sigma_file}! ")
+
     #print("Transition No: ", i)
     #print(len(molout_i))
     #sys.exit(0)
@@ -160,7 +166,12 @@ for i in tqdm(range (len(ji))):         # loop over j_i
     energ = molout_i[:,0]
 
     if sub_E == True:
-        en_j = (energ-pair_E[ji[i]-1,1])*inv_cm_j
+        mask = (pair_E[:, 0] == ji[i])
+        if not np.any(mask):
+            raise ValueError(f"Energy entry for ji={ji[i]} not found in pair_E.dat")
+        E_ji = pair_E[mask, 1][0]  # Extract energy value
+        print(f"Subtracting {E_ji} corresponding to ji={ji[i]}: Total Energies --> Kinetic Energies!")
+        en_j = (energ-E_ji)*inv_cm_j
         neg_val_index = np.where(en_j <= 0)
         en_j = np.delete(en_j, neg_val_index)
         cr_cm2 = np.delete(cr_cm2, neg_val_index)
@@ -180,14 +191,14 @@ for i in tqdm(range (len(ji))):         # loop over j_i
     if ct1==0:
         arr = np.stack((temp, rate), axis=1)
         if sub_E == True:
-            arr_sigma = [(energ-pair_E[ji[i]-1,1]), sigma]
+            arr_sigma = [(energ-E_ji), sigma]
         else:
             arr_sigma = [energ, sigma]
         ct1=1
     else:
         arr = np.c_[arr, rate]
         if sub_E == True:
-            arr_sigma += [(energ-pair_E[ji[i]-1,1]), sigma]
+            arr_sigma += [(energ-E_ji), sigma]
         else:
             arr_sigma += [energ, sigma]
 
