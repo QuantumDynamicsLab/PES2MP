@@ -2033,12 +2033,31 @@ if NNGen:
     from tensorflow.keras.models import Model
     from tensorflow.keras.layers import Input, Dense, Concatenate, Average
     from tensorflow.keras.constraints import NonNeg
+    
+    try:
+        inp.Ensemble_Model_Train
+    except:
+        Ensemble_Model_Train = True
+    else:
+        Ensemble_Model_Train = inp.Ensemble_Model_Train
+    
+    if (Ensemble_Model_Train == True):
+        print("\n The Enseble NN model will ALLOW for base model to be RETRAINED !")
+        print(" !!! Make sure that the number of models are not too large as it may slow down training considerably! \n")
+        f.write("\n\n The Enseble NN model will ALLOW for base model to be RETRAINED!")
+        f.write("\n Make sure that the number of models are not too large as it may slow down training considerably! \n\n")
 
-    def finetuning_model_ensemble(input_shape, output_shape, base_models):
+    else:
+        print("\n The Enseble NN model will NOT allow for base model to be RETRAINED!")
+        print(" !!! Make sure that base model have enough epochs to be trained! \n")
+        f.write("\n\n The Enseble NN model will NOT allow for base model to be RETRAINED!")
+        f.write("\n Make sure that base model have enough epochs to be trained! \n\n")
+
+    def finetuning_model_ensemble(input_shape, output_shape, base_models, Ensemble_Model_Train):
         # Create a new model with the same architecture as the base model
         inputs = Input(shape=(input_shape,))
         for base_model in base_models:
-            base_model.trainable = True
+            base_model.trainable = Ensemble_Model_Train
 
         base_outputs = [base_model(inputs) for base_model in base_models]
         concatenated_output = Concatenate()(base_outputs)
@@ -2052,7 +2071,7 @@ if NNGen:
 
     ## Create the fine-tuning model with the same architecture (HE)
     base_models = [globals()[f'model_e{i}'] for i in range(model_num_f)]
-    model_en = finetuning_model_ensemble(num_X, num_Y, base_models)
+    model_en = finetuning_model_ensemble(num_X, num_Y, base_models, Ensemble_Model_Train)
 
     #fit the model
     start_from_epoch_en = int(early_stop_para['start_after_cycle_en']*NN_hyperpara['maxit_ensemble']/100)
