@@ -39,7 +39,15 @@ Additional details about PES Generation, NN fitting, MP Expansion, and Scatterin
 
 <details><summary>Installation Instructions:</summary>
 
+### GUI Installation
+- run ``python3 pes2mp_installer.py``
+- Click on Anaconda Install (if not already installed on Linux/MacOS)
+- Click on Install PES2MP or PES2MP_quick to install either of the two versions (See Below)
+- Done!
+
 The makefiles (inside the `make_scripts folder`) are tested on Linux and MacOS. The quick install file does not use `conda install` (where solving environments can take hours), instead, it uses `python -m pip`. However, all 4 files create separate environments and can be run without clashing with each other. To understand more [read :snake:](https://www.anaconda.com/blog/understanding-and-improving-condas-performance)
+
+### CUI Installation
 
 ##### Install Anaconda 
 - Install anaconda
@@ -56,7 +64,22 @@ The makefiles (inside the `make_scripts folder`) are tested on Linux and MacOS. 
 <details><summary>Running PES2MP: </summary>
 	
 ### Running PES2MP
-The program can be run by keeping the input file (e.g. pesgen1D.py) 
+The program can be run by keeping the input file (e.g. pesgen1D.py) and Python program files together. 
+
+### GUI Run
+- run ``python3 pes2mp_gui.py``:
+- Select environment (pes2mp or pes2mp_q based on installation).
+- Select the folder where the input file is placed.
+- The input files must be named as shown in the GUI interface. 
+- Also change the project name inside the input file as shown below:
+``import os        # Gettig project name from GUI interface ---------------------#
+Proj_name        =  os.getenv("Proj_name", "default_project_name") # Auto-set``
+
+- Select 'Copy PES2MP Files': This will copy `pes2mp.py` and `pes2mp_driver.py` files into the selected folder.
+- There are options to open input files for making changes, running the file, and opening the output folder. 
+- Users can run the input files individually or together (automated serial execution) by selecting the files (tick mark).
+
+### CUI Installation
 
 - Step 1: Copy the PES2MP.py and PES2MP_driver.py files into a folder of your choice.
 - Step 2: Copy the input file that you want to execute (do not mix 1D/2D or 4D files)
