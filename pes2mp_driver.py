@@ -1725,7 +1725,7 @@ def create_CustomDecayLayer():
 
 #-----------------------------------------------------------------------------#
 
-def create_ND_model(hp, input_dim, num_outputs):
+def create_ND_model(hp, input_dim, num_outputs, NN_hyperpara):
     import tensorflow as tf
     from tensorflow.keras.models import Model
     from tensorflow.keras.layers import Input, Dense, Concatenate, Multiply
@@ -1737,13 +1737,9 @@ def create_ND_model(hp, input_dim, num_outputs):
     #get_custom_objects().update({'gaussian': TrainableActivation(name='Gaussian', activation_type='Gaussian'),
     #                             'ngelu': TrainableActivation(name='NGelu', activation_type='NGelu')})
 
-    deep_l = [32,64,128]   # number of units per layer
-    hidd_l = [2,3,4]       # number of hidden layer (between input and output) per branch
-    bran_l = [2,4]         # number of branches (each with hidden layers coupled with other branches)
-
-    # deep_l = [64]        # Optimized parameters! Works with most systems (Use to save time in keras-tuner!)
-    # hidd_l = [4]
-    # bran_l = [4]
+    deep_l = NN_hyperpara['NN_nodes']     # number of units per layer
+    hidd_l = NN_hyperpara['NN_layers']    # number of hidden layer (between input and output) per branch
+    bran_l = NN_hyperpara['NN_branches']  # number of branches (each with hidden layers coupled with other branches)
 
     # Define the input (R and theta)
     inputs = Input(shape=(input_dim,), name='input_layer')  # input_dim = 2 for R and theta
@@ -1790,14 +1786,14 @@ def create_ND_model(hp, input_dim, num_outputs):
     model.compile(optimizer=optimizer_instance, loss='huber', metrics=['mae'])
     return model
 #-----------------------------------------------------------------------------#
-def create_generic_model(hp, input_dim, num_outputs):
+def create_generic_model(hp, input_dim, num_outputs, NN_hyperpara):
     import tensorflow as tf
     from tensorflow.keras.models import Model
     from tensorflow.keras.layers import Input, Dense, Concatenate
 
-    deep_l = [32,64,128]   # number of units per layer
-    hidd_l = [2,3,4]       # number of hidden layer (between input and output) per branch
-    bran_l = [2,4]         # number of branches (each with hidden layers coupled with other branches)
+    deep_l = NN_hyperpara['NN_nodes']     # number of units per layer
+    hidd_l = NN_hyperpara['NN_layers']    # number of hidden layer (between input and output) per branch
+    bran_l = NN_hyperpara['NN_branches']  # number of branches (each with hidden layers coupled with other branches)
 
     # Define the input (R and theta)
     inputs = Input(shape=(input_dim,), name='input_layer')  # input_dim

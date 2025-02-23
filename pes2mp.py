@@ -33,12 +33,19 @@ import pandas as pd
 # importing driver.py
 import pes2mp_driver as driver
 import os
-from tqdm import tqdm
+from tqdm import tqdm 
+#import re
 
 import shutil
 import sys
 import importlib
+from datetime import datetime
 
+import time
+import subprocess
+
+# Start the timer.
+start_time = time.time()
 
 # uncomment the fllowing two linesto catch segmentation error!!
 # import faulthandler
@@ -66,11 +73,22 @@ if not os.path.exists(input_files_data):
 
 log_filex = inp.Proj_name  + '.log'      # Set a project name (Important)
 f = open(out_data+log_filex, 'a+')
+
+num_bars = 60
+
+print("#####################################################################")
+print("--- Date {} ---".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+print("#####################################################################")
+print("#####################    PES2MP Initiated    ########################")
+print("#####################################################################")
 print('Necessary files Created')
-f.write("##################################################################")
-f.write("\n####################    PES2MP Initiated    ######################")
-f.write("\n##################################################################")
-f.write('\n \n /data and /project folders created.')
+
+f.write("#####################################################################")
+f.write("\n--- Date {} ---".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+f.write("\n#####################################################################")
+f.write("\n#####################    PES2MP Initiated    ########################")
+f.write("\n#####################################################################")
+f.write('\n \n /data and /project folders created. \n\n')
 
 # with open(out_data+log_filex, 'w+') as f:
 #     sys.stdout = f # Change the standard output to the file we created.
@@ -98,7 +116,16 @@ else:
 
 
 if PESGen == True:
-    print("Using PESGen module!")
+    print("#-------------------------------------------------------------------#")
+    print("#-------------------#    Using PESGen module    #-------------------#")
+    print("#-------------------------------------------------------------------#")
+    
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n#-------------------#    Using PESGen module    #-------------------#")
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n\n")
+
+    #print("Using PESGen module!")
     import psi4
     coll_1D = False
     coll_2D = False
@@ -147,11 +174,11 @@ if PESGen == True:
     f.write(str(R))
     f.write("\n\n Total number of data points in R coordinates are: {} \n\n".format (r_n))
 
-    # saving and printing coordinates
-    print("Saving input coordinates in 'data/proj_name'")
-
     if coll_1D:
         np.savetxt(out_data + "1D_input_coordinates.dat", R,fmt='%.2f')
+        # saving input coordinates
+        print("Saving input coordinates in 'Projects/{}/1D_input_coordinates.dat'".format(Proj_name))
+        f.write("\n\nSaving input coordinates in 'Projects/{}/1D_input_coordinates.dat'".format(Proj_name))
 
     elif coll_2D:
         # creating matrix for 2D collision coordinates
@@ -169,6 +196,10 @@ if PESGen == True:
         # creating matrix for 2D collision coordinates
         sorted_indices = np.lexsort(keys)
         A = A_nr[sorted_indices]
+        f.write("\nCreating matrix for 2D collision coordinates")
+        #f.write("\nTQDM LOOP FINISHED:\n {'|' * num_bars} 100% |\n\n")
+        f.write(f"\nTQDM LOOP FINISHED:\n {'|' * num_bars} 100% |\n\n")
+
     # creating matrix for 4D collision coordinates
     elif coll_4D:
         phi= inp.phi
@@ -189,6 +220,8 @@ if PESGen == True:
         # creating matrix for 4D collision coordinates
         sorted_indices = np.lexsort(keys)
         A = A_nr[sorted_indices]
+        f.write("\nCreating matrix for 4D collision coordinates")
+        f.write(f"\nTQDM LOOP FINISHED:\n {'|' * num_bars} 100% |\n\n")
     else:
         # this condition is non viable
         pass
@@ -244,9 +277,14 @@ if PESGen == True:
 
         if coll_2D:
             np.savetxt(out_data + "2D_input_coordinates.dat", A,fmt='%.2f\t%d')
+            # saving input coordinates
+            print("Saving input coordinates in 'Projects/{}/2D_input_coordinates.dat'".format(Proj_name))
+            f.write("\n\nSaving input coordinates in 'Projects/{}/2D_input_coordinates.dat'".format(Proj_name))
 
         elif coll_4D:
             np.savetxt(out_data + "4D_input_coordinates.dat", A,fmt='%.2f\t%d\t%d\t%d')
+            print("Saving input coordinates in '/{}/4D_input_coordinates.dat'".format(Proj_name))
+            f.write("\n\nSaving input coordinates in '/{}/4D_input_coordinates.dat'".format(Proj_name))
             # Creating RR2 input file with XYZ coordinates below and extracting COM coordinates
             RR2_psi4, RR2_COM_len = driver.RR_com(f, inp.RR2_atoms, inp.RR2_bond_len,
                                                   inp.Charge[1], inp.Multiplicity[1],
@@ -265,10 +303,11 @@ if PESGen == True:
     else:
         Create_GAUSSIAN_input_files = inp.Create_GAUSSIAN_input_files
         print("\nCreating Gaussian Input files!\n")
-
+        f.write("\nCreating Gaussian Input files!\n")
+        
     # creating input files for Gaussian (CP corrected) ########################
     if Create_GAUSSIAN_input_files:
-        gaussian_data = input_files_data + 'Gaussian_CP/'           # directory for psi4 data
+        gaussian_data = input_files_data + 'Gaussian_CP/'           # directory for Gaussian data
         # creating gaussian directory
         if not os.path.exists(gaussian_data):
             os.makedirs(gaussian_data)
@@ -306,8 +345,10 @@ if PESGen == True:
         f2 = open(input_files_data+template_filex, 'a+')
         f2.write(str(FxD_geom_G))
         f2.close()
-        print(" \n Gaussian (CP) Input files Created! \n")
-        f.write('\n Gaussian (CP) Input files Created! \n ')
+        f.write(f"\n TQDM LOOP: Gaussian input files created:\n {'|' * num_bars} 100% |\n\n")
+
+        print(" \n Gaussian (CP) Input files Created! Check: 'Projects/{}/input_files/Gaussian_CP/' \n".format(Proj_name))
+        f.write(" \n Gaussian (CP) Input files Created! Check: 'Projects/{}/input_files/Gaussian_CP/' \n".format(Proj_name))
 
     else:
         print(" \n Create_GAUSSIAN_input_files = False : Skipping Gaussian (CP) Input! \n")
@@ -324,6 +365,7 @@ if PESGen == True:
     else:
         Create_MOLPRO_CP_input_files = inp.Create_MOLPRO_CP_input_files
         print("\nCreating molpro (CP) Input files!\n")
+        f.write("\nCreating molpro (CP) Input files!\n")
 
     # creating input files for Molpro (CP corrected)   ########################
     if Create_MOLPRO_CP_input_files:
@@ -363,8 +405,10 @@ if PESGen == True:
         f3 = open(input_files_data+template_filex, 'a+')
         f3.write(str(FxD_geom_M))
         f3.close()
-        print(" \n Molpro (CP) Input files Created! \n")
-        f.write('\n Molpro (CP) Input files Created! \n ')
+        f.write(f"\n TQDM LOOP: Molpro (CP) input files created:\n {'|' * num_bars} 100% |\n\n")
+
+        print(" \n Molpro (CP) Input files Created! Check: 'Projects/{}/input_files/Molpro_CP/' \n".format(Proj_name))
+        f.write(" \n Molpro (CP) Input files Created! Check: 'Projects/{}/input_files/Molpro_CP/' \n".format(Proj_name))
 
     else:
         print(" \n Create_MOLPRO_input_files = False : Skipping Molpro (CP) Input! \n")
@@ -382,6 +426,7 @@ if PESGen == True:
     else:
         Create_MOLPRO_CBS_input_files = inp.Create_MOLPRO_CBS_input_files
         print("\nCreating molpro (CBS) Input files!\n")
+        f.write("\nCreating molpro (CBS) Input files!\n")
 
     # creating input files for Molpro (CBS extrapolated energies) #############
     if Create_MOLPRO_CBS_input_files:
@@ -421,8 +466,11 @@ if PESGen == True:
         f4 = open(input_files_data+template_filex, 'a+')
         f4.write(str(FxD_geom_M_cbs))
         f4.close()
-        print(" \n Molpro (CBS) Input files Created! \n")
-        f.write('\n Molpro (CBS) Input files Created! \n ')
+        f.write(f"\n TQDM LOOP: Molpro(CBS) input files created:\n {'|' * num_bars} 100% |\n\n")
+
+        print(" \n Molpro (CBS) Input files Created! Check: 'Projects/{}/input_files/Molpro_CBS/' \n".format(Proj_name))
+        f.write(" \n Molpro (CBS) Input files Created! Check: 'Projects/{}/input_files/Molpro_CBS/' \n".format(Proj_name))
+
     else:
         print(" \n Create_MOLPRO_CBS_input_files = False : Skipping Molpro (CBS) Input! \n")
         f.write('\n Create_MOLPRO_CBS_input_files = False : Skipping Molpro (CBS) Input! \n ')
@@ -437,6 +485,7 @@ if PESGen == True:
     else:
         Create_MOLPRO_custom_input_files = inp.Create_MOLPRO_custom_input_files
         print("\nCreating molpro (custom) Input files!\n")
+        f.write("\nCreating molpro (custom) Input files!\n")
 
     # creating input files for Molpro (custom input) #############
     if Create_MOLPRO_custom_input_files:
@@ -474,8 +523,10 @@ if PESGen == True:
         f5 = open(input_files_data+template_filex, 'a+')
         f5.write(str(FxD_geom_M_ext))
         f5.close()
-        print(" \n Molpro (custom) Input files Created! \n")
-        f.write('\n Molpro (custom) Input files Created! \n ')
+        f.write(f"\n TQDM LOOP: Molpro (custom)  input files created:\n {'|' * num_bars} 100% |\n\n")
+
+        print(" \n Molpro (custom) Input files Created! Check: 'Projects/{}/input_files/Molpro_custom/' \n".format(Proj_name))
+        f.write(" \n Molpro (custom) Input files Created! Check: 'Projects/{}/input_files/Molpro_custom/' \n".format(Proj_name))
     else:
         print(" \n Create_MOLPRO_custom_input_files = False : Skipping Molpro (custom) Input! \n")
         f.write('\n Create_MOLPRO_custom_input_files = False : Skipping Molpro (custom) Input! \n ')
@@ -490,15 +541,16 @@ if PESGen == True:
     else:
         Create_Psi4_custom_input_files = inp.Create_Psi4_custom_input_files
         print("\nCreating Psi4 (custom) Input files!\n")
+        f.write("\nCreating Psi4 (custom) Input files!\n")
 
-    # creating input files for Molpro (CBS extrapolated energies) #############
+    # creating input files for Psi4 (Custom Template) #############
     if Create_Psi4_custom_input_files:
         psi4_custom_data = input_files_data + 'psi4_custom/'           # directory for psi4 data
         if not os.path.exists(psi4_custom_data):
             os.makedirs(psi4_custom_data)
 
         Psi4_custom_template = 'molecule {{'
-#-----------------------------# Molpro 1D (CBS) #------------------------------#
+#-----------------------------# Psi4 1D (Custom) #------------------------------#
         if coll_1D:
             FxD_geom_psi4 = driver.psi4_input_1D(inp)
             Psi4_custom_template += FxD_geom_psi4
@@ -510,7 +562,8 @@ if PESGen == True:
                 inp_file = open(psi4_custom_data + '{:d}.inp'.format(int(j)), "w")  # open input file
                 inp_file.write(Psi4_custom_template.format(R_ii,R_ii))   # write string to file
                 inp_file.close()              # close file
-#-------------------------------# Molpro 2D #-------------------------------#
+            f.write(f"\n TQDM LOOP: Psi4 1D input files created:\n {'|' * num_bars} 100% |\n\n")
+#-----------------------------# Psi4 2D (Custom) #------------------------------#
         elif coll_2D :
             FxD_geom_psi4 = driver.psi4_input_2D(inp,RR1_psi4)
             Psi4_custom_template += FxD_geom_psi4
@@ -525,7 +578,9 @@ if PESGen == True:
                 inp_file = open(psi4_custom_data + '{:d}.inp'.format(int(j)), "w")  # open input file
                 inp_file.write(Psi4_custom_template.format(R_x, R_z,R, gamma))
                 inp_file.close()              # close file
-#-------------------------------# Molpro 4D #-------------------------------#
+            f.write(f"\n TQDM LOOP: Psi4 2D input files created:\n {'|' * num_bars} 100% |\n\n")
+
+#-----------------------------# Psi4 4D (Custom) #------------------------------#
         elif coll_4D:
             FxD_geom_psi4 = driver.psi4_input_4D(inp,RR1_COM_len,RR2_COM_len)
             Psi4_custom_template += FxD_geom_psi4
@@ -541,6 +596,8 @@ if PESGen == True:
                 inp_file = open(psi4_custom_data + '{:d}.inp'.format(int(j)), "w")  # open input file
                 inp_file.write(Psi4_custom_template.format(*RR_mat,R, phi, theta2, theta1))
                 inp_file.close()              # close file
+            f.write(f"\n TQDM LOOP: Psi4 4D input files created:\n {'|' * num_bars} 100% |\n\n")
+
         else:
             print('ID: 475 --> All coll_1D, coll_2D and coll_4D are False. Check for error!')
 
@@ -549,11 +606,11 @@ if PESGen == True:
         f5.write(str(Psi4_custom_template))
         f5.close()
 
-        print(" \n Psi4 (custom) Input files Created! \n")
-        f.write('\n Psi4 (custom) Input files Created! \n ')
+        print(" \n Psi4 (custom) Input files Created! Check: 'Projects/{}/input_files/psi4_custom/' \n".format(Proj_name))
+        f.write("\n Psi4 (custom) Input files Created! Check: 'Projects/{}/input_files/psi4_custom/' \n".format(Proj_name))
     else:
-        print(" \n Create_MOLPRO_custom_input_files = False : Skipping Psi4 (custom) Input! \n")
-        f.write('\n Create_MOLPRO_custom_input_files = False : Skipping Psi4 (custom) Input! \n ')
+        print(" \n Create_Psi4_custom_input_files = False : Skipping Psi4 (custom) Input! \n")
+        f.write('\n Create_Psi4_custom_input_files = False : Skipping Psi4 (custom) Input! \n ')
 
 ################################################################################
 #----------------- Running Psi4 calculations internally------------------------#
@@ -587,6 +644,7 @@ if PESGen == True:
         psi4.set_memory(inp.psi4_mem)
         psi4.set_num_threads(inp.psi4_proc)
         print("Generating Psi4 PES!")
+        f.write("Generating Psi4 PES!")
         # 1D PES calculation using psi4
         if coll_1D:
             # geometry specifications
@@ -634,6 +692,7 @@ if PESGen == True:
                     psi4.core.clean_timers()
                     for fx in os.listdir(scratch_dir):        # removing remaining files after psi4 clean()
                         os.remove(os.path.join(scratch_dir, fx))
+            f.write(f"\n TQDM LOOP: Psi4 1D PES created:\n {'|' * num_bars} 100% |\n\n")
             #####################################################################################################################
             # coordinates for calculating E_inf ( to convert energies to cm-1 )
             R_inf         = inp.R_inf
@@ -656,7 +715,7 @@ if PESGen == True:
                 psi4.core.clean()
             except:
                 print('E infinity convergence failed! using last converged energy')
-                f.write('E infinity convergence failed! using last converged energy \n')
+                f.write('\n E infinity convergence failed! using last converged energy \n')
                 ecp_inf = list(ecp.values())[-1]
                 print(list(ecp.values())[-1])
                 pass
@@ -735,6 +794,8 @@ if PESGen == True:
                     psi4.core.clean_timers()
                     for fx in os.listdir(scratch_dir):        # removing remaining files after psi4 clean()
                         os.remove(os.path.join(scratch_dir, fx))
+            
+            f.write(f"\n TQDM LOOP: Psi4 2D PES created:\n {'|' * num_bars} 100% |\n\n")
             #####################################################################################################################
             # coordinates for calculating E_inf ( to convert energies to cm-1 )
             R_inf         = inp.R_inf
@@ -840,6 +901,9 @@ if PESGen == True:
                     psi4.core.clean_timers()
                     for fx in os.listdir(scratch_dir):        # removing remaining files after psi4 clean()
                         os.remove(os.path.join(scratch_dir, fx))
+
+            f.write(f"\n TQDM LOOP: Psi4 4D PES created:\n {'|' * num_bars} 100% |\n\n")
+
             #####################################################################################################################
             # coordinates for calculating E_inf ( to convert energies to cm-1 )
             R_inf         = inp.R_inf
@@ -866,7 +930,7 @@ if PESGen == True:
                 psi4.core.clean()
             except:
                 print('E infinity convergence failed! using last converged energy')
-                f.write('E infinity convergence failed! using last converged energy \n')
+                f.write('\n E infinity convergence failed! using last converged energy \n')
                 ecp_inf = list(ecp.values())[-1]
                 print(list(ecp.values())[-1])
                 pass
@@ -912,8 +976,17 @@ if PESGen == True:
         f1.close()
     else:
         direct_plot = False
-        print(" \n Create_PES_input = False : Skipping Psi4 calculations! \n")
+        print(" \n Run_psi4 = False : Skipping Psi4 calculations! \n")
         f.write('\n Run_psi4 = False : Skipping Psi4 calculations! \n ')
+
+    print("#-------------------------------------------------------------------#")
+    print("#--------------#    PES Files Created Successfully    #-------------#")
+    print("#-------------------------------------------------------------------#")
+
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n#--------------#    PES Files Created Successfully    #-------------#")
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n\n")
 
 else:
     print(" \n Create_PES_input = False : Checking input for external Plots \n")
@@ -937,39 +1010,70 @@ else:
 
 # plotting psi4 or any other dataframe in required format
 if (direct_plot == True or Plot_PES == True):
-    print("Using Plot module!")
+    print("#-------------------------------------------------------------------#")
+    print("#------------------#    Using PES Plot module    #------------------#")
+    print("#-------------------------------------------------------------------#")
+    
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n#------------------#    Using PES Plot module    #------------------#")
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n\n")
+
+    #print("Using Plot module!")
     if direct_plot:
         print('\nPlotting PES from Psi4 output.')
-        f.write('\nPlotting PES from Psi4 output.')
+        f.write('\nPlotting PES from Psi4 output.\n')
         print("The energies at very small R distance don't usually converge (may give : -inf ) and ruin the plots !")
-        print("Check and remove unconverged coordinates/energies in !",out_data+inp.PES_filename_cm)
-        input("Satisfied! Press Enter to continue...")
+        print("Check and remove unconverged coordinates/energies in : ",out_data+inp.PES_filename_cm)
         df_out1 = pd.read_csv(out_data+inp.PES_filename_cm,sep='\s+')
+        print(df_out1.head(5))
+        print("\n If you have missed unconverged points, EXIT and replot PES using PESPlot input file! \n")
+        f.write("\nIf you have unconverged points, remove them, and replot PES using PESPlot input file! \n\n ")
+        input("Satisfied! Press Enter to continue...")
+        f.write(str(df_out1.head(5)))
     else:
         print('\nPlotting PES from external output. ')
-        f.write('\nPlotting PES from external output. ')
+        f.write('\n Plotting PES from external output. ')
         try:
             Plot_folder = inp.Plot_folder
         except:
             print('\nUsing default path and project name')
-            f.write('\nUsing default path and project name')
+            f.write('\n Using default path and project name')
             Plot_folder = out_data + 'input_files/'
         else:
             print('\nExternal folder path provided!')
-            f.write('\nExternal folder path provided!')
+            f.write('\n External folder path provided!')
         df_out1 = pd.read_csv(Plot_folder+inp.PES_filename_cm,sep=inp.sep,header=None)
         df_out1 = df_out1.apply(pd.to_numeric, errors='coerce')
+        df_out1.dropna(inplace=True) #removing rows with na values
+
         print(df_out1.head(5))
-
-        print("\n If your input dataframe contain 'HEADER' like R, theta, E, etc, it should be visible on 1st row and must be removed. \n")
-
-        df_choice2 = int(input("\n Do you want to remove 1st row ! (0= No, 1= Yes) : "))
-        if (df_choice2 == 1):
-            df_out1.drop(index=df_out1.index[0], axis=0, inplace=True)
-            print("Header column removed! The new dataframe is: \n")
+        print("\n If your input dataframe contain non-numeric 'HEADER' like R, theta, E, etc, it will be removed. \n")
+        print("\n Also verify if data separator is correct ! If incorrect separator is used, only single columns will appear. \n")
+        sep_change = int(input("Satisfied! Enter 0 to continue or 1 to change separator (\s+, \\t, ',', etc.)..."))
+        if (sep_change == 1):
+            new_sep = input("Enter new separator (\s+ (multiple spaces), \\t (tab space), ',', etc.)...")
+            df_out1 = pd.read_csv(Plot_folder+inp.PES_filename_cm,sep=new_sep,header=None)
+            df_out1 = df_out1.apply(pd.to_numeric, errors='coerce')
+            df_out1.dropna(inplace=True) #removing rows with na values
             print(df_out1.head(5))
+            f.write("\n")
+            f.write("\nThe loaded PES: --> \n")
+            f.write(str(df_out1.head(5)))
         else:
-            print("No header input. The dataframe remains same: \n ")
+            f.write("\n")
+            f.write("\nThe loaded PES: --> \n")
+            f.write(str(df_out1.head(5)))
+            
+        #print("\n If your input dataframe contain 'HEADER' like R, theta, E, etc, it should be visible on 1st row and must be removed. \n")
+
+        #df_choice2 = int(input("\n Do you want to remove 1st row ! (0= No, 1= Yes) : "))
+        #if (df_choice2 == 1):
+        #    df_out1.drop(index=df_out1.index[0], axis=0, inplace=True)
+        #    print("Header column removed! The new dataframe is: \n")
+        #    print(df_out1.head(5))
+        #else:
+        #    print("No header input. The dataframe remains same: \n ")
 
         try:
             inp.E_inf
@@ -1014,9 +1118,9 @@ if (direct_plot == True or Plot_PES == True):
             print(df_out1.head(5))
             driver.exit_program()
 
-    print(df_out1.head(5))
-    f.write ('\nInput file read! \nPrinting first 5 values of dataframe! \n\n')
-    f.write(str(df_out1.head(5)))
+    #print(df_out1.head(5))
+    #f.write ('\nInput file read! \nPrinting first 5 values of dataframe! \n\n')
+    #f.write(str(df_out1.head(5)))
 
     out_plots = out_data + 'plots/'                   # directory for plots
     if not os.path.exists(out_plots):
@@ -1080,10 +1184,18 @@ if (direct_plot == True or Plot_PES == True):
                 driver.plot_4D_proj(df_out1, df_out1.columns[1], df_out1.columns[3],
                                     i, df_out1.columns[2], j, out_data_plots, out_plots, inp)
 
+    print("#-------------------------------------------------------------------#")
+    print("#--------------------#    PES Plots Updated    #--------------------#")
+    print("#-------------------------------------------------------------------#")
+
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n#--------------------#    PES Plots Updated    #--------------------#")
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n\n")
 
 else:
     print('No plots created. Create_PES_input / Run_psi4 and Plot_PES are False')
-    f.write('No plots created. Create_PES_input / Run_psi4 and Plot_PES are False\n')
+    f.write(' \n No plots created. Create_PES_input / Run_psi4 and Plot_PES are False \n')
 
 
 
@@ -1108,8 +1220,16 @@ if NNGen:
     NN_data = out_data + 'NN_files/' # directory for TF NN model and other files
     if not os.path.exists(NN_data):
         os.makedirs(NN_data)
+    print("#-------------------------------------------------------------------#")
+    print("#--------------------#    Using NNGen module    #-------------------#")
+    print("#-------------------------------------------------------------------#")
+    
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n#--------------------#    Using NNGen module    #-------------------#")
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n\n")
 
-    print("Using NNGen module!")
+    #print("Using NNGen module!")
 #    from keras.layers import Dropout
     from importlib import reload
     import matplotlib.pyplot as plt
@@ -1121,14 +1241,31 @@ if NNGen:
     print("The code designates columns by number 0, 1, 2 etc. ")
     print('\n and omits headers by default OR places them as first row! ')
     print(df.head(5))
-    print("\n If your input dataframe contain 'HEADER' like R, theta, E, etc, it should be visible on 1st row and must be removed. \n")
-    df_choice2 = int(input("\n Do you want to remove 1st row ! (0= No, 1= Yes) : "))
-    if (df_choice2 == 1):
-        df.drop(index=df.index[0], axis=0, inplace=True)
-        print("Header column removed! The new dataframe is: \n")
+    print("\n If your input dataframe contain non-numeric 'HEADER' like R, theta, E, etc, it will be removed. \n")
+    print("\n Also verify if data separator is correct ! If incorrect separator is used, only single columns will appear. \n")
+    sep_change = int(input("Satisfied! Enter 0 to continue or 1 to change separator (\s+, \\t, ',', etc.)..."))
+    if (sep_change == 1):
+        new_sep = input("Enter new separator (\s+ (multiple spaces), \\t (tab space), ',', etc.)...")
+        df = pd.read_csv(out_data+inp.file_name, sep=new_sep, header=None)
+        df = df.apply(pd.to_numeric, errors='coerce')
+        df.dropna(inplace=True) #removing rows with na values
         print(df.head(5))
+        f.write("\n")
+        f.write("\nThe loaded PES: --> \n")
+        f.write(str(df.head(5)))
     else:
-        print("No header input. The dataframe remains same: \n ")
+        f.write("\n")
+        f.write("\nThe loaded PES: --> \n")
+        f.write(str(df.head(5)))
+
+    #print("\n If your input dataframe contain 'HEADER' like R, theta, E, etc, it should be visible on 1st row and must be removed. \n")
+    #df_choice2 = int(input("\n Do you want to remove 1st row ! (0= No, 1= Yes) : "))
+    #if (df_choice2 == 1):
+    #    df.drop(index=df.index[0], axis=0, inplace=True)
+    #    print("Header column removed! The new dataframe is: \n")
+    #    print(df.head(5))
+    #else:
+    #    print("No header input. The dataframe remains same: \n ")
     print("\n Number of rows: ",len(df))
     print("\n")
 
@@ -1170,6 +1307,9 @@ if NNGen:
         new_df_name = str(input("\n Enter name for saving updated file: "))
         df.to_csv(NN_data+new_df_name, sep='\t', header=None, index=False)
         print("Updated file saved")
+        f.write("\n Columns rearranged internally! Check out new file. \n")
+        f.write("\n at 'Projects/{}/NN_files/' \n".format(Proj_name))
+        f.write(str(new_df_name))
     # drop columns
     elif drop_columns == 1:
         df_drop = 1
@@ -1183,10 +1323,13 @@ if NNGen:
         new_df_name = str(input("\n Enter name for saving updated file: "))
         df.to_csv(NN_data+new_df_name, sep='\t', header=None, index=False)
         print("Updated file saved")
-
+        f.write("\n Columns rearranged internally! Check out new file. \n")
+        f.write("\n at 'Projects/{}/NN_files/' \n".format(Proj_name))
+        f.write(str(new_df_name))
     else:
         print("\n Final Dataframe \n ")
         print(df.head(5))
+        f.write(str(df.head(5)))
     # define input and output columns in dataframe
     if ( inp.num_Y == 1 ):
         Functional_API_output = False
@@ -1228,7 +1371,7 @@ if NNGen:
         print("\n")
 
     print("Check for NaN Values.")
-    f.write("Check for NaN Values.\n")
+    #f.write("Check for NaN Values.\n")
     if (df.isnull().sum().sum() == 0):
         print("\n No NaN values found !!! \n ")
     else:
@@ -1266,7 +1409,9 @@ if NNGen:
         new_df_name = str(input("\n Enter name for saving updated file: "))
         df.to_csv(NN_data+new_df_name, sep='\t', header=None, index=False)
         print("Updated file saved")
-
+        f.write("\n Columns rearranged internally! Check out new file. \n")
+        f.write("\n at 'Projects/{}/NN_files/' \n".format(Proj_name))
+        f.write(str(new_df_name))
     else :
         print("No Scaling required")
         y_scale_name = inp.yscale
@@ -1333,6 +1478,7 @@ if NNGen:
 
         if (auto_cutoff == 0):
             print('Manually partitioning data! Use Full_Dataset_E_sorted plot file for reference. ')
+            f.write("\n Manually partitioning data!. \n")
             rerun = 1
             trim = int(input("\n Enter the number of points to be retained in minima region (Any guess < total data points) : \n "))
             df_pl_minima, df_pl_HE = driver.pl_trim_part(df_pl, num_XY, num_X, x.shape[0], trim, NN_plots, inp)
@@ -1342,6 +1488,7 @@ if NNGen:
                 guess_2 = int(input("\n Do you want to make another guess (0=No, 1=Yes) :  \n"))
                 if (guess_2 == 0):
                     print(" Final partition achieved! ")
+                    f.write("\n Manual Partition Done! \n")
                     rerun = 0
                 else:
                     trim = int(input("\n Another guess for number of points to be retained in minima region: \n "))
@@ -1352,6 +1499,7 @@ if NNGen:
         #    print("Partioned data not saved !")
         else:
             print('\n Energy partitioning based on input value (High_E_cutoff) entered in input file! ')
+            f.write('\n Energy partitioning based on input value (High_E_cutoff) entered in input file! ')
             diff_abs = np.abs(df_pl[col_out] - inp.High_E_cutoff)
             trim = np.argmin(diff_abs, axis=0)
             df_pl_minima, df_pl_HE = driver.pl_trim_part(df_pl, num_XY, num_X, x.shape[0], trim, NN_plots, inp)
@@ -1361,15 +1509,19 @@ if NNGen:
         print("Num of data points in high energy region = ", x.shape[0]-trim)
 
         f.write("Num of data points in minima region = {} \n".format(trim))
-        f.write("Num of data points in high energy region = {} \n".format(x.shape[0]-trim))
+        f.write("\n Num of data points in high energy region = {} \n".format(x.shape[0]-trim))
 
         #print_part = int(input("\n Do you want to save the partitioned data (0=No, 1 = Yes) : \n "))
         #if (print_part == 1):
         df_pl_minima.to_csv(NN_part_data+"minima_partition.dat", sep='\t', float_format='%.10f')
         df_pl_HE.to_csv(NN_part_data+"high_E_partition.dat, minima_partition.dat and high_E_partition.dat", sep='\t', float_format='%.10f')
         print("\n Partitioned data Saved ! Check", NN_data)
+        f.write("\n Partitioned data Saved ! Check -> \n")
+        f.write(str(NN_data))
+        f.write("\n \n")
     else:
         print("\n Data not partioned!")
+        f.write("\n Data not partioned!")
 
 
 #################################################################################
@@ -1433,7 +1585,11 @@ if NNGen:
         print ("\n Length of full dataframe (row, columns): ")
         print ("\n boundary_elements = {} \n non_boundary_elements = {}".format(boundary_df_all.shape, non_boundary_all.shape))
 
-
+    print("\n Boundary elements of dataframes (based on input coordinates) are exteacted, plotted, and saved to files!")
+    f.write("\n Boundary elements of dataframes (based on input coordinates) are exteacted, plotted, and saved to files!")
+    f.write("\n Check Out -> \n")
+    f.write(str(NN_boundary_data))
+    f.write("\n \n")
 #################################################################################
     # Creating several split for training, validation and testing datasets that shall be used to create ensemble models (Type 1a)
     # Function to split the dataset based on Euclidean distance and return the sorted datasets
@@ -1517,8 +1673,8 @@ if NNGen:
                                     stratify_val, num_bins, seed_inp, i, NN_plots, inp)
 
             if HE_train == True:
-                print("\n High energy data points (Model number =  99+i) \n")
-                f.write("\n High energy data points (Model number =  99+i) \n")
+                print("\n !!! HE_train == True : High energy points will be trained! This can degrade quality of minima \n")
+                f.write("\n !!! HE_train == True : High energy points will be trained! This can degrade quality of minima \n")
                 globals()[f'X_train_HE_{i}'], globals()[f'X_val_HE_{i}'], globals()[f'X_test_HE_{i}'], globals()[f'Y_train_HE_{i}'],   \
                 globals()[f'Y_val_HE_{i}'], globals()[f'Y_test_HE_{i}'] = driver.split_dataframe(non_boundary_df_pl_HE, \
                                             boundary_df_pl_HE, num_X, num_Y, train_ratio[i],val_test_ratio[i],  \
@@ -1535,7 +1691,10 @@ if NNGen:
                                   stratify_val, num_bins, seed_inp, i, NN_plots, inp)
 
         print("\n Train:Val:Test split for the NN models done! \n ")
+        f.write("\n Train:Val:Test split for the NN models done! \n ")
         print('Check required plots at : {}'.format(NN_plots))
+        f.write('\n Check required plots at :-> \n ')
+        f.write(str(NN_plots))
 
     # Scaling features
     from sklearn.preprocessing import StandardScaler
@@ -1551,7 +1710,14 @@ if NNGen:
     #print("\nNormalized x1:", normalized_x1_value)
     #print("\nNormalized all:", normalized_values)
 
-    tuner_folder = str(input("\n Enter name for folder (where keras-tuner data will be saved : "))
+    tuner_folder = str(input("\n Enter name for NN folder (where keras-tuner and NN data will be saved) : "))
+    f.write("\n Folder where keras-tuner (trial) data will be saved : --> \n")
+    f.write("Projects/{}/NN_files/NN_trial_models/{}/' \n\n".format(Proj_name,tuner_folder))
+    
+    f.write("\n Folder where final NN data will be saved : --> \n")
+    f.write("Projects/{}/NN_files/NN_final_models/{}/' \n\n".format(Proj_name,tuner_folder))
+
+    f.write("\n Plot for NN architecture will be saved inside respective folders for base and ensemble models! \n\n")
 
     final_NN_data = NN_data + 'NN_final_model/'+tuner_folder+'/' # directory for TF NN model and other files
     if not os.path.exists(final_NN_data):
@@ -1563,6 +1729,9 @@ if NNGen:
     with open(final_NN_data+'target_scaler.pkl', 'wb') as file:
         pickle.dump(target_scaler, file)
     print("\n Saved feature and target scaling at " + final_NN_data)
+    f.write("\n Feature and target scaling are saved as pickle files: --> \n")
+    f.write(str(tuner_folder))
+    f.write("\n\n")
 
     for i in range (model_num_f):
         # Standardize features
@@ -1648,29 +1817,68 @@ if NNGen:
         else:
             use_generic_model = inp.generic_model
 
-        if use_generic_model == True:
-            def model_builder(hp):
-                return driver.create_generic_model(hp, num_X, num_Y)
+        # Default values for NN hyperparameters
+        DEFAULT_NN_HYPERPARA = {
+            'Max_trial'   : 10,           # number of trials for architecture search 
+            'NN_nodes'    : [64,32],      # search space for NN nodes per layer
+            'NN_layers'   : [2,3,4],      # search space for NN layers 
+            'NN_branches' : [2,4],        # search space for NN Branches: even only
+            'maxit_trial' : 250,          # max iterations during trial (100-500)
+            'maxit_base'  : 1000,         # max iterations: base model (500-5000)
+            'maxit_ensemble' : 10000      # max iterations: ensemble model (5-10K)
+        }
+        
+        # NN model early stopping hyper-parameters 
+        DEFAULT_EARLY_STOP_PARA =  {
+            'start_after_cycle_base' :  20,   # 20-50% of max iterations: base
+            'patience_step_base'     :   5,   # 5-10% of max iterations: base
+            'start_after_cycle_en'   :  50,   # 50% of max iterations: ensemble 
+            'patience_step_en'       :  10   # 10% of max iterations: ensemble
+        }
+
+        # Safely merge user input with defaults
+        if hasattr(inp, "NN_hyperpara"):
+            NN_hyperpara = {**DEFAULT_NN_HYPERPARA, **inp.NN_hyperpara}
         else:
+            NN_hyperpara = DEFAULT_NN_HYPERPARA
+            
+        if hasattr(inp, "early_stop_para"):
+            early_stop_para = {**DEFAULT_EARLY_STOP_PARA, **inp.early_stop_para}
+        else:
+            early_stop_para = DEFAULT_EARLY_STOP_PARA
+
+        print("\n NN HyperParameters loaded!  ")
+        f.write("\n NN HyperParameters loaded! \n")
+
+        if use_generic_model == True:
+            print("\n Using Generic NN Model!  ")
+            f.write("\n Using Generic NN Model! \n")
             def model_builder(hp):
-                return driver.create_ND_model(hp, num_X, num_Y)
+                return driver.create_generic_model(hp, num_X, num_Y, NN_hyperpara)
+        else:
+            print("\n Using PES specific NN Model!  ")
+            f.write("\n Using PES specific NN Model! \n")
+            def model_builder(hp):
+                return driver.create_ND_model(hp, num_X, num_Y, NN_hyperpara)
 
         ########################################################################
         SilentBayesianOptimization = driver.create_silent_bayesian_optimization()
         tuner = SilentBayesianOptimization(model_builder,
                 objective='val_loss',
-                max_trials=10,
+                max_trials=NN_hyperpara['Max_trial'],
                 executions_per_trial=1,
                 project_name=NN_data + 'NN_trial_models/'+tuner_folder+'/mod_{}'.format(mod_i))
 
-        print("Finding optimum hyper-parameters for model {}!".format(mod_i))
+        print("Finding optimum architecture for model {}!".format(mod_i))
+        f.write("\n Finding optimum architecture for model {}!".format(mod_i))
         #print(X_train, Y_train)
         tuner.search(X_train, Y_train,                      # Running tuner
-                     epochs=500, # Fixed number of epochs for tuning
+                     epochs=NN_hyperpara['maxit_trial'], # Fixed number of epochs for tuning
                      batch_size=batch_size_input,  # Fixed batch size for tuning
                      validation_data = (X_val, Y_val))
 
-        print("Optimum parameters found! Optimising weights and biases! ")
+        print("\n Optimum architecture found! Optimising weights and biases! ")
+        f.write("\n Optimum architecture found! Optimising weights and biases! ")
         best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
         #print(best_hps)
 
@@ -1690,6 +1898,7 @@ if NNGen:
         ##fit the model
         if HE_train == True:
             print("HE region fit!")
+            f.write("\n Fitting High Energy region! \n")
             from tqdm.keras import TqdmCallback
             tqdm_prog = TqdmCallback(verbose=1)
             history_he = model.fit(X_train_he, Y_train_he,
@@ -1697,24 +1906,35 @@ if NNGen:
                                    epochs=HE_epochs, verbose=0,
                                    callbacks=[tqdm_prog],
                                    batch_size=batch_size_input_he)
+            f.write(f"\n TQDM LOOP (Base NN Model): HE region fitted:\n {'|' * num_bars} 100% |\n\n")
+
         else:
             pass
-
+        start_from_epoch_base = int(early_stop_para['start_after_cycle_base']*NN_hyperpara['maxit_base']/100)
+        patience_base = int(early_stop_para['patience_step_base']*NN_hyperpara['maxit_base']/100)
+        
         early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_mae', mode='min', \
-                                        verbose=1, patience=500, restore_best_weights=True,\
-                                        start_from_epoch=5000)
+                                        verbose=1, patience=patience_base, restore_best_weights=True,\
+                                        start_from_epoch=start_from_epoch_base)
         print("minima region fit!")
+        f.write("\n Fitting Minima region! \n")
         from tqdm.keras import TqdmCallback
         tqdm_prog = TqdmCallback(verbose=1)
         history_f = model.fit(X_train, Y_train,
                               validation_data = (X_val, Y_val),
-                              epochs=10000, verbose=0,
+                              epochs=NN_hyperpara['maxit_base'], verbose=0,
                               callbacks=[tqdm_prog, early_stop],
                               batch_size=batch_size_input)
 
+        f.write(f"\n TQDM LOOP (Base NN Model): Minima region fitted:\n {'|' * num_bars} 100% |\n\n")
 
+        
         model.save(final_NN_data_modi+'NN_model_{}.keras'.format(mod_i))
         print("\n Saved final model at " + final_NN_data_modi)
+        
+        f.write("\n Base model {} training complete ".format(mod_i))
+        f.write("\n Final model saved!!")
+
         globals()[f'model_e{mod_i}'] = model
 
         # plot metrics # Loss/MAE
@@ -1743,7 +1963,8 @@ if NNGen:
         # Save metrics ! Test, Val, Combined
         full_loss, full_mae = model.evaluate(X_min, X_min)
         print("full_loss = {:.4f} , full_mae = {:.4f} \n".format(full_loss, full_mae))
-        f.write("Model {} : full_loss = {:.4f} , full_mae = {:.4f} \n".format(mod_i, full_loss, full_mae))
+        f.write("\n Base model {} Prediction Matrics : \n".format(mod_i))
+        f.write("Model {} : full_loss = {:.4f} , full_mae = {:.4f} \n\n ".format(mod_i, full_loss, full_mae))
 
         driver.plot_residuals(y_original, predictions, final_NN_data_modi,'Residuals_min', fmt=inp.fmt)
 
@@ -1758,7 +1979,8 @@ if NNGen:
         else:
             pass
 
-        print("\n Predicting based on input coordinates! \n")
+        print("\n Predicting PES based on input coordinates for base model {}! \n".format(mod_i))
+        f.write("\n Predicting PES based on input coordinates for base model {}! \n".format(mod_i))
         # save predicted value!
         X_aug_s = feature_scaler.transform(X_augmented)
         Y_aug_s = model.predict(X_aug_s, batch_size=predict_batch)
@@ -1796,7 +2018,8 @@ if NNGen:
     #     print("Fine Tuning weights and biases with HE region! ")
     # else:
 
-    print("Fine Tuning weights and biases (uses minima region only)! ")
+    print("Fine Tuning weights and biases in Ensemble Model (uses minima region only)! ")
+    f.write("\n Fine Tuning weights and biases in Ensemble Model (uses minima region only)! \n")
 
     X_train_en = X_train_s0
     X_val_en   = X_val_s0
@@ -1815,7 +2038,7 @@ if NNGen:
         # Create a new model with the same architecture as the base model
         inputs = Input(shape=(input_shape,))
         for base_model in base_models:
-            base_model.trainable = False
+            base_model.trainable = True
 
         base_outputs = [base_model(inputs) for base_model in base_models]
         concatenated_output = Concatenate()(base_outputs)
@@ -1832,16 +2055,22 @@ if NNGen:
     model_en = finetuning_model_ensemble(num_X, num_Y, base_models)
 
     #fit the model
+    start_from_epoch_en = int(early_stop_para['start_after_cycle_en']*NN_hyperpara['maxit_ensemble']/100)
+    patience_en = int(early_stop_para['patience_step_en']*NN_hyperpara['maxit_ensemble']/100)
+        
     early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_mae', mode='min', \
-                                    verbose=1, patience=100, restore_best_weights=True)
+                                    verbose=1, patience=patience_en, restore_best_weights=True, \
+                                    start_from_epoch=start_from_epoch_en)
 
     from tqdm.keras import TqdmCallback
     tqdm_prog = TqdmCallback(verbose=1)
     history_f_en = model_en.fit(X_train_en, Y_train_en,
                           validation_data = (X_val_en, Y_val_en),
-                          epochs=10000, verbose=0,
+                          epochs=NN_hyperpara['maxit_ensemble'], verbose=0,
                           callbacks=[tqdm_prog,early_stop],
                           batch_size=batch_size_input) #batch_size_input
+
+    f.write(f"\n TQDM LOOP (Ensemble NN Model fitted) :\n {'|' * num_bars} 100% |\n\n")
 
     test_loss_en, test_mae_en = model_en.evaluate(X_test_en, Y_test_en)
     print("test_loss = {:.4f} , test_mae = {:.4f} \n".format(test_loss_en, test_mae_en))
@@ -1852,6 +2081,8 @@ if NNGen:
     if not os.path.exists(final_NN_data_en):
         os.makedirs(final_NN_data_en)
 
+    f.write("\n Ensemble model training complete ")
+    f.write("\n Final model saved!!")
     # plot graph
     plot_model(model_en, to_file=final_NN_data_en+f'ensemble_model_architecture.{inp.fmt}', \
                 show_shapes=True,show_layer_names=False,
@@ -1862,7 +2093,9 @@ if NNGen:
 
     model_en.save(final_NN_data_en+'NN_model_en.keras')
     print("\n Saved final model at " + final_NN_data_en)
-
+    
+    f.write("\n Folder where Ensemble NN data will be saved : --> \n")
+    f.write(" 'Projects/{}/NN_files/NN_final_models/{}/Ensemble_tuned/' \n\n".format(Proj_name,tuner_folder))
     # Make predictions
     predictions_scaled_en = model_en.predict(X_test_en, batch_size=predict_batch)
     # Inverse transform to original scale
@@ -1875,7 +2108,9 @@ if NNGen:
     y_original = target_scaler.inverse_transform(Y_min)
     # Save metrics ! Test, Val, Combined
     full_loss, full_mae = model_en.evaluate(X_min, X_min)
+
     print("full_loss = {:.4f} , full_mae = {:.4f} \n".format(full_loss, full_mae))
+    f.write("\n Ensemble Prediction Matrics : \n")
     f.write("Fine Tuning: full_loss = {:.4f} , full_mae = {:.4f} \n".format(full_loss, full_mae))
 
     #updated_weights = model_en.get_layer('ensemble_weights').weights[0].numpy()
@@ -1895,7 +2130,8 @@ if NNGen:
     else:
         pass
 
-    print("\n Predicting based on input coordinates! \n")
+    print("\n Predicting PES based on input coordinates using ensemble model! \n")
+    f.write("\n Predicting PES based on input coordinates using ensemble model! \n")
 
     X_aug_s = feature_scaler.transform(X_augmented)
     Y_aug_s = model_en.predict(X_aug_s, batch_size=predict_batch)
@@ -1904,7 +2140,20 @@ if NNGen:
     AugmentedXY = np.c_[X_augmented,Y_augmented]
     np.savetxt(final_NN_data_en + 'Predicted_results.txt' , AugmentedXY, delimiter='\t', fmt='%.4f')
     np.savetxt(out_data + 'NN_Predicted_results.txt' , AugmentedXY, delimiter='\t', fmt='%.4f')
- 
+    print("\n Saving final NN model at parent directory : -->  Projects/{}/' \n\n".format(Proj_name))
+    
+    f.write("\n\nSaving final NN model at parent directory : --> \n")
+    f.write("Projects/{}/' \n\n".format(Proj_name))
+
+    print("#-------------------------------------------------------------------#")
+    print("#---------------------#    NN Model Created    #--------------------#")
+    print("#-------------------------------------------------------------------#")
+
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n#---------------------#    NN Model Created    #--------------------#")
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n\n")
+
 else:
     print(" \n NNGen = False : Skipping NN Model \n")
     f.write('\n NNGen = False : Skipping NN Model! \n ')
@@ -1931,6 +2180,15 @@ else:
         os.makedirs(MP_plots)
 
 if MPExp:
+    print("#-------------------------------------------------------------------#")
+    print("#----------------#    Using MP Expansion module    #----------------#")
+    print("#-------------------------------------------------------------------#")
+    
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n#----------------#    Using MP Expansion module    #----------------#")
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n\n")
+
     import math
     import scipy
     from scipy.special import legendre
@@ -1964,15 +2222,26 @@ if MPExp:
             lm = inp.lam_max  # lambda max
             df_inp = pd.read_csv(out_data+inp.PES_filename_cm,header=None,sep=inp.sep)
             df_inp = df_inp.apply(pd.to_numeric, errors='coerce')
+            df_inp.dropna(inplace=True) #removing rows with na values
             print(df_inp.head(5))
-            print("\n If your input dataframe contain 'HEADER' like R, theta, E, etc, it should be visible on 1st row and must be removed. \n")
-            df_choice2 = int(input("\n Do you want to remove 1st row ! (0= No, 1= Yes) : "))
-            if (df_choice2 == 1):
-                df_inp.drop(index=df_inp.index[0], axis=0, inplace=True)
-                print("Header column removed! The new dataframe is: \n")
+
+            print("\n If your input dataframe contain non-numeric 'HEADER' like R, theta, E, etc, it will be removed. \n")
+            print("\n Also verify if data separator is correct ! If incorrect separator is used, only single columns will appear. \n")
+            sep_change = int(input("Satisfied! Enter 0 to continue or 1 to change separator (\s+, \\t, ',', etc.)..."))
+            if (sep_change == 1):
+                new_sep = input("Enter new separator (\s+ (multiple spaces), \\t (tab space), ',', etc.)...")
+                df_inp = pd.read_csv(out_data+inp.PES_filename_cm,header=None,sep=new_sep)
+                df_inp = df_inp.apply(pd.to_numeric, errors='coerce')
+                df_inp.dropna(inplace=True) #removing rows with na values
                 print(df_inp.head(5))
+                f.write("\n")
+                f.write("\nThe loaded PES: --> \n")
+                        
+                f.write(str(df_inp.head(5)))
             else:
-                print("No header input. The dataframe remains same: \n ")
+                f.write("\n")
+                f.write("\nThe loaded PES: --> \n")
+                f.write(str(df_inp.head(5)))
 
             try:
                 inp.E_inf
@@ -2022,8 +2291,13 @@ if MPExp:
             # Calculate legendre coeff and take pseudo-inverse
 
             if read_Legendre == False:
-                f.write("Generating new legendre coefficient from scratch and saving 2D_L_coeff.npy in {} folder \n".format(MP_data))
-                print("Generating new legendre coefficient from scratch and saving 2D_L_coeff.npy in {} folder".format(MP_data))
+                print("Generating new legendre coefficient from scratch and saving 2D_L_coeff.npy in \n")
+                print(str(MP_data))
+                print("\n")
+                f.write("\n Generating new legendre coefficient from scratch and saving 2D_L_coeff.npy in --> \n")
+                f.write(str(MP_data))
+                f.write("\n")
+
                 for j2 in range (ngm):                 # loop over anglular terms (goes from 0 to ngm-1)
                     j2_ang = gm_arr[j2]                # angles go from 0-90 with 15 degree interval saved in gm_arr array
                     for j3 in range (lm):              # loop over legendre terms (goes from 0 to lm-1)
@@ -2047,11 +2321,19 @@ if MPExp:
             df_Vnf = pd.DataFrame(V_nf, columns = a12)  # saves final matrix into dataframe with appropriate header
             df_Vnf.insert(0, 'R', R_arr)                # adding R column
 
-            print("saving final radial terms file 2D_Vlam.dat in {} folder".format(MP_data))
-            f.write("saving final radial terms file 2D_Vlam.dat in {} folder \n".format(MP_data))
+            print("\n A preview of radial terms: \n ")        # printing radial dataframe
+            print(df_Vnf.head(5))
+            
+            f.write("\n\n A preview of radial terms: \n ")        # printing radial dataframe
+            f.write(str(df_Vnf.head(5)))
+
+            print("Saving final radial terms file 2D_Vlam.dat in above folder! \n")
+            f.write("\n\nSaving final radial terms file 2D_Vlam.dat in above folder! \n")
+            
             df_Vnf.to_csv(MP_data+'2D_Vlam.dat', index=None, header=True,sep=',')    # save V_lam coefficients to file separated by comma
-            print("Radial terms plots are available in {} folder ".format(MP_plots))
-            f.write("Radial terms plots are available in {} folder \n".format(MP_plots))
+            print("Radial terms plots are available in above folder/MP_plots. \n")
+            f.write("\n Radial terms plots are available in above folder/MP_plots. \n")
+
             try:
                 inp.Ind_plot
             except:
@@ -2061,6 +2343,16 @@ if MPExp:
             if Ind_plot == True:
                 driver.plot_MP(lm, sym, R_arr, df_Vnf, MP_plots, inp)
             driver.plot_MP_combined(lm, sym, R_arr, df_Vnf, MP_plots, inp)
+
+            print("#-------------------------------------------------------------------#")
+            print("#---------------#    2D Mutipole Expansion Done!    #---------------#")
+            print("#-------------------------------------------------------------------#")
+
+            f.write("\n#-------------------------------------------------------------------#")
+            f.write("\n#---------------#    2D Mutipole Expansion Done!    #---------------#")
+            f.write("\n#-------------------------------------------------------------------#")
+            f.write("\n\n")
+
         else:
             ########################################################
             #        2D Inverse Multipole Expansion (for Residuals)
@@ -2070,6 +2362,28 @@ if MPExp:
             if not os.path.exists(MP_dataR):
                 os.makedirs(MP_dataR)
             df_inp = pd.read_csv(out_data+inp.PES_filename_cm,header=None,sep=inp.sep)
+            df_inp = df_inp.apply(pd.to_numeric, errors='coerce')
+            df_inp.dropna(inplace=True) #removing rows with na values
+            print(df_inp.head(5))
+            
+            print("\n If your input dataframe contain non-numeric 'HEADER' like R, theta, E, etc, it will be removed. \n")
+            print("\n Also verify if data separator is correct ! If incorrect separator is used, only single columns will appear. \n")
+            sep_change = int(input("Satisfied! Enter 0 to continue or 1 to change separator (\s+, \\t, ',', etc.)..."))
+            if (sep_change == 1):
+                new_sep = input("Enter new separator (\s+ (multiple spaces), \\t (tab space), ',', etc.)...")
+                df_inp = pd.read_csv(out_data+inp.PES_filename_cm,header=None,sep=new_sep)
+                df_inp = df_inp.apply(pd.to_numeric, errors='coerce')
+                df_inp.dropna(inplace=True) #removing rows with na values
+                print(df_inp.head(5))
+                f.write("\n")
+                f.write("\nThe loaded PES: --> \n")
+                f.write(str(df_inp.head(5)))
+            else:
+                f.write("\n")
+                f.write("\nThe loaded PES: --> \n")
+                f.write(str(df_inp.head(5)))
+                
+                
             df_inp.sort_values(by = [0,1], inplace=True, ascending = True)
             df_inp.reset_index(inplace=True, drop = True)
 
@@ -2081,13 +2395,15 @@ if MPExp:
             else:
                 print("Error! 2D_L_coeff.npy must be read from MPExp2D calculation")
                 print("Make sure file exists at {} and set read_Legendre = True".format(MP_data))
-                f.write("Error! 2D_L_coeff.npy must be read from MPExp2D calculation \n")
+                f.write("\n Error! 2D_L_coeff.npy must be read from MPExp2D calculation \n")
                 f.write("Make sure file exists at {} and set read_Legendre = True \n".format(MP_data))
                 driver.exit_program()
             #print("Radial coordinates are: \n ", df_R)        # Optional: prints radial coordinates
             print("The radial terms imported are: \n ")        # printing radial dataframe
-            print(df_Vn)
-
+            print(df_Vn.head(5))
+            f.write("\n The radial terms imported are: \n ")        # printing radial dataframe
+            f.write(str(df_Vn.head(5)))
+            
             lm  = len(px.T)                    # Radial terms
             nc  = len(df_Vn)                   # number of Radial coordinates
             ngm = len(px)                      # number of angular coordinates
@@ -2107,13 +2423,29 @@ if MPExp:
             Regen_E = df_Vnf2.values[:, -1].reshape(-1,1)  # regenerated Energies
             df_inp[3] = Regen_E.flatten()
             residuals = Regen_E - Origi_E
-            print("\nSaving V_lam2PES analytically fitted data at location: {} : residual_Vlam2E and regenerated_full_data".format(MP_dataR))
-            f.write("\nSaving V_lam2PES analytically fitted data at location: {} : residual_Vlam2E and regenerated_full_data".format(MP_dataR))
+
+            print("\nSaving regenerated PES data from analytically fitted V_lamda terms and its residual at location --> \n")
+            print(str(MP_dataR))
+            print("\n")
+
+            f.write("\n\nSaving regenerated PES data from analytically fitted V_lamda terms and its residual at location --> \n")
+            f.write(str(MP_dataR))
+            f.write("\n")
+
             np.savetxt(MP_dataR +'residual_Vlam2E.dat', np.array([Origi_E.flatten(), Regen_E.flatten(), residuals.flatten()]).T, delimiter='\t')
             df_Vnf2.to_csv(MP_dataR + 'regenerated_PES_data.dat', index=None, header=False,sep=',')  # save V_lam coefficients to file separated by comma
-            print("\nSaving V_lam2PES analytically fitted residual plot at location: {} ".format(MP_dataR))
-            f.write("\nSaving V_lam2PES analytically fitted residual plot at location: {} ".format(MP_dataR))
+            #print("\nSaving V_lam2PES analytically fitted residual plot at location: {} ".format(MP_dataR))
+            #f.write("\nSaving V_lam2PES analytically fitted residual plot at location: {} ".format(MP_dataR))
             driver.residual_plot(Origi_E,residuals,MP_dataR,inp)
+
+            print("#-------------------------------------------------------------------#")
+            print("#-----------------#    2D Inverse Fitting Done!    #----------------#")
+            print("#-------------------------------------------------------------------#")
+
+            f.write("\n#-------------------------------------------------------------------#")
+            f.write("\n#-----------------#    2D Inverse Fitting Done!    #----------------#")
+            f.write("\n#-------------------------------------------------------------------#")
+            f.write("\n\n")
 
     elif Expansion_typ == '4D':
         ########################################################
@@ -2124,17 +2456,27 @@ if MPExp:
         if Residuals == False :
             df_inp = pd.read_csv(out_data+inp.PES_filename_cm,header=None,sep=inp.sep)
             df_inp = df_inp.apply(pd.to_numeric, errors='coerce')
+            df_inp.dropna(inplace=True) #removing rows with na values
             print(df_inp.head(5))
-            print("\n If your input dataframe contain 'HEADER' like R, theta, E, etc, it should be visible on 1st row and must be removed. \n")
-            df_choice2 = int(input("\n Do you want to remove 1st row ! (0= No, 1= Yes) : "))
-            if (df_choice2 == 1):
-                df_inp.drop(index=df_inp.index[0], axis=0, inplace=True)
-                print("Header column removed! The new dataframe is: \n")
+            
+            print("\n If your input dataframe contain non-numeric 'HEADER' like R, theta, E, etc, it will be removed. \n")
+            print("\n Also verify if data separator is correct ! If incorrect separator is used, only single columns will appear. \n")
+            sep_change = int(input("Satisfied! Enter 0 to continue or 1 to change separator (\s+, \\t, ',', etc.)..."))
+            if (sep_change == 1):
+                new_sep = input("Enter new separator (\s+ (multiple spaces), \\t (tab space), ',', etc.)...")
+                df_inp = pd.read_csv(out_data+inp.PES_filename_cm,header=None,sep=new_sep)
+                df_inp = df_inp.apply(pd.to_numeric, errors='coerce')
+                df_inp.dropna(inplace=True) #removing rows with na values
                 print(df_inp.head(5))
+                f.write("\n")
+                f.write("\nThe loaded PES: --> \n")
+                f.write(str(df_inp.head(5)))
             else:
-                print("No header input. The dataframe remains same: \n ")
+                f.write("\n")
+                f.write("\nThe loaded PES: --> \n")
+                f.write(str(df_inp.head(5)))
+ 
             df_inp.columns = ['R','phi','th2','th1','E']
-
             try:
                 inp.E_inf
             except:
@@ -2153,12 +2495,23 @@ if MPExp:
             print(df_inp)
             #f.write(str(df_inp))
             angmat = df_inp[['phi','th2','th1']].drop_duplicates().to_numpy() # extracting unique angular coordinates
+            
             print("Number of angular terms: ", len(angmat))
-            f.write("Number of angular terms: {} \n".format(angmat))
-            print("Angular terms will be saved in {} Ang_Mat.dat".format(MP_data))
-            f.write("Angular terms will be saved in {} Ang_Mat.dat \n".format(MP_data))
+            f.write("\n\nNumber of angular terms: \n {} \n".format(len(angmat)))
+            f.write("\n\n List of angular terms: \n {} \n".format(angmat))            
+            #print("Angular terms will be saved in {} Ang_Mat.dat".format(MP_data))
+            #f.write("Angular terms will be saved in {} Ang_Mat.dat \n".format(MP_data))
+
+            print("Angular terms will be saved in Ang_Mat.dat at : --> \n")
+            print(str(MP_data))
+            print("\n")
+            f.write("\nAngular terms will be saved in Ang_Mat.dat at --> \n")
+            f.write(str(MP_data))
+            f.write("\n")
+
             np.savetxt(MP_data +"Ang_Mat.dat",angmat,fmt='%.2f\t%.2f\t%.2f')
-            print(angmat)
+            #print(angmat)
+            #f.write(str(angmat))
 
             Lmat = np.zeros((1,3))
             L1max  = inp.L1max                           # max order for first radial term (NCCN)
@@ -2187,9 +2540,22 @@ if MPExp:
             num2  = np.reshape(num, (-1, 1))
             Lmat1 = np.append(num2,Lmat,axis=1)
             #Lmat1   # Vlam along with their numbering
-            print("Lambda terms will be saved in {} Lambda_ref.dat".format(MP_data))
-            f.write("Lambda terms will be saved in {} Lambda_ref.dat \n".format(MP_data))
+            #print("Lambda terms will be saved in {} Lambda_ref.dat".format(MP_data))
+            #f.write("Lambda terms will be saved in {} Lambda_ref.dat \n".format(MP_data))
+            
+            print("The list of Lambda terms will be saved in Lambda_ref.dat at \n")
+            print(str(MP_data))
+            print("\n")
+            
+            f.write("\nThe list of Lambda terms will be saved in Lambda_ref.dat at --> \n")
+            f.write(str(MP_data))
+            f.write("\n")
+
             print(Lmat1)
+            f.write("\n\n Number of Lambda terms are: \n")
+            f.write(str(len(Lmat1)))
+            f.write("\n\nThe list of Lambda terms are: \n")
+            f.write(str(Lmat1))
             # saving radial coefficients for future reference (The final data does not contain V_lambda terms but the pointer in the first column)
             np.savetxt(MP_data +"Lambda_ref.dat",Lmat1,fmt='%i\t%i\t%i\t%i')
             # Declare Variables
@@ -2211,8 +2577,13 @@ if MPExp:
 
             # Calculate legendre coeff and take pseudo-inverse
             if read_SH == False:
-                f.write("Generating new Spherical Harmonics coefficient from scratch and saving 4D_BiSp_coeff.npy in {} folder \n".format(MP_data))
-                print("Generating new Spherical Harmonics coefficient from scratch and saving 4D_BiSp_coeff.npy in {} folder".format(MP_data))
+                print("Generating new Spherical Harmonics coefficient from scratch and saving 4D_BiSp_coeff.npy in \n")
+                print(str(MP_data))
+                print("\n")
+                f.write("\n\nGenerating new Spherical Harmonics coefficient from scratch and saving 4D_BiSp_coeff.npy in --> \n")
+                f.write(str(MP_data))
+                f.write("\n")
+                
                 for j2 in tqdm(range (ngm)):
                     phi, th2, th1 = angmat[j2,0],angmat[j2,1],angmat[j2,2]
                     for j3 in range (lm):
@@ -2220,6 +2591,7 @@ if MPExp:
                         pxc = driver.Bispher_SF(L1,L2,L, phi, th2, th1)
                         px[j2,j3]=pxc
                 np.save(MP_data + "4D_BiSp_coeff.npy", px)    # save Bispherical Harmonics coefficients to numpy readable file for future use
+                f.write(f"\n TQDM LOOP (BiSpherical Harmonics calculated!) :\n {'|' * num_bars} 100% |\n\n")
             else:
                 px = np.load(MP_data+"4D_BiSp_coeff.npy")
 
@@ -2235,12 +2607,23 @@ if MPExp:
             df_Vnf.insert(0, 'R', R_arr)                              # adding R column
 
             #print("The 15th to 30th terms are: \n ", df_Vnf[15:30])    # prints first few terms
-
-            print("saving final radial terms file 4D_Vlam.dat in {}".format(MP_data))
-            f.write("saving final radial terms file 4D_Vlam.dat in {} \n".format(MP_data))
+            print("\n A preview of radial terms: \n ")        # printing radial dataframe
+            print(df_Vnf.head(5))
+            
+            f.write("\n\n A preview of radial terms: \n ")        # printing radial dataframe
+            f.write(str(df_Vnf.head(5)))
+            
+            
+            print("Saving final radial terms file 4D_Vlam.dat in above folder")
+            f.write("\n\nSaving final radial terms file 4D_Vlam.dat in above folder \n")
             df_Vnf.to_csv(MP_data + '4D_Vlam.dat', index=None, header=True,sep=',')  # save V_lam coefficients to file separated by comma
-            print("Plotting radial terms at {}".format(MP_plots))
-            f.write("Plotting radial terms at {}".format(MP_plots))
+            print("Plotting radial terms at :--> ")
+            print(MP_plots)
+            
+            f.write("\n Plotting radial terms at :--> \n ")
+            f.write(str(MP_plots))
+            f.write("\n")
+ 
             try:
                 inp.Ind_plot
             except:
@@ -2250,6 +2633,16 @@ if MPExp:
             if Ind_plot == True:
                 driver.plot_MP(lm, 1, R_arr, df_Vnf, MP_plots, inp)
             driver.plot_MP_combined(lm, 1, R_arr, df_Vnf, MP_plots, inp)
+
+            print("#-------------------------------------------------------------------#")
+            print("#---------------#    4D Mutipole Expansion Done!    #---------------#")
+            print("#-------------------------------------------------------------------#")
+
+            f.write("\n#-------------------------------------------------------------------#")
+            f.write("\n#---------------#    4D Mutipole Expansion Done!    #---------------#")
+            f.write("\n#-------------------------------------------------------------------#")
+            f.write("\n\n")
+
         else:
             ########################################################
             #        4D Inverse Multipole Expansion (for Residuals)
@@ -2258,7 +2651,30 @@ if MPExp:
             MP_dataR = MP_data + 'Residuals_Inv_Fit/' # directory for TF NN model and other files
             if not os.path.exists(MP_dataR):
                 os.makedirs(MP_dataR)
-            df_inp = pd.read_csv(out_data+inp.PES_filename_cm,header=None,sep=inp.sep,names=['R','phi','th2','th1','E'])
+            df_inp = pd.read_csv(out_data+inp.PES_filename_cm,header=None,sep=inp.sep)
+            df_inp = df_inp.apply(pd.to_numeric, errors='coerce')
+            df_inp.dropna(inplace=True) #removing rows with na values
+            print(df_inp.head(5))
+
+            print("\n If your input dataframe contain non-numeric 'HEADER' like R, theta, E, etc, it will be removed. \n")
+            print("\n Also verify if data separator is correct ! If incorrect separator is used, only single columns will appear. \n")
+            sep_change = int(input("Satisfied! Enter 0 to continue or 1 to change separator (\s+, \\t, ',', etc.)..."))
+            if (sep_change == 1):
+                new_sep = input("Enter new separator (\s+ (multiple spaces), \\t (tab space), ',', etc.)...")
+                df_inp = pd.read_csv(out_data+inp.PES_filename_cm,header=None,sep=new_sep)
+                df_inp = df_inp.apply(pd.to_numeric, errors='coerce')
+                df_inp.dropna(inplace=True) #removing rows with na values
+                print(df_inp.head(5))
+                f.write("\n")
+                f.write("\nThe loaded PES: --> \n")
+                f.write(str(df_inp.head(5)))
+            else:
+                f.write("\n")
+                f.write("\nThe loaded PES: --> \n")
+                f.write(str(df_inp.head(5)))
+            
+
+            df_inp.columns =['R','phi','th2','th1','E']
             df_inp.sort_values(by = [ 'R','phi','th2','th1'], inplace=True, ascending = True)
             df_inp.reset_index(inplace=True, drop = True)  # sorting by R, phi, th2 and th1 and reindexing
 
@@ -2275,8 +2691,11 @@ if MPExp:
                 f.write("Make sure file exists at {} and set read_Legendre = True \n".format(MP_data))
                 driver.exit_program()
             #print("Radial coordinates are: \n ", df_R)        # Optional: prints radial coordinates
+
             print("The radial terms imported are: \n ")        # printing radial dataframe
-            print(df_Vn)
+            print(df_Vn.head(5))
+            f.write("\n The radial terms imported are: \n ")        # printing radial dataframe
+            f.write(str(df_Vn.head(5)))
 
             lm  = len(px.T)                    # Radial terms
             nc  = len(df_Vn)                   # number of Radial coordinates
@@ -2295,14 +2714,32 @@ if MPExp:
             Origi_E = df_inp.values[:, -1].reshape(-1,1)  # original Energies
             Regen_E = df_Vnf2.values[:, -1].reshape(-1,1)  # regenerated Energies
             residuals = Regen_E - Origi_E
-            print("\nSaving V_lam2PES analytically fitted residual and data at location:\n {} :\n residual_Vlam2E.dat and regenerated_full_data.dat".format(MP_dataR))
-            f.write("\nSaving V_lam2PES analytically fitted residual and data at location:\n {} :\n residual_Vlam2E and regenerated_full_data".format(MP_dataR))
+
+            print("\nSaving regenerated PES data from analytically fitted V_lamda terms and its residual at location --> \n")
+            print(str(MP_dataR))
+            print("\n")
+
+            f.write("\n\nSaving regenerated PES data from analytically fitted V_lamda terms and its residual at location --> \n")
+            f.write(str(MP_dataR))
+            f.write("\n")
+
             np.savetxt(MP_dataR +'residual_Vlam2E.dat', np.array([Origi_E.flatten(), Regen_E.flatten(), residuals.flatten()]).T, delimiter='\t')
             df_Vnf2.to_csv(MP_dataR + 'regenerated_PES_data.dat', index=None, header=False,sep=',')  # save V_lam coefficients to file separated by comma
             df_inp.to_csv(MP_dataR + 'original_PES_data.dat', index=None, header=False,sep=',')  # save V_lam coefficients to file separated by comma
-            print("\nSaving V_lam2PES analytically fitted residuals at location: {} ".format(MP_dataR))
-            f.write("\nSaving V_lam2PES analytically fitted residuals at location: {} ".format(MP_dataR))
+
+            #print("\nSaving V_lam2PES analytically fitted residuals at location: {} ".format(MP_dataR))
+            #f.write("\nSaving V_lam2PES analytically fitted residuals at location: {} ".format(MP_dataR))
             driver.residual_plot(Origi_E,residuals,MP_dataR,inp)
+
+            print("#-------------------------------------------------------------------#")
+            print("#-----------------#    4D Inverse Fitting Done!    #----------------#")
+            print("#-------------------------------------------------------------------#")
+
+            f.write("\n#-------------------------------------------------------------------#")
+            f.write("\n#-----------------#    4D Inverse Fitting Done!    #----------------#")
+            f.write("\n#-------------------------------------------------------------------#")
+            f.write("\n\n")
+
     else:
         print("Error: Unknwon Expansion_typ. Set as '2D' or '4D'.")
 else:
@@ -2323,6 +2760,16 @@ else:
     FnFit = inp.FnFit
 
 if FnFit:
+
+    print("#-------------------------------------------------------------------#")
+    print("#----------------#    Using Function Fit module    #----------------#")
+    print("#-------------------------------------------------------------------#")
+    
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n#----------------#    Using Function Fit module    #----------------#")
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n\n")
+    
     from scipy.optimize import curve_fit
     from lmfit import Model
     #FnFit_data = out_data + 'FnFit_files/' # directory for TF NN model and other files
@@ -2358,6 +2805,8 @@ if FnFit:
 
     if inp.Fnfit_type == 'Vlam':
         print("Fitting Radial coefficients obtained after multipole expansion!\n")
+        f.write("Fitting Radial coefficients obtained after multipole expansion!\n")
+        
         MP_data = out_data + 'MP_files/'
         FnFit_data = MP_data + 'VlamFnFit/' # directory for TF NN model and other files
         if not os.path.exists(FnFit_data):
@@ -2390,7 +2839,7 @@ if FnFit:
                 strt = min(strt1,strt2)
                 strt_i[i] = strt
                 print("Minima Fit:{} | Start position: {} | Value (cm-1) {}".format(i,strt, y_dummy[strt]))
-                f.write("Minima Fit:{} | Start position: {} | Value (cm-1) {} \n\n".format(i,strt, y_dummy[strt]))
+                f.write("\n\nMinima Fit:{} | Start position: {} | Value (cm-1) {} \n".format(i,strt, y_dummy[strt]))
             else:
                 strt = inp.start_pos[i]
                 strt_i[i] = strt
@@ -2412,19 +2861,23 @@ if FnFit:
             new_lam0 = inp.fnfit_custom(x_dummy*scale_R, *best_vals)/scale_Energy
             Fitted_VlamE0 = np.c_[Fitted_VlamE0,new_lam0]
             Error_MP_fit0[i] = driver.plot_Vlam(x_dummy, y_dummy, best_vals, strt, i, inp, FnFit_plots,0, scale_R, scale_Energy)
-            f.write( 'RMSE {} | 0Fn = {} \n'.format(i, Error_MP_fit0[i]))
+            f.write( 'RMSE {} | {} \n'.format(i, Error_MP_fit0[i]))
             #print(result.best_values)
             #print('\n')
 
         #print("The new Function Fitted V_lam data is stored in {} ! ")
         #f.write("The new Function Fitted V_lam data is stored in {} ! ")
 
-        f.write ("Start position for fitting each radial term : \n")
+        f.write ("\n Start position for fitting each radial term : \n")
         f.write("start_pos = \n {} \n".format(strt_i))
 
-        f.write('\n Mean RMS Error | 0Fn = {} \n'.format(np.mean(Error_MP_fit0)))
-        print("\nSaving analytically fitted V_lam data (FnFitted_Vlam.dat) at locations: \n {} \n and \n {} \n".format(MP_data,FnFit_data))
-        f.write("\nSaving analytically fitted V_lam data (FnFitted_Vlam.dat) at locations: \n {} \n and \n {} \n".format(MP_data,FnFit_data))
+        f.write('\n Mean RMS Error | {} \n'.format(np.mean(Error_MP_fit0)))
+        
+        print("\nSaving analytically fitted V_lam data (FnFitted_Vlam.dat) at locations: \n ")
+        print(" {} \n and \n {} \n".format(MP_data,FnFit_data))
+        f.write("\n\nSaving analytically fitted V_lam data (FnFitted_Vlam.dat) at locations: \n ")
+        f.write(" {} \n and \n {} \n".format(MP_data,FnFit_data))
+
         np.savetxt(MP_data+"FnFitted_Vlam.dat", Fitted_VlamE0, delimiter=",")
         np.savetxt(FnFit_data+"FnFitted_Vlam.dat", Fitted_VlamE0, delimiter=",")
 
@@ -2442,7 +2895,8 @@ if FnFit:
             print("Error! coll_typ must be either '2D' or '4D'. ")
             driver.exit_program()
 
-        print("\nSaving V_lam raw coefficients at location: {} ".format(out_data))
+        print("\nSaving V_lam raw coefficients at location: \n {} ".format(out_data))
+        f.write("\n\nSaving V_lam raw coefficients at location: \n {} ".format(out_data))
 
         try:
             inp.Pair_fns
@@ -2503,11 +2957,21 @@ if FnFit:
             Strlm3 = ','.join(map(str, inp.N_Vals))+', \n'
             Str3 += Strlm3*lm +'\n'
 
-        print("\nSaving MOLSCAT &POTL at location: {} ".format(out_data))
+        print("\nSaving MOLSCAT &POTL (MOLSCAT_POT.txt) at location: \n {} ".format(out_data))
+        f.write("\n\nSaving MOLSCAT &POTL (MOLSCAT_POT.txt) at location: \n {} \n".format(out_data))
 
         mol_file3 = open(out_data+"MOLSCAT_POT.txt", "w")
         mol_file3.write(Str3)
         mol_file3.close()
+
+        print("#-------------------------------------------------------------------#")
+        print("#-----------------#    MOLSCAT &POTL Generated    #-----------------#")
+        print("#-------------------------------------------------------------------#")
+
+        f.write("\n#-------------------------------------------------------------------#")
+        f.write("\n#-----------------#    MOLSCAT &POTL Generated    #-----------------#")
+        f.write("\n#-------------------------------------------------------------------#")
+        f.write("\n\n")
 
     elif inp.Fnfit_type == 'PES':
 
@@ -2534,7 +2998,9 @@ if FnFit:
         else:
             HELR_Fit = False
 
-        print("Fitting PES data into analytical funciton!\n")
+        print("Fitting PES data into analytical function!\n")
+        f.write("\n Fitting PES data into analytical function! \n")
+        
         FnFit_data = out_data + 'PESFnFit/' # directory for TF NN model and other files
         if not os.path.exists(FnFit_data):
             os.makedirs(FnFit_data)
@@ -2552,17 +3018,27 @@ if FnFit:
 
         df_inp = pd.read_csv(out_data+inp.filename,header=None,sep=inp.sep)
         df_inp = df_inp.apply(pd.to_numeric, errors='coerce')
+        df_inp.dropna(inplace=True) #removing rows with na values
+
+        print("Loaded PES! \n ")
         print(df_inp.head(5))
-
-        print("\n If your input dataframe contain 'HEADER' like R, theta, E, etc, it should be visible on 1st row and must be removed. \n")
-
-        df_choice2 = int(input("\n Do you want to remove 1st row ! (0= No, 1= Yes) : "))
-        if (df_choice2 == 1):
-            df_inp.drop(index=df_inp.index[0], axis=0, inplace=True)
-            print("Header column removed! The new dataframe is: \n")
+        
+        print("\n If your input dataframe contain non-numeric 'HEADER' like R, theta, E, etc, it will be removed. \n")
+        print("\n Also verify if data separator is correct ! If incorrect separator is used, only single columns will appear. \n")
+        sep_change = int(input("Satisfied! Enter 0 to continue or 1 to change separator (\s+, \\t, ',', etc.)..."))
+        if (sep_change == 1):
+            new_sep = input("Enter new separator (\s+ (multiple spaces), \\t (tab space), ',', etc.)...")
+            df_inp = pd.read_csv(out_data+inp.filename,header=None,sep=new_sep)
+            df_inp = df_inp.apply(pd.to_numeric, errors='coerce')
+            df_inp.dropna(inplace=True) #removing rows with na values
             print(df_inp.head(5))
+            f.write("\n")
+            f.write("\nThe loaded PES: --> \n")
+            f.write(str(df_inp.head(5)))
         else:
-            print("No header input. The dataframe remains same: \n ")
+            f.write("\n")
+            f.write("\nThe loaded PES: --> \n")
+            f.write(str(df_inp.head(5)))
 
         if inp.PES_typ == '1D':
             df_inp.columns = ['R', 'E']
@@ -2607,6 +3083,7 @@ if FnFit:
 
             if he_fit == True:
                 print('High Energy region fitting!')
+                f.write('\n High Energy region fitting!')
                 pos_minima=np.argmin(y_dummy)
                 strtHE, strt_valHe = driver.find_nearest(y_dummy, value=he_cutoff) # datapoint with cutoff
                 gmodel = Model(inp.fnfit_he) # using lmfit
@@ -2614,40 +3091,52 @@ if FnFit:
                 for keyi in range (len(params.keys())):
                     params.add(list(params.keys())[keyi], value=inp.he_initial_val[keyi])
                 print('Fitting from :', strtHE, 'to', pos_minima-inp.he_min_offset)
+                f.write('\n Fitting from: {} to {} \n'.format(strtHE, (pos_minima-inp.he_min_offset)))
+
                 result = gmodel.fit(y_dummy[strtHE:pos_minima-inp.he_min_offset], params, x=x_dummy[strtHE:pos_minima-inp.he_min_offset]) # Final Optimization
                 best_vals = np.array(list(result.best_values.values()))
-                print('Coeff HE',best_vals)
+                print('\n Optimised Coefficients for High Energy (HE) : \n ',best_vals)
+                f.write(' \n Optimised Coefficients for High Energy (HE): \n  {} \n\n'.format(best_vals))
+
                 Fitted_E[:strt] = inp.fnfit_he(x_dummy[:strt], *best_vals)
                 R_arr_HE, R_arr_val_HE = driver.find_nearest(R_arr, value=x_dummy[strt]) # datapoint with cutoff
                 predicted_energiesHELR[:R_arr_HE] = inp.fnfit_he(R_arr[:R_arr_HE], *best_vals)
             else:
                 R_arr_HE = 0
                 print('No High Energy fitting!')
+                f.write('\n No High Energy fitting!')
 
             # ------------- Long range region fitting ---------------#
 
             if lr_fit == True:
 
                 print('Long range fitting!')
+                f.write('\n Long range fitting! \n')
+
                 endLR = len(x_dummy)-inp.lr_min_offset # datapoint with cutoff
                 gmodel = Model(inp.fnfit_lr) # using lmfit
                 params = gmodel.make_params()
                 for keyi in range (len(params.keys())):
                     params.add(list(params.keys())[keyi], value=inp.lr_initial_val[keyi])
                 print('Fitting from :', endLR, 'to', len(x_dummy))
+                f.write('\n Fitting from: {} to {} \n'.format(endLR, len(x_dummy)))
+
                 result = gmodel.fit(y_dummy[endLR:], params, x=x_dummy[endLR:]) # Final Optimization
                 best_vals = np.array(list(result.best_values.values()))
-                print('Coeff LR',best_vals)
+                print('\n Optimised Coefficients for Long Range (LR) : \n ',best_vals)
+                f.write(' \n Optimised Coefficients for Long Range (LR): \n {} \n\n'.format(best_vals))
                 Fitted_E[endLR:] = inp.fnfit_lr(x_dummy[endLR:], *best_vals)
                 R_arr_LR, R_arr_val_LR = driver.find_nearest(R_arr, value=x_dummy[endLR]) # datapoint with cutoff
                 predicted_energiesHELR[R_arr_LR:] = inp.fnfit_lr(R_arr[R_arr_LR:], *best_vals)
             else:
                 print('No Long Range fitting!')
+                f.write('\n No Long Range fitting! \n')
                 R_arr_LR = len(R_arr)
 
             # --------------------------- Full range fitting ------------------------#
 
             print('Using Custom Function for full range fitting!')
+            f.write('\n Using Custom Function for full range fitting!')
 
             gmodel = Model(inp.fnfit_custom) # using lmfit
             params = gmodel.make_params()
@@ -2674,9 +3163,10 @@ if FnFit:
             predicted_energiesR = inp.fnfit_custom(x_dummy*scale_R, *best_vals)/scale_Energy
 
             print("Potential at initial R value: ", predicted_energies[0])
+            f.write("\n Potential at initial R value: {}".format(predicted_energies[0]))
 
             print(result.best_values)
-            f.write("Best Coefficients: \n")
+            f.write("\n Fitting Coefficients for full region fit : \n")
             f.write(str(best_vals))
 
             final_data = np.c_[ R_arr, predicted_energies ]
@@ -2685,18 +3175,21 @@ if FnFit:
             if HELR_Fit == True:
                 predicted_energiesHELR[R_arr_HE:R_arr_LR] = inp.fnfit_custom(R_arr[R_arr_HE:R_arr_LR]*scale_R, *best_vals)/scale_Energy
 
-            print("\nSaving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to : {}".format(FnFit_data))
-            f.write("\nSaving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to : {}".format(FnFit_data))
+            print("\nSaving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to : \n {}".format(FnFit_data))
+            f.write("\n\nSaving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to : \n {} \n\n".format(FnFit_data))
             np.savetxt(FnFit_data+"Fnfit_PES.dat", final_data, delimiter=",",fmt='%.2f,%.16f')
             np.savetxt(FnFit_data+"residuals_Fnfit_PES.dat", residuals_data, delimiter=",",fmt='%.16f,%.16f')
 
-            print("\nPlotting E fit (R) at location: {} ".format(FnFit_plots))
-            f.write("\nPlotting E fit (R) at location: {} ".format(FnFit_plots))
+            print("\nPlotting E fit (R) at location: \n {} ".format(FnFit_plots))
+            f.write("\n\nPlotting E fit (R) at location: \n {} \n\n".format(FnFit_plots))
             driver.residual_plot_E(y_dummy.to_numpy(),residuals,FnFit_plots,inp,'custom')
 
             if HELR_Fit == True:
                 driver.C_fit1D_Plot(y_dummy,predicted_energies,predicted_energiesHELR,R_arr,x_dummy,FnFit_plots,inp)
                 HELR_Fit_PES = np.c_[ x_dummy, predicted_energiesHELR ]
+                print("\nSaving Only High Energy and Long Range region fitted PES (HELR_Fit_PES.dat) to : \n {}".format(FnFit_data))
+                f.write("\n\nSaving Only High Energy and Long Range region fitted PES (HELR_Fit_PES.dat) to : \n {} \n\n".format(FnFit_data))
+
                 np.savetxt(FnFit_data+"HELR_Fit_PES.dat", HELR_Fit_PES, delimiter=",",fmt='%.2f,%.16f')
                 driver.fit1D_Plot(y_dummy,predicted_energiesHELR,'HELR',x_dummy,x_dummy,FnFit_plots,inp)
             else:
@@ -2704,7 +3197,7 @@ if FnFit:
 
             # saving data and plots!
 
-            f.write("\nSaving a copy of fitted PES (Fnfit_PES.dat) to : {}".format(out_data))
+            f.write("\n\nSaving a copy of fitted PES (Fnfit_PES.dat) to : \n {} \n\n".format(out_data))
             np.savetxt(out_data+"Fnfit_PES.dat", final_data, delimiter=",",fmt='%.2f,%.16f')
 
         elif inp.PES_typ == '2D':
@@ -2735,7 +3228,8 @@ if FnFit:
             start = np.zeros(ngm,dtype=int)
             end   = np.zeros(ngm,dtype=int)
             ct = 0                      # counter
-            print("Extracting end and start radial positions")
+            print("Extracting end and start radial positions for each angular term : ")
+            f.write("\n 2D Collision: Extracting end and start radial positions for each angular term: \n")
             for i in tqdm(range (len(df_inp))):
                 if (i == 0):
                     R_st = df_inp['R'][i]
@@ -2751,13 +3245,15 @@ if FnFit:
                         start[ct] = i
                         R_st = df_inp['R'][i]
                         ct+=1
+            f.write(f"\n TQDM LOOP (end and start radial positions extracted from PES!) :\n {'|' * num_bars} 100% |\n\n")
+
             #print("1922: Match these two numbers: ct = {} | ngm = {}".format(ct,ngm))
             print("Start End Positions for each angle: ")
             print("Start Positions: \n {}".format(start))
             print("End Positions: \n {}".format(end))
             f.write("Start End Positions: \n")
             f.write("Start Positions: \n {} \n".format(start))
-            f.write("End Positions: \n {} \n".format(end))
+            f.write("End Positions: \n {} \n \n".format(end))
             #if (ct!=ngm):
             #    driver.exit_program()
             # All R end and start positions extracted!
@@ -2773,10 +3269,14 @@ if FnFit:
             #A_Residuals = df_inp.pop('E')   # Coordinates for residuals
             A_Residuals = df_inp.drop('E', axis=1)
             AR = A_Residuals.to_numpy()
+
+            f.write(f"\n TQDM LOOP (R/Theta coordinates Generated!) :\n {'|' * num_bars} 100% |\n\n")
+
             #print(len(df_inp))
 
             # Fitting PES
-            print("Fitting PES each angle at a time")
+            print("Fitting PES each angle at a time: ")
+            f.write("\n Fitting PES each angle at a time: \n")
             predicted_energies = np.zeros(ngm*nc)           # final terms
             predicted_energiesR = np.zeros(len(df_inp))     # final terms
             predicted_energiesHELR = np.zeros(ngm*nc)       # final terms
@@ -2805,12 +3305,13 @@ if FnFit:
                     strt=np.argmin(y_dummy)-inp.cutoff_pos
 
                 print("Coefficients for Angular coordinate: {} \n".format(angmat[i]))
-                f.write("Coefficients for Angular coordinate: {} \n".format(angmat[i]))
+                f.write("\n Coefficients for Angular coordinate: {} \n".format(angmat[i]))
 
                 #------------- High energy region fitting ---------------#
 
                 if he_fit == True:
                     print('High Energy region fitting!')
+                    f.write('\n High Energy region fitting!')
                     pos_minima=np.argmin(y_dummy)
                     strtHE, strt_valHe = driver.find_nearest(y_dummy, value=he_cutoff) # datapoint with cutoff
                     gmodel = Model(inp.fnfit_he) # using lmfit
@@ -2818,39 +3319,48 @@ if FnFit:
                     for keyi in range (len(params.keys())):
                         params.add(list(params.keys())[keyi], value=inp.he_initial_val[keyi])
                     print('Fitting from :', strtHE, 'to', pos_minima-inp.he_min_offset)
+                    f.write('\n Fitting from: {} to {} \n'.format(strtHE, (pos_minima-inp.he_min_offset)))
                     result = gmodel.fit(y_dummy[strtHE:pos_minima-inp.he_min_offset], params, x=x_dummy[strtHE:pos_minima-inp.he_min_offset]) # Final Optimization
                     best_vals = np.array(list(result.best_values.values()))
-                    print('Coeff HE',best_vals)
+                    print('Optimised Coefficients for High Energy (HE) : ',best_vals)
+                    f.write(' \n Optimised Coefficients for High Energy (HE): \n  {} \n\n'.format(best_vals))
                     Fitted_E[:strt] = inp.fnfit_he(x_dummy[:strt], *best_vals)
                     R_arr_HE, R_arr_val_HE = driver.find_nearest(R_arr, value=x_dummy[strt]) # datapoint with cutoff
                     predicted_energiesHELR[i*nc:i*nc+R_arr_HE] = inp.fnfit_he(R_arr[:R_arr_HE], *best_vals)
                 else:
                     R_arr_HE = 0
                     print('No High Energy fitting!')
+                    f.write('\n No High Energy fitting! \n')
                 # ------------- Long range region fitting ---------------#
 
                 if lr_fit == True:
                     print('Long range fitting!')
+                    f.write('\n Long range fitting! \n')
+                    
                     endLR = len(x_dummy)-inp.lr_min_offset # datapoint with cutoff
                     gmodel = Model(inp.fnfit_lr) # using lmfit
                     params = gmodel.make_params()
                     for keyi in range (len(params.keys())):
                         params.add(list(params.keys())[keyi], value=inp.lr_initial_val[keyi])
                     print('Fitting from :', endLR, 'to', len(x_dummy))
+                    f.write('\n Fitting from: {} to {} \n'.format(endLR, len(x_dummy)))
                     result = gmodel.fit(y_dummy[endLR:], params, x=x_dummy[endLR:]) # Final Optimization
                     best_vals = np.array(list(result.best_values.values()))
-                    print('Coeff LR',best_vals)
+                    print('\n Optimised Coefficients for Long Range (LR)',best_vals)
+                    f.write(' \n Optimised Coefficients for Long Range (LR): \n {} \n\n'.format(best_vals))
                     Fitted_E[endLR:] = inp.fnfit_lr(x_dummy[endLR:], *best_vals)
                     R_arr_LR, R_arr_val_LR = driver.find_nearest(R_arr, value=x_dummy[endLR]) # datapoint with cutoff
                     predicted_energiesHELR[i*nc+R_arr_LR:(i+1)*nc] = inp.fnfit_lr(R_arr[R_arr_LR:], *best_vals)
 
                 else:
                     print('No Long Range fitting!')
+                    f.write('\n No Long Range fitting! \n')
                     R_arr_LR = len(R_arr)
 
                     # ------------- Full range fitting ---------------#
 
                 print('Using Custom Function for full range fitting!')
+                f.write('\n Using Custom Function for full range fitting!')
 
                 #y_dummy = Fitted_E
 
@@ -2884,9 +3394,10 @@ if FnFit:
                 ER = inp.fnfit_custom(x_dummy*scale_R, *best_vals)/scale_Energy
 
                 print("Potential at initial R value: ", E[0])
+                f.write("\n Potential at initial R value: {}".format(E[0]))
 
                 print(result.best_values)
-                f.write("Best Coefficients: \n")
+                f.write("\n Fitting Coefficients for full region fit : \n")
                 f.write(str(best_vals))
 
                 predicted_energies[i*nc:(i+1)*nc] = E
@@ -2894,6 +3405,8 @@ if FnFit:
                 if HELR_Fit == True:
                     predicted_energiesHELR[i*nc+R_arr_HE:i*nc+R_arr_LR] = inp.fnfit_custom(R_arr[R_arr_HE:R_arr_LR]*scale_R, *best_vals)/scale_Energy
                 #predicted_energiesHELR[st:en] = Fitted_E
+
+            f.write(f"\n TQDM LOOP (Function Fitting Done!) :\n {'|' * num_bars} 100% |\n\n")
 
             Origi_E_df = df_inp['E']
             Origi_E = Origi_E_df.to_numpy()
@@ -2903,19 +3416,32 @@ if FnFit:
             residuals = predicted_energiesR - Origi_E
 
             residuals_data = np.c_[Origi_E, residuals ]
-            print("\nSaving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to : {}".format(FnFit_data))
-            f.write("\nSaving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to : {}".format(FnFit_data))
+            print("\nSaving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to: \n {}".format(FnFit_data))
+            f.write("\n\nSaving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to: \n {} \n\n".format(FnFit_data))
             np.savetxt(FnFit_data+"Fnfit_PES.dat", final_data, delimiter=",",fmt='%.2f,%.2f,%.16f')
             if HELR_Fit == True:
                 np.savetxt(FnFit_data+"HELRfit_PES.dat", HELR_Fit_PES, delimiter=",",fmt='%.2f,%.2f,%.16f')
+                print("\nSaving Only High Energy and Long Range region fitted PES (HELR_Fit_PES.dat) to : \n {}".format(FnFit_data))
+                f.write("\n\nSaving Only High Energy and Long Range region fitted PES (HELR_Fit_PES.dat) to : \n {} \n\n".format(FnFit_data))
+
+
             np.savetxt(FnFit_data+"residuals_Fnfit_PES.dat", residuals_data, delimiter=",",fmt='%.16f,%.16f')
 
-            print("\nPlotting residuals for E fit (R) at location: {} ".format(FnFit_plots))
-            f.write("\nPlotting residuals for E fit (R) at location: {} ".format(FnFit_plots))
+            print("\nPlotting residuals for E fit (R) at location: \n {} ".format(FnFit_plots))
+            f.write("\nPlotting residuals for E fit (R) at location: \n {} \n\n".format(FnFit_plots))
             driver.residual_plot_E(Origi_E,residuals,FnFit_plots,inp,'custom')
 
-            f.write("\nSaving a copy of fitted PES (Fnfit_PES.dat) to : {}".format(out_data))
+            f.write("\n\nSaving a copy of fitted PES (Fnfit_PES.dat) to: \n {} \n\n".format(out_data))
             np.savetxt(out_data+"Fnfit_PES.dat", final_data, delimiter=",",fmt='%.2f,%.2f,%.16f')
+
+            print("#-------------------------------------------------------------------#")
+            print("#-------#    2D PES Fitted into analytical expression!    #---------#")
+            print("#-------------------------------------------------------------------#")
+    
+            f.write("\n#-------------------------------------------------------------------#")
+            f.write("\n#-------#    2D PES Fitted into analytical expression!    #---------#")
+            f.write("\n#-------------------------------------------------------------------#")
+            f.write("\n\n")
 
         elif inp.PES_typ == '4D':
             df_inp.columns = ['R', 'phi', 'th2', 'th1', 'E']
@@ -2944,7 +3470,8 @@ if FnFit:
             start = np.zeros(ngm,dtype=int)
             end   = np.zeros(ngm,dtype=int)
             ct = 0                      # counter
-            print("Extracting end and start radial positions")
+            print("Extracting end and start radial positions for each angular term : ")
+            f.write("\n 4D Collision: Extracting end and start radial positions for each angular term : \n")
             for i in tqdm(range (len(df_inp))):
                 if (i == 0):
                     R_st = df_inp['R'][i]
@@ -2960,6 +3487,8 @@ if FnFit:
                         start[ct] = i
                         R_st = df_inp['R'][i]
                         ct+=1
+            f.write(f"\n TQDM LOOP (end and start radial positions extracted!) :\n {'|' * num_bars} 100% |\n\n")
+
             #print("1951: Match these two numbers: i = {} | ngm = {}".format(i,ngm))
             print("Start End Positions for each angle: ")
             print("Start Positions: \n {}".format(start))
@@ -2978,11 +3507,14 @@ if FnFit:
                 c = np.tile(b,(len(R_arr),1))  # creating angles as columns
                 d = np.c_[ R_arr, c ]        # joining r and columns
                 A = np.vstack([A, d]) # repeating for different geoms and joining
+            f.write(f"\n TQDM LOOP (R/Phi/Theta2/Theta1 coordinates generated!) :\n {'|' * num_bars} 100% |\n\n")
+
             A = np.delete(A, 0, 0) # deleting first row
             A_Residuals = df_inp.drop('E', axis=1)
             AR = A_Residuals.to_numpy()
             # Fitting PES
-            print("\nFitting PES each angle at a time")
+            print("\nFitting PES each angle at a time: ")
+            f.write("\n Fitting PES each angle at a time: \n")
             predicted_energies = np.zeros(ngm*nc)     # final terms
             predicted_energiesR = np.zeros(len(df_inp))     # final terms
             predicted_energiesHELR = np.zeros(len(df_inp))  # final terms
@@ -3009,11 +3541,14 @@ if FnFit:
                 else:
                     strt=np.argmin(y_dummy)-inp.cutoff_pos
 
+                print("Coefficients for Angular coordinate: {} \n".format(angmat[i]))
+                f.write("\n Coefficients for Angular coordinate: {} \n".format(angmat[i]))
 
                 #------------- High energy region fitting ---------------#
 
                 if he_fit == True:
                     print('High Energy region fitting!')
+                    f.write('\n High Energy region fitting!')
                     pos_minima=np.argmin(y_dummy)
                     strtHE, strt_valHe = driver.find_nearest(y_dummy, value=he_cutoff) # datapoint with cutoff
                     gmodel = Model(inp.fnfit_he) # using lmfit
@@ -3021,33 +3556,50 @@ if FnFit:
                     for keyi in range (len(params.keys())):
                         params.add(list(params.keys())[keyi], value=inp.he_initial_val[keyi])
                     print('Fitting from :', strtHE, 'to', pos_minima-inp.he_min_offset)
+                    f.write('\n Fitting from: {} to {} \n'.format(strtHE, (pos_minima-inp.he_min_offset)))
                     result = gmodel.fit(y_dummy[strtHE:pos_minima-inp.he_min_offset], params, x=x_dummy[strtHE:pos_minima-inp.he_min_offset]) # Final Optimization
                     best_vals = np.array(list(result.best_values.values()))
-                    print('Coeff HE',best_vals)
+                    print('Optimised Coefficients for High Energy (HE): \n ',best_vals)
+                    f.write(' \n Optimised Coefficients for High Energy (HE): \n  {} \n\n'.format(best_vals))
                     Fitted_E[:strt] = inp.fnfit_he(x_dummy[:strt], *best_vals)
+                    # ! Test and Uncomment
+                    R_arr_HE, R_arr_val_HE = driver.find_nearest(R_arr, value=x_dummy[strt]) # datapoint with cutoff
+                    predicted_energiesHELR[i*nc:i*nc+R_arr_HE] = inp.fnfit_he(R_arr[:R_arr_HE], *best_vals)
                 else:
+                    R_arr_HE = 0 # ! Test and Uncomment
                     print('No High Energy fitting!')
+                    f.write('\n No High Energy fitting! \n')
                 # ------------- Long range region fitting ---------------#
 
                 if lr_fit == True:
                     print('Long range fitting!')
+                    f.write('\n Long range fitting! \n')
+
                     endLR = len(x_dummy)-inp.lr_min_offset # datapoint with cutoff
                     gmodel = Model(inp.fnfit_lr) # using lmfit
                     params = gmodel.make_params()
                     for keyi in range (len(params.keys())):
                         params.add(list(params.keys())[keyi], value=inp.lr_initial_val[keyi])
                     print('Fitting from :', endLR, 'to', len(x_dummy))
+                    f.write('\n Fitting from: {} to {} \n'.format(endLR, len(x_dummy)))
                     result = gmodel.fit(y_dummy[endLR:], params, x=x_dummy[endLR:]) # Final Optimization
                     best_vals = np.array(list(result.best_values.values()))
-                    print('Coeff LR',best_vals)
+                    print('\n Optimised Coefficients for Long Range (LR)',best_vals)
+                    f.write(' \n Optimised Coefficients for Long Range (LR): \n {} \n\n'.format(best_vals))
                     Fitted_E[endLR:] = inp.fnfit_lr(x_dummy[endLR:], *best_vals)
+                    # ! Test and Uncomment
+                    R_arr_LR, R_arr_val_LR = driver.find_nearest(R_arr, value=x_dummy[endLR]) # datapoint with cutoff
+                    predicted_energiesHELR[i*nc+R_arr_LR:(i+1)*nc] = inp.fnfit_lr(R_arr[R_arr_LR:], *best_vals)
                 else:
                     print('No Long Range fitting!')
+                    f.write('\n No Long Range fitting! \n')
+                    R_arr_LR = len(R_arr) # ! Test and Uncomment
 
                 # ------------- Full range fitting ---------------#
 
 
                 print('Using Custom Function for full range fitting!')
+                f.write('\n Using Custom Function for full range fitting!')
 
                 gmodel = Model(inp.fnfit_custom) # using lmfit
 
@@ -3070,15 +3622,18 @@ if FnFit:
                 E = inp.fnfit_custom(R_arr*scale_R, *best_vals)/scale_Energy
                 ER = inp.fnfit_custom(x_dummy*scale_R, *best_vals)/scale_Energy
                 print("Potential at initial R value: ", E[0])
+                f.write("\n Potential at initial R value: {}".format(E[0]))
 
                 print(result.best_values)
-                f.write("Best Coefficients: \n")
+                f.write("\n Fitting Coefficients for full region fit : \n")
                 f.write(str(best_vals))
 
                 predicted_energies[i*nc:(i+1)*nc] = E
                 predicted_energiesR[st:en] = ER
                 if HELR_Fit == True:
                     predicted_energiesHELR[i*nc+R_arr_HE:i*nc+R_arr_LR] = inp.fnfit_custom(R_arr[R_arr_HE:R_arr_LR]*scale_R, *best_vals)/scale_Energy
+
+            f.write(f"\n TQDM LOOP (Function Fitting Done!) :\n {'|' * num_bars} 100% |\n\n")
 
             Origi_E_df = df_inp['E']
             Origi_E = Origi_E_df.to_numpy()
@@ -3088,23 +3643,36 @@ if FnFit:
             residuals = predicted_energiesR - Origi_E
 
             residuals_data = np.c_[Origi_E, residuals ]
-            print("\nSaving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to : {}".format(FnFit_data))
-            f.write("\nSaving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to : {}".format(FnFit_data))
+            print("\nSaving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to: \n {}".format(FnFit_data))
+            f.write("\n\nSaving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to: \n {} \n\n".format(FnFit_data))
             #print("\nSaving fitted PES to : {}".format(FnFit_data))
             np.savetxt(FnFit_data+"Fnfit_PES.dat", final_data, delimiter=",",fmt='%.2f,%.2f,%.2f,%.2f,%.16f')
             if HELR_Fit == True:
                 np.savetxt(FnFit_data+"HELRfit_PES.dat", HELR_Fit_PES, delimiter=",",fmt='%.2f,%.2f,%.2f,%.2f,%.16f')
+                print("\nSaving Only High Energy and Long Range region fitted PES (HELR_Fit_PES.dat) to : \n {}".format(FnFit_data))
+                f.write("\n\nSaving Only High Energy and Long Range region fitted PES (HELR_Fit_PES.dat) to : \n {} \n\n".format(FnFit_data))
+
             np.savetxt(FnFit_data+"residuals_Fnfit_PES.dat", residuals_data, delimiter=",",fmt='%.16f,%.16f')
 
-            print("\nPlotting residuals for E fit (R) at location: {} ".format(FnFit_plots))
-            f.write("\nPlotting residuals for E fit (R) at location: {} ".format(FnFit_plots))
+            print("\nPlotting residuals for E fit (R) at location: \n {} ".format(FnFit_plots))
+            f.write("\nPlotting residuals for E fit (R) at location: \n {} \n\n".format(FnFit_plots))
             driver.residual_plot_E(Origi_E,residuals,FnFit_plots,inp,'custom')
 
-            f.write("\nSaving a copy of fitted PES (Fnfit_PES.dat) to : {}".format(out_data))
+            f.write("\n\nSaving a copy of fitted PES (Fnfit_PES.dat) to: \n {} \n\n".format(out_data))
             np.savetxt(out_data+"Fnfit_PES.dat", final_data, delimiter=",",fmt='%.2f,%.2f,%.2f,%.2f,%.16f')
+
+            print("#-------------------------------------------------------------------#")
+            print("#-------#    4D PES Fitted into analytical expression!    #---------#")
+            print("#-------------------------------------------------------------------#")
+    
+            f.write("\n#-------------------------------------------------------------------#")
+            f.write("\n#-------#    4D PES Fitted into analytical expression!    #---------#")
+            f.write("\n#-------------------------------------------------------------------#")
+            f.write("\n\n")
 
         else:
             print("\nIncorrect PES_typ. Must be either '1D', '2D' or '4D'.")
+
     else:
         print("\nIncorrect Fnfit_type. Must be either 'PES' or 'Vlam'.")
 
@@ -3112,13 +3680,29 @@ else:
     print(" \n FnFit = False : Skipping Analytical Fitting of Radial Coefficients \n")
     f.write('\n FnFit = False : Skipping Analytical Fitting of Radial Coefficients! \n ')
 #################################################################################
-print("##################################################################")
-print("!!!!!!!!!!!!!!!         PES2MP Finished        !!!!!!!!!!!!!!!!!!!")
-print("##################################################################")
 
-f.write("\n##################################################################")
-f.write("\n####################    PES2MP Finished     ######################")
-f.write("\n##################################################################")
+    # Calculate the runtime.
+run_time = time.time() - start_time
+# Convert runtime to hours, minutes, and seconds.
+hours, rem = divmod(run_time, 3600)
+minutes, seconds = divmod(rem, 60)
+
+print("#####################################################################")
+print("!!!!!!!!!!!!!!!!         PES2MP Finished        !!!!!!!!!!!!!!!!!!!!!")
+print("#####################################################################")
+print("Run time: {} hours, {} minutes, {:.2f} seconds".format(int(hours), int(minutes), seconds))
+print("#####################################################################")
+
+print("\n\n\n")
+
+f.write("\n#####################################################################")
+f.write("\n#####################    PES2MP Finished     ########################")
+f.write("\n#####################################################################")
+f.write("\nRun time: {} hours, {} minutes, {:.2f} seconds".format(int(hours), int(minutes), seconds))
+f.write("\n#####################################################################")
+
 f.write("\n\n\n")
 
 f.close()
+
+
