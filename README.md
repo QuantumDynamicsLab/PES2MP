@@ -72,14 +72,15 @@ The program can be run by keeping the input file (e.g. pesgen1D.py) and Python p
 - Select the folder where the input file is placed.
 - The input files must be named as shown in the GUI interface. 
 - Also change the project name inside the input file as shown below:
-``import os        # Gettig project name from GUI interface ---------------------#
-Proj_name        =  os.getenv("Proj_name", "default_project_name") # Auto-set``
+
+``import os        # Gettig project name from GUI interface ``  <br />
+``Proj_name        =  os.getenv("Proj_name", "default_project_name")``
 
 - Select 'Copy PES2MP Files': This will copy `pes2mp.py` and `pes2mp_driver.py` files into the selected folder.
 - There are options to open input files for making changes, running the file, and opening the output folder. 
 - Users can run the input files individually or together (automated serial execution) by selecting the files (tick mark).
 
-### CUI Installation
+### CUI Run
 
 - Step 1: Copy the PES2MP.py and PES2MP_driver.py files into a folder of your choice.
 - Step 2: Copy the input file that you want to execute (do not mix 1D/2D or 4D files)
