@@ -1975,7 +1975,7 @@ def plot_Vlam(x_dummy, y_dummy,parsx,strt,i,inp,FnFit_plots,x,scale_R,scale_Ener
     import numpy as np
     plt.figure(figsize=(12,4))      # size of figure
     plt.subplot(1,3,1)                      # first subplot at visually appropriate x, y limit
-    plt.scatter(x_dummy, y_dummy,s=20, color='#00b3b3',label = r'$ab initio$ potential')
+    plt.scatter(x_dummy, y_dummy,s=20, color='#00b3b3',label = r'$ab-initio$ potential')
     plt.plot(x_dummy, inp.fnfit_custom(x_dummy*scale_R, *parsx)/scale_Energy, linestyle='-.', linewidth=2, color='black', label = 'custom fit (S0)')
     plt.grid(True,linestyle=':')                # grid on
     plt.minorticks_on()                         # minor ticks are on
@@ -1991,7 +1991,7 @@ def plot_Vlam(x_dummy, y_dummy,parsx,strt,i,inp,FnFit_plots,x,scale_R,scale_Ener
     plt.xlim(inp.R_lim[0], inp.R_lim[1])
 
     plt.subplot(1,3,2)                      # second subplot at maximum x, y limit
-    plt.scatter(x_dummy, y_dummy,s=20, color='#00b3b3',label = r'$ab initio$ potential')
+    plt.scatter(x_dummy, y_dummy,s=20, color='#00b3b3',label = r'$ab-initio$ potential')
     plt.plot(x_dummy, inp.fnfit_custom(x_dummy*scale_R, *parsx)/scale_Energy, linestyle='-.', linewidth=2, color='black', label = 'custom fit (S0)')
     plt.grid(True,linestyle=':')                # grid on
     plt.minorticks_on()                         # minor ticks are on
@@ -2004,7 +2004,7 @@ def plot_Vlam(x_dummy, y_dummy,parsx,strt,i,inp,FnFit_plots,x,scale_R,scale_Ener
     plt.xlim(0.0, x_dummy.max())
 
     plt.subplot(1,3,3)                      # third subplot at zoomed in y limit [-1, +1]
-    plt.scatter(x_dummy, y_dummy,s=20, color='#00b3b3',label = r'$ab initio$ potential')
+    plt.scatter(x_dummy, y_dummy,s=20, color='#00b3b3',label = r'$ab-initio$ potential')
     plt.plot(x_dummy, inp.fnfit_custom(x_dummy*scale_R, *parsx)/scale_Energy, linestyle='-.', linewidth=2, color='black', label = 'custom fit (S0)')
     plt.grid(True,linestyle=':')                # grid on
     plt.minorticks_on()                         # minor ticks are on
@@ -2057,7 +2057,7 @@ def C_fit1D_Plot(Origi_E,predicted_energies,predicted_energiesHELR,R_arr,x_dummy
     import numpy as np
     plt.figure(figsize=(12,8))      # size of figure
     y_dummy = Origi_E
-    plt.scatter(x_dummy, y_dummy, s=20, color='#00b3b3',label = r'$ab initio$ potential')
+    plt.scatter(x_dummy, y_dummy, s=20, color='#00b3b3',label = r'$ab-initio$ potential')
     plt.plot(R_arr, predicted_energies, linestyle='-', linewidth=2, color='black', label = 'custom full range fit')
     plt.plot(x_dummy, predicted_energiesHELR, linestyle='dotted', linewidth=4, color='red', label = 'HE and LR fir')
     plt.grid(True,linestyle=':')                # grid on
@@ -2092,7 +2092,7 @@ def fit1D_Plot(Origi_E,predicted_energies,fit_name,R_arr,x_dummy,FnFit_plots,inp
     import numpy as np
     plt.figure(figsize=(12,8))      # size of figure
     y_dummy = Origi_E
-    plt.scatter(x_dummy, y_dummy, s=20, color='#00b3b3',label = r'$ab initio$ potential')
+    plt.scatter(x_dummy, y_dummy, s=20, color='#00b3b3',label = r'$ab-initio$ potential')
     plt.plot(R_arr, predicted_energies, linestyle='-', linewidth=2, color='black', label = fit_name)
     plt.grid(True,linestyle=':')                # grid on
     plt.minorticks_on()                         # minor ticks are on
