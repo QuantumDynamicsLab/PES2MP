@@ -23,7 +23,7 @@ class PES2MPGUI:
         self.root.config(bg=BG_COLOR)
         
         # Default folder setup
-        default_folder = os.path.join(os.getcwd(), "PES2MP_GUI")
+        default_folder = os.path.join(os.getcwd(), "GUI_examples")
         os.makedirs(default_folder, exist_ok=True)
 
         self.scripts = {
