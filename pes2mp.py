@@ -3137,7 +3137,7 @@ if FnFit:
                 params = gmodel.make_params()
                 for keyi in range (len(params.keys())):
                     params.add(list(params.keys())[keyi], value=inp.lr_initial_val[keyi])
-                print('Fitting from :', endLR, 'to', len(x_dummy))
+                print('\n Fitting from :', endLR, 'to', len(x_dummy))
                 f.write('\n Fitting from: {} to {} \n'.format(endLR, len(x_dummy)))
 
                 result = gmodel.fit(y_dummy[endLR:], params, x=x_dummy[endLR:]) # Final Optimization
@@ -3154,8 +3154,8 @@ if FnFit:
 
             # --------------------------- Full range fitting ------------------------#
 
-            print('Using Custom Function for full range fitting!')
-            f.write('\n Using Custom Function for full range fitting!')
+            print('\n Using Custom Function for full range fitting!')
+            f.write('\n\n Using Custom Function for full range fitting!')
 
             gmodel = Model(inp.fnfit_custom) # using lmfit
             params = gmodel.make_params()
@@ -3211,8 +3211,9 @@ if FnFit:
 
                 np.savetxt(FnFit_data+"HELR_Fit_PES.dat", HELR_Fit_PES, delimiter=",",fmt='%.2f,%.16f')
                 driver.fit1D_Plot(y_dummy,predicted_energiesHELR,'HELR',x_dummy,x_dummy,FnFit_plots,inp)
+                driver.fit1D_Plot(y_dummy,predicted_energies,'CustomFn_fit',R_arr,x_dummy,FnFit_plots,inp)
             else:
-                driver.fit1D_Plot(y_dummy,predicted_energies,'Full',R_arr,x_dummy,FnFit_plots,inp)
+                driver.fit1D_Plot(y_dummy,predicted_energies,'CustomFn_fit',R_arr,x_dummy,FnFit_plots,inp)
 
             # saving data and plots!
 
@@ -3361,7 +3362,7 @@ if FnFit:
                     params = gmodel.make_params()
                     for keyi in range (len(params.keys())):
                         params.add(list(params.keys())[keyi], value=inp.lr_initial_val[keyi])
-                    print('Fitting from :', endLR, 'to', len(x_dummy))
+                    print('\n Fitting from :', endLR, 'to', len(x_dummy))
                     f.write('\n Fitting from: {} to {} \n'.format(endLR, len(x_dummy)))
                     result = gmodel.fit(y_dummy[endLR:], params, x=x_dummy[endLR:]) # Final Optimization
                     best_vals = np.array(list(result.best_values.values()))
@@ -3378,8 +3379,8 @@ if FnFit:
 
                     # ------------- Full range fitting ---------------#
 
-                print('Using Custom Function for full range fitting!')
-                f.write('\n Using Custom Function for full range fitting!')
+                print('\n Using Custom Function for full range fitting!')
+                f.write('\n\n Using Custom Function for full range fitting!')
 
                 #y_dummy = Fitted_E
 
@@ -3599,7 +3600,7 @@ if FnFit:
                     params = gmodel.make_params()
                     for keyi in range (len(params.keys())):
                         params.add(list(params.keys())[keyi], value=inp.lr_initial_val[keyi])
-                    print('Fitting from :', endLR, 'to', len(x_dummy))
+                    print('\n Fitting from :', endLR, 'to', len(x_dummy))
                     f.write('\n Fitting from: {} to {} \n'.format(endLR, len(x_dummy)))
                     result = gmodel.fit(y_dummy[endLR:], params, x=x_dummy[endLR:]) # Final Optimization
                     best_vals = np.array(list(result.best_values.values()))
@@ -3617,8 +3618,8 @@ if FnFit:
                 # ------------- Full range fitting ---------------#
 
 
-                print('Using Custom Function for full range fitting!')
-                f.write('\n Using Custom Function for full range fitting!')
+                print('\n Using Custom Function for full range fitting!')
+                f.write('\n\n Using Custom Function for full range fitting!')
 
                 gmodel = Model(inp.fnfit_custom) # using lmfit
 

@@ -2093,7 +2093,7 @@ def fit1D_Plot(Origi_E,predicted_energies,fit_name,R_arr,x_dummy,FnFit_plots,inp
     plt.figure(figsize=(12,8))      # size of figure
     y_dummy = Origi_E
     plt.scatter(x_dummy, y_dummy, s=20, color='#00b3b3',label = r'$ab initio$ potential')
-    plt.plot(R_arr, predicted_energies, linestyle='-', linewidth=2, color='black', label = 'custom full range fit')
+    plt.plot(R_arr, predicted_energies, linestyle='-', linewidth=2, color='black', label = fit_name)
     plt.grid(True,linestyle=':')                # grid on
     plt.minorticks_on()                         # minor ticks are on
     plt.legend(loc="upper right")
