@@ -1,0 +1,246 @@
+#####################################################################
+--- Date 2025-02-25 13:45:21 ---
+#####################################################################
+#####################    PES2MP Initiated    ########################
+#####################################################################
+ 
+ /data and /project folders created. 
+
+
+ Create_PES_input = False : Checking input for external Plots! 
+  
+ No plots created. Create_PES_input / Run_psi4 and Plot_PES are False 
+
+ NNGen = False : Skipping NN Model! 
+ 
+ MPExp = False : Skipping Multipole Expansion! 
+ 
+#-------------------------------------------------------------------#
+#----------------#    Using Function Fit module    #----------------#
+#-------------------------------------------------------------------#
+
+
+ Fitting PES data into analytical function! 
+
+
+The loaded PES: --> 
+     0             1
+1  1.0  72977.328434
+2  1.1  53774.705403
+3  1.2  38331.430685
+4  1.3  26653.871581
+5  1.4  18309.263131Start position: 18 | Value (cm-1) 282.414589 
+
+
+ High Energy region fitting!
+ Fitting from: 6 to 31 
+ 
+ Optimised Coefficients for High Energy (HE): 
+  [5.40975740e+06 4.02942319e+00] 
+
+
+ Long range fitting! 
+
+ Fitting from: 90 to 130 
+ 
+ Optimised Coefficients for Long Range (LR): 
+ [-1.15206564e+04  3.87287597e+00] 
+
+
+
+ Using Custom Function for full range fitting!
+ Potential at initial R value: 536728.4679588921
+ Fitting Coefficients for full region fit : 
+[ 2.10389547e+08 -1.11861889e+08  1.08803205e+08 -6.35764575e+07
+  4.87965540e+06 -1.54272918e+06  1.79560937e+04 -3.64215950e+03]
+
+Saving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to : 
+ /Users/apoorvkushwaha/Downloads/PES2MP-o3_PES/GUI_examples/999_PES/1D_anion/Projects/fit/PESFnFit/ 
+
+
+
+Plotting E fit (R) at location: 
+ /Users/apoorvkushwaha/Downloads/PES2MP-o3_PES/GUI_examples/999_PES/1D_anion/Projects/fit/PESFnFit/Plots/ 
+
+
+
+Saving Only High Energy and Long Range region fitted PES (HELR_Fit_PES.dat) to : 
+ /Users/apoorvkushwaha/Downloads/PES2MP-o3_PES/GUI_examples/999_PES/1D_anion/Projects/fit/PESFnFit/ 
+
+
+
+Saving a copy of fitted PES (Fnfit_PES.dat) to : 
+ /Users/apoorvkushwaha/Downloads/PES2MP-o3_PES/GUI_examples/999_PES/1D_anion/Projects/fit/ 
+
+
+#####################################################################
+#####################    PES2MP Finished     ########################
+#####################################################################
+Run time: 0 hours, 0 minutes, 3.85 seconds
+#####################################################################
+
+
+#####################################################################
+--- Date 2025-02-26 14:25:05 ---
+#####################################################################
+#####################    PES2MP Initiated    ########################
+#####################################################################
+ 
+ /data and /project folders created. 
+
+
+ Create_PES_input = False : Checking input for external Plots! 
+  
+ No plots created. Create_PES_input / Run_psi4 and Plot_PES are False 
+
+ NNGen = False : Skipping NN Model! 
+ 
+ MPExp = False : Skipping Multipole Expansion! 
+ 
+#-------------------------------------------------------------------#
+#----------------#    Using Function Fit module    #----------------#
+#-------------------------------------------------------------------#
+
+
+ Fitting PES data into analytical function! 
+
+
+The loaded PES: --> 
+     0             1
+1  1.0  72977.328434
+2  1.1  53774.705403
+3  1.2  38331.430685
+4  1.3  26653.871581
+5  1.4  18309.263131Start position: 18 | Value (cm-1) 282.414589 
+
+
+ High Energy region fitting!
+ Fitting from: 6 to 31 
+ 
+ Optimised Coefficients for High Energy (HE): 
+  [5.40975740e+06 4.02942319e+00] 
+
+
+ Long range fitting! 
+
+ Fitting from: 90 to 130 
+ 
+ Optimised Coefficients for Long Range (LR): 
+ [-1.15206564e+04  3.87287597e+00] 
+
+
+
+ Using Custom Function for full range fitting!
+ Potential at initial R value: 536728.4679588921
+ Fitting Coefficients for full region fit : 
+[ 2.10389547e+08 -1.11861889e+08  1.08803205e+08 -6.35764575e+07
+  4.87965540e+06 -1.54272918e+06  1.79560937e+04 -3.64215950e+03]
+
+Saving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to : 
+ /Users/apoorvkushwaha/Downloads/PES2MP-o3_PES/GUI_examples/999_PES/1D_anion/Projects/fit/PESFnFit/ 
+
+
+
+Plotting E fit (R) at location: 
+ /Users/apoorvkushwaha/Downloads/PES2MP-o3_PES/GUI_examples/999_PES/1D_anion/Projects/fit/PESFnFit/Plots/ 
+
+
+
+Saving Only High Energy and Long Range region fitted PES (HELR_Fit_PES.dat) to : 
+ /Users/apoorvkushwaha/Downloads/PES2MP-o3_PES/GUI_examples/999_PES/1D_anion/Projects/fit/PESFnFit/ 
+
+
+
+Saving a copy of fitted PES (Fnfit_PES.dat) to : 
+ /Users/apoorvkushwaha/Downloads/PES2MP-o3_PES/GUI_examples/999_PES/1D_anion/Projects/fit/ 
+
+
+#####################################################################
+#####################    PES2MP Finished     ########################
+#####################################################################
+Run time: 0 hours, 0 minutes, 3.62 seconds
+#####################################################################
+
+
+#####################################################################
+--- Date 2025-02-26 14:25:58 ---
+#####################################################################
+#####################    PES2MP Initiated    ########################
+#####################################################################
+ 
+ /data and /project folders created. 
+
+
+ Create_PES_input = False : Checking input for external Plots! 
+  
+ No plots created. Create_PES_input / Run_psi4 and Plot_PES are False 
+
+ NNGen = False : Skipping NN Model! 
+ 
+ MPExp = False : Skipping Multipole Expansion! 
+ 
+#-------------------------------------------------------------------#
+#----------------#    Using Function Fit module    #----------------#
+#-------------------------------------------------------------------#
+
+
+ Fitting PES data into analytical function! 
+
+
+The loaded PES: --> 
+     0             1
+1  1.0  72977.328434
+2  1.1  53774.705403
+3  1.2  38331.430685
+4  1.3  26653.871581
+5  1.4  18309.263131Start position: 18 | Value (cm-1) 282.414589 
+
+
+ High Energy region fitting!
+ Fitting from: 6 to 31 
+ 
+ Optimised Coefficients for High Energy (HE): 
+  [5.40975740e+06 4.02942319e+00] 
+
+
+ Long range fitting! 
+
+ Fitting from: 90 to 130 
+ 
+ Optimised Coefficients for Long Range (LR): 
+ [-1.15206564e+04  3.87287597e+00] 
+
+
+
+ Using Custom Function for full range fitting!
+ Potential at initial R value: 536728.4679588921
+ Fitting Coefficients for full region fit : 
+[ 2.10389547e+08 -1.11861889e+08  1.08803205e+08 -6.35764575e+07
+  4.87965540e+06 -1.54272918e+06  1.79560937e+04 -3.64215950e+03]
+
+Saving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to : 
+ /Users/apoorvkushwaha/Downloads/PES2MP-o3_PES/GUI_examples/999_PES/1D_anion/Projects/fit/PESFnFit/ 
+
+
+
+Plotting E fit (R) at location: 
+ /Users/apoorvkushwaha/Downloads/PES2MP-o3_PES/GUI_examples/999_PES/1D_anion/Projects/fit/PESFnFit/Plots/ 
+
+
+
+Saving Only High Energy and Long Range region fitted PES (HELR_Fit_PES.dat) to : 
+ /Users/apoorvkushwaha/Downloads/PES2MP-o3_PES/GUI_examples/999_PES/1D_anion/Projects/fit/PESFnFit/ 
+
+
+
+Saving a copy of fitted PES (Fnfit_PES.dat) to : 
+ /Users/apoorvkushwaha/Downloads/PES2MP-o3_PES/GUI_examples/999_PES/1D_anion/Projects/fit/ 
+
+
+#####################################################################
+#####################    PES2MP Finished     ########################
+#####################################################################
+Run time: 0 hours, 0 minutes, 2.28 seconds
+#####################################################################
+
+
