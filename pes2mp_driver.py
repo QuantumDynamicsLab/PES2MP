@@ -895,6 +895,7 @@ def plot_4D_proj(df_out1, header_keep, header_drop1, header_drop1_val, header_dr
                  header_drop2_val, out_data_plots, out_plots, inp):
     import numpy as np
     import matplotlib.pyplot as plt
+    plt.rcParams.update({'font.size': 16})
 
     df_res = df_out1.loc[(df_out1[header_drop1]==header_drop1_val) &
                          (df_out1[header_drop2]==header_drop2_val)]
@@ -964,6 +965,7 @@ def plot_4D_proj(df_out1, header_keep, header_drop1, header_drop1_val, header_dr
 def plot_2D_proj(df_out1, z1_3d, out_data, out_plots, inp):
     import numpy as np
     import matplotlib.pyplot as plt
+    plt.rcParams.update({'font.size': 16})
     plt.figure(figsize=(20,8))                            # figure size
 
     theta = np.radians(z1_3d.columns)                     # theta converted to radians
@@ -996,8 +998,8 @@ def plot_2D_proj(df_out1, z1_3d, out_data, out_plots, inp):
     try:
         inp.plt_title
     except:
-        print('No plot title provided. Using Default!')
-        plt.title("Polar Plot")                                       # title of plot
+        print('No plot title provided!')
+        #plt.title("Polar Plot")                                       # title of plot
     else:
         plt.title(inp.plt_title)
 
@@ -1025,6 +1027,7 @@ def plot_2D_proj(df_out1, z1_3d, out_data, out_plots, inp):
 #-----------------------------------------------------------------------------#
 def plot_1D (df_out1,z1_3d,out_plots, inp, x):
     import matplotlib.pyplot as plt
+    plt.rcParams.update({'font.size': 16})
     plt.figure(figsize=(20,8))                             # figure size
     if x == 1:
         df_out1.plot(x=df_out1.columns[0],y=df_out1.columns[1])
@@ -1169,6 +1172,7 @@ def pl_trim_part(df_pl, num_XY, num_X, x_shape , trim, out_plots, inp):
 
 def pl_trim_vis_full(df_pl, num_XY, num_X, x_shape, out_plots, inp):
     import matplotlib.pyplot as plt
+    plt.rcParams.update({'font.size': 16})
     import numpy as np
     try:
         inp.plt_srt_yscale
@@ -1206,6 +1210,7 @@ def pl_trim_vis_full(df_pl, num_XY, num_X, x_shape, out_plots, inp):
 
 def pl_trim_vis_part(df_pl_min, df_pl_HE, num_XY, num_X, x_shape, trim, out_plots, inp):
     import matplotlib.pyplot as plt
+    plt.rcParams.update({'font.size': 16})
     import numpy as np
     try:
         inp.plt_srt_yscale
@@ -1303,6 +1308,7 @@ def extract_boundary_elements(df, num_X):
 # Function to plot boundary elements for non-partitioned data (2D plots only).
 def plot_boundary(df_pl, i, j, out_plots, inp):
     import matplotlib.pyplot as plt
+    plt.rcParams.update({'font.size': 16})
     try:
         inp.plt_bnd_yscale
     except:
@@ -1335,6 +1341,7 @@ def plot_boundary(df_pl, i, j, out_plots, inp):
 # function to plot boundary elements of 2 partitioned data (minima and high energy)
 def plot_boundary_partition(boundary_df_pl_minima,boundary_df_pl_HE, i, j, out_plots, inp):
     import matplotlib.pyplot as plt
+    plt.rcParams.update({'font.size': 16})
     try:
         inp.plt_bnd_yscale
     except:
@@ -1545,6 +1552,7 @@ def split_dataframenoval(df, df2, num_X, num_Y, train_ratio, stratify_val, num_b
 def Plot_Histogram(bins_val,num_col,num_bins,model_num, out_plots, inp):
     import numpy as np
     import matplotlib.pyplot as plt
+    plt.rcParams.update({'font.size': 16})
     #column_name = f'_bins'
     plt.hist(bins_val, bins=np.arange(-0.5,((num_bins-1)*num_col)+0.51,1),
               edgecolor='black')
@@ -1567,6 +1575,7 @@ def Plot_Histogram(bins_val,num_col,num_bins,model_num, out_plots, inp):
 def plot_residuals(y_original, predictions, output_path, output_label, fmt):
     import matplotlib.pyplot as plt
     import numpy as np
+    plt.rcParams.update({'font.size': 16})
     fig = plt.figure(figsize=(10, 8))
     plt.scatter(y_original, y_original - predictions)
     plt.axhline(color='black', linestyle=':')
@@ -1589,6 +1598,7 @@ def plot_residuals(y_original, predictions, output_path, output_label, fmt):
 
 def plot_loss_and_mae(history, output_path, output_label, fmt):
     import matplotlib.pyplot as plt
+    plt.rcParams.update({'font.size': 16})
     fig = plt.figure(figsize =(10, 8))
     # Plot training & validation loss values
     plt.plot(history[output_label])
@@ -1832,6 +1842,7 @@ def create_generic_model(hp, input_dim, num_outputs, NN_hyperpara):
 def plot_MP(lm, sym, R_arr, df_Vnf, MP_plots, inp):
     df_Vnf.columns = df_Vnf.columns.astype(str)
     import matplotlib.pyplot as plt
+    plt.rcParams.update({'font.size': 16})
     for i in range(0,lm):               # loop over V_lambda terms
         y_dummy = df_Vnf['{}'.format(i*sym)]         # stores individual V_lambda for each loop
         plt.figure(figsize=(11,3))      # size of figure
@@ -1881,6 +1892,7 @@ def plot_MP(lm, sym, R_arr, df_Vnf, MP_plots, inp):
 
 def plot_MP_combined(lm, sym, R_arr, df_Vnf, MP_plots, inp):
     import matplotlib.pyplot as plt
+    plt.rcParams.update({'font.size': 16})
     df_Vnf.columns = df_Vnf.columns.astype(str)
     for i in range(0,lm):                                      # loop over V_lambda terms
         y_dummy = df_Vnf['{}'.format(i*sym)]                   # stores individual V_lambda for each loop
@@ -1934,6 +1946,7 @@ def Bispher_SF(L1,L2,L,ph,th2,th1):
 def residual_plot(Origi_E,residuals,MP_plots,inp):
     # Plot error distribution
     import matplotlib.pyplot as plt
+    plt.rcParams.update({'font.size': 16})
     fig = plt.figure(figsize =(10, 8))
     plt.scatter(Origi_E, residuals)
     plt.axhline(color='black',linestyle=':')
@@ -1973,6 +1986,8 @@ def find_nearest(array, value):
 def plot_Vlam(x_dummy, y_dummy,parsx,strt,i,inp,FnFit_plots,x,scale_R,scale_Energy):
     import matplotlib.pyplot as plt
     import numpy as np
+    plt.rcParams.update({'font.size': 16})
+
     plt.figure(figsize=(12,4))      # size of figure
     plt.subplot(1,3,1)                      # first subplot at visually appropriate x, y limit
     plt.scatter(x_dummy, y_dummy,s=20, color='#00b3b3',label = r'$ab-initio$ potential')
@@ -2027,6 +2042,8 @@ def plot_Vlam(x_dummy, y_dummy,parsx,strt,i,inp,FnFit_plots,x,scale_R,scale_Ener
 def residual_plot_E(Origi_E,residuals,MP_plots,inp,x):
     # Plot error distribution
     import matplotlib.pyplot as plt
+    plt.rcParams.update({'font.size': 16})
+
     fig = plt.figure(figsize =(10, 8))
     plt.scatter(Origi_E, residuals)
     plt.axhline(color='black',linestyle=':')
@@ -2055,11 +2072,13 @@ def C_fit1D_Plot(Origi_E,predicted_energies,predicted_energiesHELR,R_arr,x_dummy
     # Plot error distribution
     import matplotlib.pyplot as plt
     import numpy as np
+    plt.rcParams.update({'font.size': 16})
+
     plt.figure(figsize=(12,8))      # size of figure
     y_dummy = Origi_E
     plt.scatter(x_dummy, y_dummy, s=20, color='#00b3b3',label = r'$ab-initio$ potential')
     plt.plot(R_arr, predicted_energies, linestyle='-', linewidth=2, color='black', label = 'custom full range fit')
-    plt.plot(x_dummy, predicted_energiesHELR, linestyle='dotted', linewidth=4, color='red', label = 'HE and LR fir')
+    plt.plot(x_dummy, predicted_energiesHELR, linestyle='dotted', linewidth=4, color='red', label = 'HE and LR fit')
     plt.grid(True,linestyle=':')                # grid on
     plt.minorticks_on()                         # minor ticks are on
     plt.legend(loc="upper right")
@@ -2090,6 +2109,8 @@ def fit1D_Plot(Origi_E,predicted_energies,fit_name,R_arr,x_dummy,FnFit_plots,inp
     # Plot error distribution
     import matplotlib.pyplot as plt
     import numpy as np
+    plt.rcParams.update({'font.size': 16})
+
     plt.figure(figsize=(12,8))      # size of figure
     y_dummy = Origi_E
     plt.scatter(x_dummy, y_dummy, s=20, color='#00b3b3',label = r'$ab-initio$ potential')
