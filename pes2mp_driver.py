@@ -930,6 +930,7 @@ def plot_4D_proj(df_out1, header_keep, header_drop1, header_drop1_val, header_dr
     ax = plt.axes(projection="polar")                                # polar plot initialization
     [X, Y] = np.meshgrid(theta, r)                                   # 2D mesh creation
     cp = plt.contourf(X, Y, z1_3d,levels,cmap='seismic', extend="both")  # contour plot
+    cp.set_rasterized(True)
 
     plt.colorbar(cp, pad = 0.12)                                     # colorbar position
     ax.set_facecolor("maroon")                                       # set background color
@@ -988,6 +989,7 @@ def plot_2D_proj(df_out1, z1_3d, out_data, out_plots, inp):
     ax = plt.axes(projection="polar")                     # polar plot initialization
     [X, Y] = np.meshgrid(theta, r)                        # 2D mesh creation
     cp = plt.contourf(X, Y, z1_3d,levels,cmap='seismic', extend="both")     # contour plot
+    cp.set_rasterized(True)
 
     plt.colorbar(cp, pad = 0.12)                           # colorbar position
     ax.set_facecolor("maroon")                             # set background color
