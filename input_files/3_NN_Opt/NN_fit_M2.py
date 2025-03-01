@@ -68,7 +68,7 @@ testing_dataset = [5]*4       # % of data ponts for testing model
 
 NN_hyperpara = {
     'Max_trial'   : 10,           # number of trials for architecture search 
-    'NN_nodes'    : [12,64,32],      # search space for NN nodes per layer
+    'NN_nodes'    : [16,32,64],      # search space for NN nodes per layer
     'NN_layers'   : [2,3,4],      # search space for NN layers 
     'NN_branches' : [2,4],        # search space for NN Branches: even only
     'maxit_trial' : 250,          # max iterations during trial (100-500)
