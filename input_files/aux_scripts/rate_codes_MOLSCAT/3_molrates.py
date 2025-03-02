@@ -47,11 +47,11 @@ subtract_1 = False       # 1-->0, 2-->1 , 3-->2, etc...
 # Special Cases
 #--------------------------------------------------------------------------------#
 # For cases when only even states are present for cases with I=0 like C2, C3 etc. 
-# Subtracting -1 from States and doubling to give J (Keep subtract_1 = False)
+# Subtracting 1 from States and doubling to give J (Keep subtract_1 = False)
 even_j1    = True        # 1-->0, 2-->2 , 3-->4, etc...
 #--------------------------------------------------------------------------------#
 # change label (x-1)/2) (case where 2 rotational state of H2 are included in basis)
-# Subtracting -1 from States and halving to give J (Keep subtract_1 = False)
+# Subtracting 1 from States and halving to give J (Keep subtract_1 = False)
 two_j2     = False       # 1-->0, 2-->2 , 3-->4, etc...
 #--------------------------------------------------------------------------------#
 
