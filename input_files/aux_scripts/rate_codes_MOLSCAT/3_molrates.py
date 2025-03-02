@@ -34,11 +34,12 @@ ji = np.arange(2,5,1)     # 2 to 4      [2,3,4]
 jf = np.arange(1,4,1)     # 1 to 3      [1,2,3]
 #--------------------------------------------------------------------------------#
 # Remember molscat starts j from 1. Change labels to rotational states as shown:
-# To keep labels as it is, set both of them False.
+# To keep labels as it is, set all of them False.
 
-# For He and H2 (P0: J=0 and O1: J=1) set    subtract_1 = True and even_j = False
-# Only for case: H2 (P2) i.e. (J=0,2) set    subtract_1 = False and even_j = True
+# If RR only has even values like C2, C3, etc.            set      even_j1 = True
+# If RR only has both even and odd values like HCO, NCCN. set   subtract_1 = True
 
+# If two J2 cases: P02 i.e. (J2=0,2)                      set       two_j2 = True
 #--------------------------------------------------------------------------------#
 # change label (x-1) to convert 1 to 0 and so on. (He and 1 rotational state of H2)
 subtract_1 = False       # 1-->0, 2-->1 , 3-->2, etc...
