@@ -37,7 +37,7 @@ jf = np.arange(1,4,1)     # 1 to 3      [1,2,3]
 # To keep labels as it is, set all of them False.
 
 # If RR only has even values like C2, C3, etc.            set      even_j1 = True
-# If RR only has both even and odd values like HCO, NCCN. set   subtract_1 = True
+# If RR only has both even and odd values like CO, NCCN. set   subtract_1 = True
 
 # If two J2 cases: P02 i.e. (J2=0,2)                      set       two_j2 = True
 #--------------------------------------------------------------------------------#
