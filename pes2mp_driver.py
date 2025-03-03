@@ -1034,7 +1034,7 @@ def plot_2D_proj(df_out1, z1_3d, out_data, out_plots, inp):
 #-----------------------------------------------------------------------------#
 def plot_1D (df_out1,z1_3d,out_plots, inp, x):
     import matplotlib.pyplot as plt
-    plt.rcParams.update({'font.size': 16})
+    plt.rcParams.update({'font.size': 15})
     plt.figure(figsize=(20,8))                             # figure size
     if x == 1:
         df_out1.plot(x=df_out1.columns[0],y=df_out1.columns[1])
@@ -1849,7 +1849,7 @@ def create_generic_model(hp, input_dim, num_outputs, NN_hyperpara):
 def plot_MP(lm, sym, R_arr, df_Vnf, MP_plots, inp):
     df_Vnf.columns = df_Vnf.columns.astype(str)
     import matplotlib.pyplot as plt
-    plt.rcParams.update({'font.size': 16})
+    plt.rcParams.update({'font.size': 12})
     for i in range(0,lm):               # loop over V_lambda terms
         y_dummy = df_Vnf['{}'.format(i*sym)]         # stores individual V_lambda for each loop
         plt.figure(figsize=(11,3))      # size of figure
@@ -1899,7 +1899,7 @@ def plot_MP(lm, sym, R_arr, df_Vnf, MP_plots, inp):
 
 def plot_MP_combined(lm, sym, R_arr, df_Vnf, MP_plots, inp):
     import matplotlib.pyplot as plt
-    plt.rcParams.update({'font.size': 16})
+    plt.rcParams.update({'font.size': 14})
     df_Vnf.columns = df_Vnf.columns.astype(str)
     for i in range(0,lm):                                      # loop over V_lambda terms
         y_dummy = df_Vnf['{}'.format(i*sym)]                   # stores individual V_lambda for each loop
@@ -1993,7 +1993,7 @@ def find_nearest(array, value):
 def plot_Vlam(x_dummy, y_dummy,parsx,strt,i,inp,FnFit_plots,x,scale_R,scale_Energy):
     import matplotlib.pyplot as plt
     import numpy as np
-    plt.rcParams.update({'font.size': 16})
+    plt.rcParams.update({'font.size': 12})
 
     plt.figure(figsize=(12,4))      # size of figure
     plt.subplot(1,3,1)                      # first subplot at visually appropriate x, y limit
