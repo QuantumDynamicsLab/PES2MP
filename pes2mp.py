@@ -1039,7 +1039,7 @@ if (direct_plot == True or Plot_PES == True):
         except:
             print('\nUsing default path and project name')
             f.write('\n Using default path and project name')
-            Plot_folder = out_data + 'input_files/'
+            Plot_folder = out_data #+ 'input_files/'
         else:
             print('\nExternal folder path provided!')
             f.write('\n External folder path provided!')
@@ -1110,7 +1110,7 @@ if (direct_plot == True or Plot_PES == True):
             if E_Hartree == True:
                 df_out1[4] = (df_out1[4] - E_inf)*219474.63             # convert to cm-1
                 df_out1.to_csv(out_data+'pes_cm_4D.dat', index=None, header=None,sep=',')    # save V_lam coefficients to file separated by comma
-            df_out1.columns = ['R', 'phi', 'theta2', 'theta1', 'E']
+            df_out1.columns = ['R', 'phi', 'theta_2', 'theta_1', 'E']
 
         else:
             print('Invalid dataframe column number: Must be 2, 3 or 5.')

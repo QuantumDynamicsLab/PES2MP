@@ -937,9 +937,12 @@ def plot_4D_proj(df_out1, header_keep, header_drop1, header_drop1_val, header_dr
 
     plt.grid(True,linestyle=':')                                     # grid on
     plt.minorticks_on()                                              # minor ticks are on
-    plt.title("Polar Plot of {} vs R at ({} = {} and {} = {})".format (header_keep,header_drop1,
-                                                                       header_drop1_val, header_drop2,
-                                                                       header_drop2_val)) # title of plot
+    
+    #plt.title(r"Polar Plot of {} vs R at ({} = {} and {} = {})".format (header_keep,header_drop1,
+    #                                                                   header_drop1_val, header_drop2,
+    #                                                                   header_drop2_val)) # title of plot
+    plt.title(f"Polar Plot ($\{header_keep}$, R) at ($\{header_drop1}$ = {header_drop1_val}\u00B0 and $\{header_drop2}$ = {header_drop2_val}\u00B0)", pad=30)
+
     try:
         inp.plt_x_axis
     except:
@@ -953,6 +956,7 @@ def plot_4D_proj(df_out1, header_keep, header_drop1, header_drop1_val, header_dr
     plt.ylim(0,inp.R_lim[1])                                         # y limit
     #plt.xlim(0, 2*np.pi)                                            # x limit (not needed)
 
+    plt.tight_layout()
     # Use polar_plot_%s_%s_%d_%d.eps and format='eps to save polar contour in eps format
     plt.savefig(out_plots+'polar_plot_%s_%s_%d_%d.'
                 %(header_drop1,header_drop2,int(header_drop1_val),int(header_drop2_val)) + inp.fmt,
@@ -1001,7 +1005,7 @@ def plot_2D_proj(df_out1, z1_3d, out_data, out_plots, inp):
         inp.plt_title
     except:
         print('No plot title provided!')
-        #plt.title("Polar Plot")                                       # title of plot
+        plt.title(r"Polar Plot ($\theta$, R)", pad=30)                                       # title of plot
     else:
         plt.title(inp.plt_title)
 
@@ -1017,6 +1021,7 @@ def plot_2D_proj(df_out1, z1_3d, out_data, out_plots, inp):
 
     plt.ylim(0,inp.R_lim[1])                                                 # y limit
     #plt.xlim(0, 2*np.pi)                                  # x limit (not needed)
+    plt.tight_layout()
 
     # plt.savefig(out_plots+'Polar_plot.eps', format='eps')  # save polar contour in eps
     plt.savefig(out_plots+'Polar_plot_2D.'+inp.fmt, format=inp.fmt,bbox_inches='tight')  # save ploar plot in pdf
@@ -1203,7 +1208,7 @@ def pl_trim_vis_full(df_pl, num_XY, num_X, x_shape, out_plots, inp):
         plt.minorticks_on()
         plt.xlabel("Number of data points")
         plt.ylabel("Energy / Output")
-        plt.savefig(out_plots+'Non_partitioned_Full_Dataset_E_sorted_{}.'.format(i)+inp.fmt, format=inp.fmt)
+        plt.savefig(out_plots+'Non_partitioned_Full_Dataset_E_sorted_{}.'.format(i)+inp.fmt, format=inp.fmt,bbox_inches='tight')
         plt.close()
         #plt.show()
         #plt.pause(0.01)
@@ -1335,7 +1340,7 @@ def plot_boundary(df_pl, i, j, out_plots, inp):
     plt.minorticks_on()
     plt.yscale(plt_bnd_yscale)
     plt.xscale(plt_bnd_xscale)
-    plt.savefig(out_plots+'Boundary_Full_Dataset{}.'.format(j)+inp.fmt, format=inp.fmt)
+    plt.savefig(out_plots+'Boundary_Full_Dataset{}.'.format(j)+inp.fmt, format=inp.fmt,bbox_inches='tight')
     print("\n Boundary elements separated and plotted!!")
     plt.close()
   #plt.show()
@@ -1384,7 +1389,7 @@ def plot_boundary_partition(boundary_df_pl_minima,boundary_df_pl_HE, i, j, out_p
     sub2.set_ylabel("Column {} \ntheta/phi (Degrees)".format(j))
 
     plt.tight_layout()
-    plt.savefig(out_plots+'Boundary_Partitioned_Dataset_{}.'.format(j)+inp.fmt, format=inp.fmt)
+    plt.savefig(out_plots+'Boundary_Partitioned_Dataset_{}.'.format(j)+inp.fmt, format=inp.fmt,bbox_inches='tight')
     plt.close()
     print("\n Boundary elements for minima and high energy regions separated and plotted!!")
   #plt.show()
@@ -1591,7 +1596,7 @@ def plot_residuals(y_original, predictions, output_path, output_label, fmt):
         pass
     plt.xscale('symlog')  # Symmetric log scale for X axis
     plt.tight_layout()  # Tight layout
-    plt.savefig(output_path + output_label + '.' + fmt, format=fmt)
+    plt.savefig(output_path + output_label + '.' + fmt, format=fmt ,bbox_inches='tight')
     plt.close(fig)  # Close the figure to release memory
 
     residuals = np.c_[y_original,predictions]
@@ -1610,7 +1615,7 @@ def plot_loss_and_mae(history, output_path, output_label, fmt):
     plt.xlabel('Epoch')
     plt.yscale('log')
     plt.legend(['Train', 'Validation'], loc='upper right')
-    plt.savefig(output_path+'NN_{}_History.'.format(output_label)+fmt, format=fmt)
+    plt.savefig(output_path+'NN_{}_History.'.format(output_label)+fmt, format=fmt ,bbox_inches='tight')
     plt.close(fig)
 
 
@@ -1909,7 +1914,7 @@ def plot_MP_combined(lm, sym, R_arr, df_Vnf, MP_plots, inp):
         plt.ylim(inp.E_lim[0], inp.E_lim[1])                                      # y limit (y_min, y_max)
         plt.xlim(inp.R_lim[0], inp.R_lim[1])                   # x limit (x_min, x_max)
     #plt.show()                                                 # to combine individual plots, plt.show() is used outside loop.
-    plt.savefig(MP_plots+'Combined_V_lam.'+inp.fmt, format=inp.fmt)  # save combined figure
+    plt.savefig(MP_plots+'Combined_V_lam.'+inp.fmt, format=inp.fmt,bbox_inches='tight')  # save combined figure
     plt.close()
 
 #-----------------------------------------------------------------------------#
@@ -1960,7 +1965,7 @@ def residual_plot(Origi_E,residuals,MP_plots,inp):
     #plt.yticks(rotation = 50)
     plt.xlabel(r'Energy $(\mathrm{cm}^{-1})$')             # Y label (written in latex $...$ format)
     plt.tight_layout()                      # tight layout
-    plt.savefig(MP_plots+'Residuals_Vlam2E.'+inp.fmt, format=inp.fmt)
+    plt.savefig(MP_plots+'Residuals_Vlam2E.'+inp.fmt, format=inp.fmt,bbox_inches='tight')
     plt.ylim(inp.Y_lim[0], inp.Y_lim[1])
     try:
         inp.cutoff
@@ -1970,7 +1975,7 @@ def residual_plot(Origi_E,residuals,MP_plots,inp):
         cutoff = inp.cutoff
     plt.yscale('linear')
     plt.xlim(Origi_E.min(), cutoff)
-    plt.savefig(MP_plots+'Residuals_Vlam2E_zoom.'+inp.fmt, format=inp.fmt)
+    plt.savefig(MP_plots+'Residuals_Vlam2E_zoom.'+inp.fmt, format=inp.fmt,bbox_inches='tight')
     plt.close()
 
 #-----------------------------------------------------------------------------#
@@ -2057,7 +2062,7 @@ def residual_plot_E(Origi_E,residuals,MP_plots,inp,x):
     #plt.yticks(rotation = 50)
     plt.xlabel(r'Energy $(\mathrm{cm}^{-1})$')             # Y label (written in latex $...$ format)
     plt.tight_layout()                      # tight layout
-    plt.savefig(MP_plots+'Residuals_EFnFit_{}.'.format(x)+inp.fmt, format=inp.fmt)
+    plt.savefig(MP_plots+'Residuals_EFnFit_{}.'.format(x)+inp.fmt, format=inp.fmt,bbox_inches='tight')
     plt.ylim(inp.Y_lim[0], inp.Y_lim[1])
     try:
         inp.cutoff
@@ -2067,7 +2072,7 @@ def residual_plot_E(Origi_E,residuals,MP_plots,inp,x):
         cutoff = inp.cutoff
     plt.yscale('linear')
     plt.xlim(Origi_E.min(), cutoff)
-    plt.savefig(MP_plots+'Residuals_EFnFit_zoom_{}.'.format(x)+inp.fmt, format=inp.fmt)
+    plt.savefig(MP_plots+'Residuals_EFnFit_zoom_{}.'.format(x)+inp.fmt, format=inp.fmt,bbox_inches='tight')
     plt.close()
 
 def C_fit1D_Plot(Origi_E,predicted_energies,predicted_energiesHELR,R_arr,x_dummy,FnFit_plots,inp):
