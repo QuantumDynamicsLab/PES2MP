@@ -1078,11 +1078,9 @@ def plot_1D (df_out1,z1_3d,out_plots, inp, x):
     try:
         inp.ncol
     except:
-        ncol = 1
+        plt.legend(loc=legend_loc, prop={'size': 14})  # name and position of legend
     else:
-        ncol = inp.ncol
-
-    plt.legend(loc=legend_loc,ncol=ncol, prop={'size': 13})  # name and position of legend
+        plt.legend(bbox_to_anchor=(0.5, -0.15), loc='upper center', ncol=inp.ncol,prop={'size': 12})  # name and position of legend
 
     try:
         inp.E_lim
@@ -1923,9 +1921,10 @@ def plot_MP_combined(lm, sym, R_arr, df_Vnf, MP_plots, inp):
         else:
             ncol = inp.ncol
         if inp.Expansion_typ == '2D':
-            plt.legend(title = r'$\lambda $', loc ="lower right",ncol=ncol)  # name and position of legend
+            plt.legend(title = r'$\lambda $', bbox_to_anchor=(0.5, -0.15), loc='upper center', ncol=ncol,prop={'size': 12})  # name and position of legend
         else:
-            plt.legend(title = r'$\Lambda $', loc ="lower right",ncol=ncol)  # name and position of legend
+            plt.legend(title = r'$\Lambda $', bbox_to_anchor=(0.5, -0.15), loc='upper center' , ncol=ncol,prop={'size': 12})  # name and position of legend
+
         plt.title("Radial Coefficients")                       # title of plot
         plt.xlabel(r'R $\mathrm{(\AA)}$')                      # X label (written in latex $...$ format)
         if inp.Expansion_typ == '2D':
