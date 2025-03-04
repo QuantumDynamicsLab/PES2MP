@@ -1071,9 +1071,18 @@ def plot_1D (df_out1,z1_3d,out_plots, inp, x):
         inp.legend_loc
     except:
         print('No legend location provided. Using Default!')
-        plt.legend(loc="lower right")             # legend location
+        legend_loc="lower right"             # legend location
     else:
-        plt.legend(loc=inp.legend_loc)
+        legend_loc=inp.legend_loc
+
+    try:
+        inp.ncol
+    except:
+        ncol = 1
+    else:
+        ncol = inp.ncol
+
+    plt.legend(loc=legend_loc,ncol=ncol, prop={'size': 13})  # name and position of legend
 
     try:
         inp.E_lim
@@ -1907,10 +1916,22 @@ def plot_MP_combined(lm, sym, R_arr, df_Vnf, MP_plots, inp):
         plt.plot(R_arr, y_dummy,label='{}'.format(i*sym))      # plot each V_lambda
         plt.grid(True,linestyle=':')                           # grid on
         plt.minorticks_on()                                    # minor ticks on
-        plt.legend(title = r'$\lambda $', loc ="lower right")  # name and position of legend
+        try:
+            inp.ncol
+        except:
+            ncol = 1
+        else:
+            ncol = inp.ncol
+        if inp.Expansion_typ == '2D':
+            plt.legend(title = r'$\lambda $', loc ="lower right",ncol=ncol)  # name and position of legend
+        else:
+            plt.legend(title = r'$\Lambda $', loc ="lower right",ncol=ncol)  # name and position of legend
         plt.title("Radial Coefficients")                       # title of plot
         plt.xlabel(r'R $\mathrm{(\AA)}$')                      # X label (written in latex $...$ format)
-        plt.ylabel(r'$V_\lambda$ $(\mathrm{cm}^{-1})$')        # Y label (written in latex $...$ format)
+        if inp.Expansion_typ == '2D':
+            plt.ylabel(r'$V_\lambda$ $(\mathrm{cm}^{-1})$')        # Y label (written in latex $...$ format)
+        else:
+            plt.ylabel(r'$V_\Lambda$ $(\mathrm{cm}^{-1})$')        # Y label (written in latex $...$ format)
         plt.ylim(inp.E_lim[0], inp.E_lim[1])                                      # y limit (y_min, y_max)
         plt.xlim(inp.R_lim[0], inp.R_lim[1])                   # x limit (x_min, x_max)
     #plt.show()                                                 # to combine individual plots, plt.show() is used outside loop.

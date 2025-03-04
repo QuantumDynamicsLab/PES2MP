@@ -6,8 +6,7 @@ import sys
 import shutil
 from tkinter import ttk
 
-# Define color scheme
-# Define color scheme
+# color scheme
 BG_COLOR = "whitesmoke"  
 TEXT_COLOR = "black"  
 ACCENT_COLOR = "lightblue"  
@@ -22,7 +21,7 @@ class PES2MPGUI:
         self.root.title("PES2MP GUI")
         self.root.config(bg=BG_COLOR)
         
-        # Default folder setup
+        # default folder
         default_folder = os.path.join(os.getcwd(), "GUI_examples")
         os.makedirs(default_folder, exist_ok=True)
 
@@ -56,7 +55,6 @@ class PES2MPGUI:
             "4_FnFit_Vlam4D": "MP_files/VlamFnFit"
         }
         
-        # Configure ttk styles for Mac compatibility
         style = ttk.Style()
         style.theme_use('clam')
         style.configure('.', background=BG_COLOR, foreground=TEXT_COLOR)
@@ -68,35 +66,34 @@ class PES2MPGUI:
         
         self.create_widgets(default_folder)
 
-        # Adjust window size dynamically based on content size
+        #  dynamic window size
         self.adjust_window_size()
 
 
     def adjust_window_size(self):
-        # Get the required size for the window based on the content
-        # First, update the layout to get the proper requested size of the window
+        # adjusting window size based on content
         self.root.update_idletasks()
 
         required_width = self.root.winfo_reqwidth()
         required_height = self.root.winfo_reqheight()
 
-        # Define maximum and minimum threshold
+        # maximum and minimum threshold foe window
         max_width = 1000
         max_height = 700
         min_width = 400  # Minimum width
         min_height = 300  # Minimum height
 
-        # Set the window size, but don't exceed the max dimensions
+        # Set the window size weith and height
         final_width = min(required_width, max_width)
         final_height = min(required_height, max_height)
 
-        # Ensure the window isn't smaller than the minimum size
+        # ensure proper width 
         final_width = max(final_width, min_width)
         final_height = max(final_height, min_height)
 
         self.root.geometry(f"{final_width}x{final_height}")
 
-        # Set a minimum window size (to prevent shrinking too small)
+        # Set the minimum window size (to prevent shrinking too small)
         self.root.minsize(min_width, min_height)
 
     def create_widgets(self, default_folder):
@@ -181,7 +178,7 @@ class PES2MPGUI:
         execute_btn.pack(pady=10)
 
 
-        # Footer
+        # Footer heading
         tk.Label(self.root, text="Quantum Dynamics Lab, IIT Ropar", bg=BG_COLOR, 
                 fg=TEXT_COLOR).pack(side=tk.BOTTOM, pady=10)
 
@@ -252,7 +249,7 @@ class PES2MPGUI:
     def update_selection(self, script, var):
         script_cat = self.get_script_category(script)
         if var.get():
-            # Check for mixing dimensions
+            # Check for mixing dimensions (redundant check along with tabs)
             if self.selected_category and self.selected_category != script_cat:
                 messagebox.showerror("Error", "Cannot mix script dimensions!")
                 var.set(False)
@@ -262,7 +259,7 @@ class PES2MPGUI:
             # Add the script if it is not already in the list
             if script not in self.selected_scripts:
                 self.selected_scripts.append(script)
-            # Always sort the selected scripts based on their order in the full list (top-to-bottom)
+            # sort selected scripts based on order in the full list (top-to-bottom)
             self.selected_scripts.sort(key=lambda s: self.scripts[self.selected_category].index(s))
         else:
             if script in self.selected_scripts:
@@ -270,7 +267,7 @@ class PES2MPGUI:
             if not self.selected_scripts:
                 self.selected_category = None
 
-        # Update the label that displays the selected scripts.
+        # Update the label display.
         self.sequence_label.config(text=f"Selected scripts: {', '.join(self.selected_scripts) or 'None'}")
 
 
@@ -312,14 +309,13 @@ class PES2MPGUI:
         if not self.validate_project():
             return
             
-        # Get the terminal command once
+        # Get the terminal command
         #terminal_cmd = self.get_terminal_command()
         
-        # Wrap folder and project variables in double quotes to handle spaces
         folder = self.folder_var.get()
         env = self.env_var.get()
         project = self.project_var.get()
-        log_file = f"Projects/outv_{project}.log"  # Define your log file location
+        log_file = f"Projects/outv_{project}.log"  # log file location
 
         inner_command = (
             f"source $(conda info --base)/etc/profile.d/conda.sh && "
@@ -350,14 +346,12 @@ class PES2MPGUI:
         if not self.validate_project():
             return
             
-        # Get the terminal command once
         #terminal_cmd = self.get_terminal_command()
         
-        # Wrap folder and project variables in double quotes to handle spaces
         folder = self.folder_var.get()
         env = self.env_var.get()
         project = self.project_var.get()
-        log_file = f"Projects/outv_{project}.log"  # Define your log file location
+        log_file = f"Projects/outv_{project}.log"  # log file location
         script_chain = " && ".join([f"python3 pes2mp.py {s} " for s in self.selected_scripts])
 
         inner_command = (
@@ -404,7 +398,6 @@ class PES2MPGUI:
         if not project_name:
             messagebox.showerror("Error", "Project name is required!")
             return
-        # Use mapped folder name if available; otherwise, default to the script name.
         folder_mapping = self.script_folders.get(script, script)
         folder_path = os.path.join(self.folder_var.get(), "Projects", self.project_var.get(), folder_mapping)
         if sys.platform == "darwin":

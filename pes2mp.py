@@ -2408,7 +2408,13 @@ if MPExp:
 
             # importing 2D radial terms
             df_Vn = pd.read_csv(MP_data+inp.V_lam_filename_cm,sep=inp.sep_vlam,header=None)
+
+            df_Vn = df_Vn.apply(pd.to_numeric, errors='coerce')
+            df_Vn.dropna(inplace=True) #removing rows with na values
+            print(df_Vn.head(5))
+
             df_R = df_Vn.pop(0)                              # removing R column from df_Vn and saving to df_R
+            
             if inp.read_Legendre :
                 px = np.load(MP_data+"2D_L_coeff.npy")         # importing legendre coefficients
             else:
@@ -2699,6 +2705,11 @@ if MPExp:
 
             # importing 2D radial terms
             df_Vn = pd.read_csv(MP_data+inp.V_lam_filename_cm,sep=inp.sep_vlam,header=None)
+
+            df_Vn = df_Vn.apply(pd.to_numeric, errors='coerce')
+            df_Vn.dropna(inplace=True) #removing rows with na values
+            print(df_Vn.head(5))
+
             df_R = df_Vn.pop(0)                              # removing R column from df_Vn and saving to df_R
             #df_R = df_Vn.pop('R')                              # removing R column from df_Vn and saving to df_R
             if inp.read_Legendre :

@@ -12,7 +12,7 @@ class InstallerGUI:
         self.root.title("Installer GUI")
         self.root.config(bg="#f7f7f7")
         
-        # Signature frame with solid border
+        # frame 1
         signature_frame = tk.Frame(self.root, bg="#FAF0E6", pady=10, bd=2, relief="solid")
         signature_frame.pack(fill=tk.X)
 
@@ -22,8 +22,6 @@ class InstallerGUI:
         
         self.create_widgets()
 
-
-         # Signature frame with solid border
         signature_frame2 = tk.Frame(self.root, bg="white", pady=10, bd=2, relief="solid")
         signature_frame2.pack(fill=tk.X)
 
@@ -32,29 +30,25 @@ class InstallerGUI:
                                    font=it_font, bg="white", fg="black")
         signature_label5.pack(anchor="e",ipadx=20)
           
-        # Adjust window size dynamically based on content size
+        # dynamic size
         self.adjust_window_size()
 
     
     def adjust_window_size(self):
-        # Get the required size for the window based on the content
-        # First, update the layout to get the proper requested size of the window
         self.root.update_idletasks()
 
         required_width = self.root.winfo_reqwidth()
         required_height = self.root.winfo_reqheight()
 
-        # Define maximum and minimum threshold
+        # maximum and minimum threshold for window
         max_width = 1000
         max_height = 700
         min_width = 600  # Minimum width
         min_height = 300  # Minimum height
 
-        # Set the window size, but don't exceed the max dimensions
         final_width = min(required_width, max_width)
         final_height = min(required_height, max_height)
 
-        # Ensure the window isn't smaller than the minimum size
         final_width = max(final_width, min_width)
         final_height = max(final_height, min_height)
 
@@ -65,7 +59,6 @@ class InstallerGUI:
     
     def create_widgets(self):
 
-        # Create a Frame for the buttons with padding
         frame = tk.Frame(self.root, bg="#f7f7f7")
         frame.pack(padx=20, pady=20, expand=True, fill="both")
 
@@ -85,13 +78,13 @@ class InstallerGUI:
             {"name": "Install BLAS/LAPACK", "script": "install_blas_lapack.sh"},
             {"name": "Install Miscellaneous", "script": "install_etc.sh"},
             ]
-        # Configure grid to resize and distribute space evenly
+        # distribute space evenly
         for i in range(2):  # For each row
             frame.grid_rowconfigure(i, weight=1, uniform="equal")  # All rows should have the same weight
         for i in range(2):  # For each column
             frame.grid_columnconfigure(i, weight=1, uniform="equal")  # All columns should have the same weight
 
-        # Define directories to change to
+        # directories to change to
         self.script_dirs = (
             ["/makefiles"] * 2 +
             ["/makefiles/uninstall_pes2mp"] * 2 +
@@ -101,7 +94,6 @@ class InstallerGUI:
         )
 
 
-        # Create buttons for each script with improved styling
         self.buttons = []
         for i in range(4):
             row = i // 2  # Two columns per row
@@ -185,15 +177,14 @@ class InstallerGUI:
     #     cwd = os.getcwd()
 
     #     try:
-    #         # Change to the specific directory for the script
     #         os.chdir(cwd+script_dir)
     #         print()
     #         os.chmod(script, 0o755)
 
-    #         # Run the script using subprocess
+    #         # Run the Script using subprocess
     #         result = subprocess.run(["bash", script], capture_output=True, text=True)
 
-    #         # Check if the script ran successfully
+    #         # Check if the Script(s) ran successfully
     #         if result.returncode == 0:
     #             messagebox.showinfo("Success", f"Script {script} ran successfully!")
     #         else:
@@ -211,9 +202,7 @@ class InstallerGUI:
         target_dir = cwd+script_dir
         #print(target_dir)
 
-        # Build the command to execute in the new terminal.
-        # It changes to the target directory, makes the script executable,
-        # runs it, and then keeps the terminal open.
+        # save command to execute in the new terminal.
         command = f"cd '{target_dir}' && chmod +x {script} && ./{script}; exec $SHELL"
     
         try:
