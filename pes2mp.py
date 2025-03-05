@@ -2712,7 +2712,7 @@ if MPExp:
 
             df_R = df_Vn.pop(0)                              # removing R column from df_Vn and saving to df_R
             #df_R = df_Vn.pop('R')                              # removing R column from df_Vn and saving to df_R
-            if inp.read_Legendre :
+            if inp.read_SH :
                 px = np.load(MP_data+"4D_BiSp_coeff.npy")         # importing legendre coefficients
             else:
                 print("Error! 4D_BiSp_coeff.npy must be read from MPExp2D calculation")

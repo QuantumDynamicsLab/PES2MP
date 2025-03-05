@@ -28,7 +28,7 @@ class PES2MPGUI:
         self.scripts = {
             "1D": ["1_pesgen1D", "opt_plot1D", "2_FnFit1D"],
             "2D": ["1_pesgen2D", "opt_NNfit2D", "opt_plot2D", "2_FnFit2D", "3_MPExp2D", "4_FnFit_Vlam2D", "opt_residual2D"],
-            "4D": ["1_pesgen4D", "opt_NNfit4D", "opt_plot4D", "2_FnFit4D", "3_MPExp4D", "4_FnFit_Vlam4D"]
+            "4D": ["1_pesgen4D", "opt_NNfit4D", "opt_plot4D", "2_FnFit4D", "3_MPExp4D", "4_FnFit_Vlam4D", "opt_residual4D"]
         }
 
         self.selected_scripts = []
@@ -52,7 +52,8 @@ class PES2MPGUI:
             "opt_NNfit4D": "NN_files",
             "2_FnFit4D": "PESFnFit",
             "3_MPExp4D": "MP_files",
-            "4_FnFit_Vlam4D": "MP_files/VlamFnFit"
+            "4_FnFit_Vlam4D": "MP_files/VlamFnFit",
+            "opt_residual4D": "MP_files/Residuals_Inv_Fit",
         }
         
         style = ttk.Style()
