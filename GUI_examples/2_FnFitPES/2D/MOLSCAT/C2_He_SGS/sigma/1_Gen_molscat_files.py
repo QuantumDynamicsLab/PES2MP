@@ -71,10 +71,10 @@ def loop(start,fin,step,j):
 
 # Use fractional values only when step size < 1
 j1 = loop (0.05, 30.0,  0.05, j)     # initial / final value / step size / counter
-j2 = loop (30.0, 50.1, 0.1,  j1)    # initial / final value / step size / counter
+j2 = loop (30.1, 100.0, 0.1,  j1)    # initial / final value / step size / counter
 
 # When step size > 1, do not use fractional values
-jF = loop (51,  100,   1,    j2)    # initial / final value / step size / counter
+jF = loop (101,  500,   1,    j2)    # initial / final value / step size / counter
 
 #################################################################################
 # keep last counter name jF
