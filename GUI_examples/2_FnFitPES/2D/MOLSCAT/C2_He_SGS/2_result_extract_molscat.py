@@ -20,7 +20,7 @@ filename = 'sigma.dat'    # output file name  (cross sec)
 filename_PE = 'pair_E.dat'   # output file name (pair Energy)
 
 ini   = 1           # initial file number
-final = 852        # final file number 
+final = 1700        # final file number 
 
 # the final file number will be used for extracting pair Energy
 

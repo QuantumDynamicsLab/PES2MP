@@ -15,7 +15,7 @@ path = os.getcwd()
 #################### Input parameters (make changes here) ########################
 ##################################################################################
 #--------------------------------------------------------------------------------#
-tmax = 50    # maximum temperature in kelvin
+tmax = 100    # maximum temperature in kelvin
 redm = 3.4309 # reduced mass in amu
 #--------------------------------------------------------------------------------#
 # File name for input (extract using result_extract_molscat.py)
@@ -31,8 +31,8 @@ all_tr = False    # calculate all transitions (not recommended: keep false)
 
 # molscat labels start from 1 (dont give ji/jf values with 0) [see templates below]
 
-ji = [2 ,3, 3, 4]     # use label for molscat
-jf = [1, 1, 2, 3]     # 1->2, 1->3, 2->3 and 3->4 
+ji = [2, 3, 4, 5]     # use label for molscat
+jf = [1, 1, 1, 1]     # 1->2, 1->3, 2->3 and 3->4 
 
 #--------------------------------------------------------------------------------#
 # Remember molscat starts j from 1. Change labels to rotational states as shown:
