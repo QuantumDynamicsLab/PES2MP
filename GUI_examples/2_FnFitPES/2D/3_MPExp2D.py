@@ -44,6 +44,7 @@ Expansion_typ = '2D'      # 2D i.e. RR-atom collision PES expansion
 # Do not use header and make sure that any R/theta coordinate is not missing
 PES_filename_cm  = "Fnfit_PES.dat"     # Enter Filename (Energies in cm-1)
 sep = ','    # data separation: ',' comma, '\t' tab, '\s+' multiple spaces
+ncol=4       # number of columns for legend
 #------------------------------------------------------------------------------#
 
 #------------------------------------------------------------------------------#

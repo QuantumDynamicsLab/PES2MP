@@ -12,11 +12,10 @@ cutoff = 100    # Energy cutoff in cm-1. PES Features are preserved till cutoff
 # Use below code to define custom analytical function for radial fitting ------#
 # Use templates for more functions. -------------------------------------------#
 
-def fnfit_custom(x, a1,a2):
+def fnfit_custom(x, a1,a2,a3,a4,a5):
     import numpy as np
-    return  a1*np.exp(-4*x) + a2*np.exp(-2*x)
-
-initial_val  =  [1e8, -1e7]                  # Enter initial guess
+    return  a1*np.exp(-4*x)+a2*np.exp(-3*x)+a3*np.exp(-2*x)+a4*np.exp(-1*x)+a5*np.exp(-0.2*x) 
+initial_val  = [1e4]*5                    # Enter initial guess
 
 #------------------------ Optional Constraints --------------------------------#
 #lower_bounds = [0]*8                        # Lower bound
@@ -26,7 +25,7 @@ initial_val  =  [1e8, -1e7]                  # Enter initial guess
 fmt     = 'pdf'     # format for created plots, options = pdf, eps, png, etc.
 scale_x = 'symlog'  # 'symlog' or 'linear'
 scale_y = 'symlog'  # 'symlog' or 'linear'
-Y_lim   = [-10,10]    # E (residual) limit for zoomed in plot
+Y_lim   = [-1,1]    # E (residual) limit for zoomed in plot
 #------------------------------------------------------------------------------#
 
 

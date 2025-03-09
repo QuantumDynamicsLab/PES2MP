@@ -12,22 +12,21 @@ symmetric = True        # Verify if rigid rotor is symmetric (else put False)
 # Use below code to define custom analytical function for radial fitting -------#
 # Use same templates as FnFit_PES just use -inf for lower_bounds ---------------#
 #-------------------------------------------------------------------------------#
-def fnfit_custom(x, a1,a2):
+def fnfit_custom(x, a1,a2,a3,a4,a5):
     import numpy as np
-    return  a1*np.exp(-4*x) + a2*np.exp(-2*x)
-
-initial_val  =  [1e8, -1e7]                  # Enter initial guess
+    return  a1*np.exp(-4*x)+a2*np.exp(-3*x)+a3*np.exp(-2*x)+a4*np.exp(-1*x)+a5*np.exp(-0.2*x) 
+initial_val  = [1e4]*5                    # Enter initial guess
 #-------------------------------------------------------------------------------#
 
 #-------------------------------------------------------------------------------#
 #----------------- Enter data for printing MOLSCAT &POTL File ------------------#
 #-------------------------------------------------------------------------------#
 #import numpy as np                        # Use if needed ---------------------#
-Exp_fns = 2                                # number of Exponential functions
+Exp_fns = 5                                # number of Exponential functions
 A_sign  = [+1]*Exp_fns                     # Enter signs of coeffs A (in order)
 
 N_Opt   = False                            # Are N values optimised (A.e^(-Nx))?
-N_Vals  = [-4,-2]                          # If N_Opt=False, enter N coeffs 
+N_Vals  = [-4,-3,-2,-1,-0.2]  # If N_Opt=False, enter N coeffs 
 
 Pair_fns = False		    # pair func = a1*(np.exp(-3.1*x)+np.exp(-3.0*x))...
 Print_raw = True            # Raw coefficients for later formatting
