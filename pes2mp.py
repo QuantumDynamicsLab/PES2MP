@@ -1630,7 +1630,10 @@ if NNGen:
         f.write('Seed for random skitlearn split of training, testing and validation dataset: {} \n'.format(seed_inp))
         stratify_val = 1
     elif Split_Choice_minima == 2 or 3:
-        num_bins = int(input("Enter number of bins for split (Suggestion: 3-5 [5(2D); 3(4D)] : "))
+        if Split_Choice_minima == 2:
+            num_bins = int(input("Enter number of bins for split (Suggestion: 3-5 [4-5(2D); 2-3(4D)] : "))
+        else:
+            num_bins = int(input("Enter number of bins for split (Suggestion: 5+) : "))
         seed_inp = None
         if (Split_Choice_minima == 2):
           stratify_val = 2

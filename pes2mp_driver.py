@@ -1224,7 +1224,7 @@ def pl_trim_vis_full(df_pl, num_XY, num_X, x_shape, out_plots, inp):
 
 def pl_trim_vis_part(df_pl_min, df_pl_HE, num_XY, num_X, x_shape, trim, out_plots, inp):
     import matplotlib.pyplot as plt
-    plt.rcParams.update({'font.size': 16})
+    plt.rcParams.update({'font.size': 10})
     import numpy as np
     try:
         inp.plt_srt_yscale
@@ -1355,7 +1355,7 @@ def plot_boundary(df_pl, i, j, out_plots, inp):
 # function to plot boundary elements of 2 partitioned data (minima and high energy)
 def plot_boundary_partition(boundary_df_pl_minima,boundary_df_pl_HE, i, j, out_plots, inp):
     import matplotlib.pyplot as plt
-    plt.rcParams.update({'font.size': 16})
+    plt.rcParams.update({'font.size': 12})
     try:
         inp.plt_bnd_yscale
     except:
