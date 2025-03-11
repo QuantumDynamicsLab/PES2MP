@@ -2877,7 +2877,7 @@ if FnFit:
                 strt = inp.start_pos[i]
                 strt_i[i] = strt
                 print("Minima Fit:{} | Start position: {} | Value (cm-1) {}".format(i,strt, y_dummy[strt]))
-                f.write("Minima Fit:{} | Start position: {} | Value (cm-1) {} \n\n".format(i,strt, y_dummy[strt]))
+                f.write("\n\nMinima Fit:{} | Start position: {} | Value (cm-1) {} \n\n".format(i,strt, y_dummy[strt]))
 
             gmodel = Model(inp.fnfit_custom) # using lmfit
 
@@ -3035,6 +3035,10 @@ if FnFit:
         f.write("\n Fitting PES data into analytical function! \n")
         
         FnFit_data = out_data + 'PESFnFit/' # directory for TF NN model and other files
+        
+        if HELR_Fit == False:
+            f_fnout = open(FnFit_data+"pes_fn.txt", "a+")
+
         if not os.path.exists(FnFit_data):
             os.makedirs(FnFit_data)
         FnFit_plots = FnFit_data + 'Plots/' # directory for TF NN model and other files
@@ -3075,6 +3079,9 @@ if FnFit:
 
         if inp.PES_typ == '1D':
             df_inp.columns = ['R', 'E']
+
+            if HELR_Fit == False:
+                f_fnout.write('1D \n')
 
             if E_Hartree == True:
                 df_inp['E'] = (df_inp['E'] - E_inf)*219474.63             # convert to cm-1
@@ -3202,6 +3209,11 @@ if FnFit:
             f.write("\n Fitting Coefficients for full region fit : \n")
             f.write(str(best_vals))
 
+            if HELR_Fit == False:
+                #f_fnout.write(str(",".join(best_vals) + "\n"))
+                np.savetxt(f_fnout, best_vals.reshape(1, -1), delimiter=',', fmt='%.16g')
+
+
             final_data = np.c_[ R_arr, predicted_energies ]
             residuals = predicted_energiesR - y_dummy.to_numpy()
             residuals_data = np.c_[ y_dummy.to_numpy(), residuals ]
@@ -3228,14 +3240,28 @@ if FnFit:
                 driver.fit1D_Plot(y_dummy,predicted_energies,'CustomFn_fit',R_arr,x_dummy,FnFit_plots,inp)
             else:
                 driver.fit1D_Plot(y_dummy,predicted_energies,'CustomFn_fit',R_arr,x_dummy,FnFit_plots,inp)
+                f_fnout.close()
 
             # saving data and plots!
 
             f.write("\n\nSaving a copy of fitted PES (Fnfit_PES.dat) to : \n {} \n\n".format(out_data))
             np.savetxt(out_data+"Fnfit_PES.dat", final_data, delimiter=",",fmt='%.2f,%.16f')
 
+            print("#-------------------------------------------------------------------#")
+            print("#-------#    1D PES Fitted into analytical expression!    #---------#")
+            print("#-------------------------------------------------------------------#")
+    
+            f.write("\n#-------------------------------------------------------------------#")
+            f.write("\n#-------#    1D PES Fitted into analytical expression!    #---------#")
+            f.write("\n#-------------------------------------------------------------------#")
+            f.write("\n\n")
+
+
         elif inp.PES_typ == '2D':
             df_inp.columns = ['R', 'th', 'E']
+
+            if HELR_Fit == False:
+                f_fnout.write('2D \n')
 
             if E_Hartree == True:
                 df_inp['E'] = (df_inp['E'] - E_inf)*219474.63             # convert to cm-1
@@ -3334,7 +3360,7 @@ if FnFit:
                 except:
                     strt, strt_val = driver.find_nearest(y_dummy, value=inp.cutoff) # datapoint with cutoff
                     print("Minima Fit:{} | Start position: {} | Value (cm-1) {} \n".format(i,strt, strt_val))
-                    f.write("Minima Fit:{} | Start position: {} | Value (cm-1) {} \n\n".format(i,strt, strt_val))
+                    f.write("\n\nMinima Fit:{} | Start position: {} | Value (cm-1) {} \n\n".format(i,strt, strt_val))
                 else:
                     strt=np.argmin(y_dummy)-inp.cutoff_pos
 
@@ -3433,6 +3459,10 @@ if FnFit:
                 print(result.best_values)
                 f.write("\n Fitting Coefficients for full region fit : \n")
                 f.write(str(best_vals))
+    
+                if HELR_Fit == False:
+                    np.savetxt(f_fnout, angmat[i].reshape(1, -1), delimiter=',', fmt='%.6g')
+                    np.savetxt(f_fnout, best_vals.reshape(1, -1), delimiter=',', fmt='%.16g')
 
                 predicted_energies[i*nc:(i+1)*nc] = E
                 predicted_energiesR[st:en] = ER
@@ -3457,6 +3487,8 @@ if FnFit:
                 np.savetxt(FnFit_data+"HELRfit_PES.dat", HELR_Fit_PES, delimiter=",",fmt='%.2f,%.2f,%.16f')
                 print("\nSaving Only High Energy and Long Range region fitted PES (HELR_Fit_PES.dat) to : \n {}".format(FnFit_data))
                 f.write("\n\nSaving Only High Energy and Long Range region fitted PES (HELR_Fit_PES.dat) to : \n {} \n\n".format(FnFit_data))
+            else:
+                f_fnout.close()
 
 
             np.savetxt(FnFit_data+"residuals_Fnfit_PES.dat", residuals_data, delimiter=",",fmt='%.16f,%.16f')
@@ -3479,6 +3511,9 @@ if FnFit:
 
         elif inp.PES_typ == '4D':
             df_inp.columns = ['R', 'phi', 'th2', 'th1', 'E']
+
+            if HELR_Fit == False:
+                f_fnout.write('4D \n')
 
             if E_Hartree == True:
                 df_inp['E'] = (df_inp['E'] - E_inf)*219474.63             # convert to cm-1
@@ -3571,7 +3606,7 @@ if FnFit:
                 except:
                     strt, strt_val = driver.find_nearest(y_dummy, value=inp.cutoff) # datapoint with cutoff
                     print("Minima Fit:{} | Start position: {} | Value (cm-1) {} \n".format(i,strt, strt_val))
-                    f.write("Minima Fit:{} | Start position: {} | Value (cm-1) {} \n\n".format(i,strt, strt_val))
+                    f.write("\n\nMinima Fit:{} | Start position: {} | Value (cm-1) {} \n\n".format(i,strt, strt_val))
                 else:
                     strt=np.argmin(y_dummy)-inp.cutoff_pos
 
@@ -3662,6 +3697,10 @@ if FnFit:
                 f.write("\n Fitting Coefficients for full region fit : \n")
                 f.write(str(best_vals))
 
+                if HELR_Fit == False:
+                    np.savetxt(f_fnout, angmat[i].reshape(1, -1), delimiter=',', fmt='%.6g')
+                    np.savetxt(f_fnout, best_vals.reshape(1, -1), delimiter=',', fmt='%.16g')
+
                 predicted_energies[i*nc:(i+1)*nc] = E
                 predicted_energiesR[st:en] = ER
                 if HELR_Fit == True:
@@ -3685,6 +3724,8 @@ if FnFit:
                 np.savetxt(FnFit_data+"HELRfit_PES.dat", HELR_Fit_PES, delimiter=",",fmt='%.2f,%.2f,%.2f,%.2f,%.16f')
                 print("\nSaving Only High Energy and Long Range region fitted PES (HELR_Fit_PES.dat) to : \n {}".format(FnFit_data))
                 f.write("\n\nSaving Only High Energy and Long Range region fitted PES (HELR_Fit_PES.dat) to : \n {} \n\n".format(FnFit_data))
+            else:
+                f_fnout.close()
 
             np.savetxt(FnFit_data+"residuals_Fnfit_PES.dat", residuals_data, delimiter=",",fmt='%.16f,%.16f')
 
