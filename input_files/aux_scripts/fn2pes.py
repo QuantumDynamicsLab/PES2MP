@@ -15,9 +15,9 @@ R_range = np.concatenate((R1, R2))
 
 #------------------------------------------------------------------------------#
 # Define input & output files
-input_filename = "4dpes_fn.txt"         # filename having pes coefficients
-output_dataframe = "4dpes_fngen.dat"    # filename for PES in dataframe format
-output_matrix = "4dpesmat_fngen.dat"    # filename for PES in matrix format (2D/4D)
+input_filename = "pes_fn.txt"         # filename having pes coefficients
+output_dataframe = "pes_fngen.dat"    # filename for PES in dataframe format
+output_matrix = "pesmat_fngen.dat"    # filename for PES in matrix format (2D/4D)
 #------------------------------------------------------------------------------#
 
 ################################## MAIN CODE ###################################
