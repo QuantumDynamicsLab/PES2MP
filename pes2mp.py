@@ -3035,15 +3035,16 @@ if FnFit:
         f.write("\n Fitting PES data into analytical function! \n")
         
         FnFit_data = out_data + 'PESFnFit/' # directory for TF NN model and other files
-        
-        if HELR_Fit == False:
-            f_fnout = open(FnFit_data+"pes_fn.txt", "a+")
 
         if not os.path.exists(FnFit_data):
             os.makedirs(FnFit_data)
         FnFit_plots = FnFit_data + 'Plots/' # directory for TF NN model and other files
         if not os.path.exists(FnFit_plots):
             os.makedirs(FnFit_plots)
+
+        if HELR_Fit == False:
+            f_fnout = open(FnFit_data+"pes_fn.txt", "a+")
+     
         #df_res = pd.read_csv(out_data+inp.filename,sep=inp.sep)
         #if Matrix_convert:
         #    if PES_typ == '2D':
