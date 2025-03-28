@@ -80,7 +80,7 @@ class PES2MPGUI:
 
         # maximum and minimum threshold foe window
         max_width = 1000
-        max_height = 700
+        max_height = 800
         min_width = 400  # Minimum width
         min_height = 300  # Minimum height
 
@@ -135,8 +135,41 @@ class PES2MPGUI:
         tk.Label(settings_frame, text="Project Name:", fg=TEXT_COLOR, bg=BG_COLOR, \
                  font=(None, 11)).grid(row=2, column=0, sticky="w")
         self.project_var = tk.StringVar()
-        ttk.Entry(settings_frame, textvariable=self.project_var, font=(None, 11)).grid(row=2, column=1)
+        ttk.Entry(settings_frame, textvariable=self.project_var, width=20, font=(None, 11)).grid(row=2, column=1, sticky="w")
 
+        # Create/Open Project Folder button
+        ttk.Button(settings_frame, text="Create Project Folder", command=self.create_project_folder).grid(row=2, column=2, padx=5)
+        ttk.Button(settings_frame, text="Open Project Folder", command=self.open_project_folder).grid(row=2, column=3, padx=5)
+
+
+
+
+        # Custom File Name Input
+        custom_file_frame = ttk.Frame(self.root)
+        custom_file_frame.pack(padx=20, pady=2, fill=tk.X)
+
+        #ttk.Separator(custom_file_frame, orient="horizontal").grid(row=-1, column=0, columnspan=6, sticky="ew", pady=5)
+        ttk.Label(custom_file_frame, text="---------------- Optional Entry (Run Custom Scripts) ----------------", foreground="gray").grid(row=0, column=0, columnspan=6, pady=2)
+      
+        # File name input
+        tk.Label(custom_file_frame, text="Custom Script:", bg=BG_COLOR, fg=TEXT_COLOR, font=(None, 11)).grid(row=1, column=1, sticky="w")
+        self.file_name_var = tk.StringVar()
+        ttk.Entry(custom_file_frame, textvariable=self.file_name_var, width=30, font=(None, 11)).grid(row=1, column=2, sticky="w")
+        
+        # Static .py label (not editable)
+        tk.Label(custom_file_frame, text=".py", bg=BG_COLOR, fg=TEXT_COLOR, font=(None, 11)).grid(row=1, column=3, sticky="w")
+        
+        # Open button
+        ttk.Button(custom_file_frame, text="Open File", command=self.open_custom_file).grid(row=1, column=4, padx=5)
+        
+        # Run button
+        ttk.Button(custom_file_frame, text="Run", command=self.run_custom_file).grid(row=1, column=5, padx=5)        
+        
+        tab_labels = {
+            "1D": ("Atom - Atom Collision", "●  → ←  ○"),
+            "2D": ("Rigid Rotor - Atom Collision", "/  → ←  ∘"),
+            "4D": ("Rigid Rotor - Rigid Rotor Collision", "/  → ←  \\"),
+        }
         # Script Tabs
         self.tabs = ttk.Notebook(self.root)
         self.tabs.pack(padx=20, pady=10, fill=tk.BOTH, expand=True)
@@ -145,7 +178,12 @@ class PES2MPGUI:
             tab_frame = ttk.Frame(self.tabs)
             self.tabs.add(tab_frame, text=dimension)
             self.create_script_panel(tab_frame, dimension)
-
+            # Add bottom labels
+            title, symbol = tab_labels[dimension]
+            if title:
+                ttk.Label(tab_frame, text=title, font=("Arial", 14, "bold")).pack(side="bottom", pady=(2, 0))
+            if symbol:
+                ttk.Label(tab_frame, text=symbol, font=("Segoe UI Symbol", 20)).pack(side="bottom", pady=(0, 0))
         # Execution controls
             
         self.sequence_label = tk.Label(self.root, text="Selected scripts: None", 
@@ -339,6 +377,31 @@ class PES2MPGUI:
             command = f'gnome-terminal -- bash -c \'{inner_command}\''
             subprocess.Popen(command, shell=True)
 
+    def run_custom_file(self):
+        file_name = self.file_name_var.get().strip()
+        if not file_name:
+            messagebox.showerror("Error", "Please provide a file name!")
+            return
+        folder = self.folder_var.get()
+        env = self.env_var.get()
+        project = self.project_var.get()
+        inner_command = (
+            f"source $(conda info --base)/etc/profile.d/conda.sh && "
+            f"cd {folder} && "
+            f"conda activate {env} && "
+            f"python3 pes2mp.py {file_name} ; "
+            f"exec $SHELL"
+        )
+        if sys.platform == "darwin":
+            apple_script = f'''
+            tell application "Terminal"
+                do script "{inner_command}"
+                activate
+            end tell'''
+            subprocess.Popen(["osascript", "-e", apple_script])
+        else:
+            subprocess.Popen(inner_command, shell=True)
+
     def run_sequence(self):
         if not self.selected_scripts:
             messagebox.showwarning("Warning", "No scripts selected!")
@@ -394,6 +457,19 @@ class PES2MPGUI:
         elif sys.platform == "linux":
             subprocess.Popen(["xdg-open", file_path])
 
+
+    def open_custom_file(self):
+        file_name = self.file_name_var.get().strip()
+        if not file_name:
+            messagebox.showerror("Error", "Please provide a file name!")
+            return
+        file_path = os.path.join(self.folder_var.get(), f"{file_name}.py")
+        if sys.platform == "darwin":
+            subprocess.Popen(["open", file_path])
+        elif sys.platform == "linux":
+            subprocess.Popen(["xdg-open", file_path])
+
+
     def open_script_folder(self, script):
         project_name = self.project_var.get().strip()
         if not project_name:
@@ -405,6 +481,38 @@ class PES2MPGUI:
             subprocess.Popen(["open", folder_path])
         elif sys.platform == "linux":
             subprocess.Popen(["xdg-open", folder_path])
+
+    def create_project_folder(self):
+        project_name = self.project_var.get().strip()
+        if not project_name:
+            messagebox.showerror("Error", "Project name is required!")
+            return
+    
+        # Define the folder path
+        folder_path = os.path.join(self.folder_var.get(), "Projects", project_name)
+        
+        # Create folder if it doesn't exist
+        os.makedirs(folder_path, exist_ok=True)
+
+    def open_project_folder(self):
+        project_name = self.project_var.get().strip()
+        if not project_name:
+            messagebox.showerror("Error", "Project name is required!")
+            return
+        folder_path = os.path.join(self.folder_var.get(), "Projects", project_name)
+        # Open the folder based on the OS
+        try:
+            if sys.platform == "darwin":
+                subprocess.Popen(["open", folder_path])
+            elif sys.platform == "linux":
+                subprocess.Popen(["xdg-open", folder_path])
+            else:
+                messagebox.showerror("Error", "Unsupported operating system!")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to open folder: {e}")
+
+
+
     
     #def get_terminal_command(self):
     #    """Return the appropriate terminal command based on the platform."""
