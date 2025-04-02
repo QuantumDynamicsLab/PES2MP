@@ -17,6 +17,12 @@ python -m pip install --upgrade pip
 python -m pip install tensorflow keras-tuner pyshtools numpy pandas pyarrow scipy sympy matplotlib tqdm scikit-learn jupyter spyder #lmfit pydot python-graphviz
 conda install -y lmfit pydot python-graphviz -c conda-forge 
 
+# To use GPU acceleration in MacOS, uncomment the lines below
+#python -m pip uninstall tensorflow
+#python -m pip install tensorflow-macos
+#python -m pip install tensorflow-metal
+
+
 # optional d3/d4 dispersion correction for Psi4 (works with psithon)
 # Refer https://github.com/dftd4/dftd4 and https://psicode.org/psi4manual/master/dftd3.html
 conda install dftd3-python  -y -c conda-forge   # or conda install dftd3-python  -y -c conda-forge 
