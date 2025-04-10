@@ -187,11 +187,11 @@ for i in tqdm(range (len(ji))):         # loop over j_i
     # rate by integration
     def integrand(e_j, sigma, t):
         akboltz = scipy.constants.Boltzmann    # boltzmann const in J K-1
-        return sigma*en_j*np.exp(-e_j/(akboltz*t))
+        return sigma*e_j*np.exp(-e_j/(akboltz*t))
 
     for tp in range (1,tmax+1,1):
         res = integrand(en_j,cr_cm2,tp)
-        I = scipy.integrate.simpson(res)
+        I = scipy.integrate.simpson(res, x=en_j)
         rate_int[tp-1] = const[tp-1]*I/avaga
     if ct2==0:
         arr_int = np.stack((temp, rate_int), axis=1)
