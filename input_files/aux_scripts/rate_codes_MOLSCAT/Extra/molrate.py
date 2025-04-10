@@ -87,7 +87,7 @@ def integrand(e_j, sigma, t):
 # integration using composite Simpson's rule
 for tp in range (1,tmax+1,1):
     res = integrand(en_j,cr_cm2,tp)
-    I = scipy.integrate.simpson(res, x=en_j)
+    I = scipy.integrate.simpson(res)
     rate_int[tp-1] = const[tp-1]*I/avaga
 temp = np.arange(1,tmax+1)
 arr_int = np.stack((temp, rate_int), axis=1)            
