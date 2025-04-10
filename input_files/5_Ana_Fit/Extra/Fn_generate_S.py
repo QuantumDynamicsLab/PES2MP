@@ -13,7 +13,7 @@ N_exp  = 4                          # number of exponential functions
 beta_c = np.linspace(0.1, 5, N_exp) # beta coeff range (automatic generation)
                                     # initial value, final value, no. of points
 
-# beta_c = [-0.25,-1,-2,-3]         # beta coeff range (manual input)
+# beta_c = [0.25,1,2,3]         # beta coeff range (manual input)
 
 #------------------------------------------------------------------------------#
 # Program/script/code/wizardry
