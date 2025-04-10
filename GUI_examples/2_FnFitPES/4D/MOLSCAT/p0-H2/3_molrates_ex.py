@@ -111,8 +111,8 @@ if all_tr:
     jf = []
     for i in range (1, max(j_i)+1):         # loop over j_i
         for j in range (1, max(j_f)+1):     # loop over j_i
-            ji = np.append(ji,i)
-            jf = np.append(ji,j)
+            ji.append(i)
+            jf.append(j)
     print("Total Transitions:", len(ji))
 
 else:
@@ -214,7 +214,7 @@ for i in tqdm(range (len(ji))):         # loop over j_i
 
     for tp in range (1,tmax+1,1):
         res = integrand(en_j,cr_cm2,tp)
-        I = scipy.integrate.simpson(res, x=en_j)
+        I = scipy.integrate.simpson(res)
         rate_int[tp-1] = const[tp-1]*I/avaga
     if ct2==0:
         arr_int = np.stack((temp, rate_int), axis=1)
