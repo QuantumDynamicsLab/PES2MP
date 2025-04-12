@@ -40,7 +40,14 @@ cutoff = 100    # Energy cutoff in cm-1. PES Features are preserved till cutoff
 #initial_val  = [1e4]*4                    # Enter initial guess
 #------------------------------------------------------------------------------#
 # Fn4 (Custom Exp-Log Function)
-
+def fnfit_custom(x, a1,a2,a3):
+    import numpy as np
+    u = a2*x
+    return  a1*np.exp(-u)*np.log(a3/u) 
+ 
+initial_val  = [1e6,1,1]                   # Enter initial guess
+#------------------------------------------------------------------------------#
+# Fn5 (Custom ExpLog-Log Function)
 def fnfit_custom(x, a,b,c):
     import numpy as np
     u = 1.88973*x
@@ -48,9 +55,14 @@ def fnfit_custom(x, a,b,c):
     
     return a * XX * np.exp(XX)
 initial_val  = [300, 8, 0.2]                   # Enter initial guess
-
 #------------------------ Optional Constraints --------------------------------#
-# Fn(1,2,3) (Off) - Fn4 (On)
+# Fn(1,2,3) (Off:Commented) - Fn4/Fn5 (On: Uncomment)
+#------------------------------------------------------------------------------#
+# Fn4 (Custom Exp-Log Function)
+lower_bounds = [1,     0,   0]                     # Lower bound
+upper_bounds = [1e12, 10,  10]                     # Upper bound
+#------------------------------------------------------------------------------#
+# Fn5 (Custom ExpLog-Log Function)
 lower_bounds = [0,     0, 0]                     # Lower bound
 upper_bounds = [1000,  9, 9]                     # Upper bound
 #------------------------------------------------------------------------------#
