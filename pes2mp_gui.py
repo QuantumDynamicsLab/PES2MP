@@ -365,28 +365,6 @@ class PES2MPGUI:
             messagebox.showinfo("Success", f"Copied PES2MP.py and PES2MP_driver.py to:\n{dest_folder}")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to copy files:\n{e}")
-    
-#    def copy_pes2mp_files_auto(self):
-#        files_to_copy = ["pes2mp.py", "pes2mp_driver.py"] #source file paths
-#        dest_dir = self.folder_var.get()  # Destination folder selected by the user
-#        for file in files_to_copy:
-#            src = os.path.join(os.getcwd(), file)
-#            dst = os.path.join(dest_dir, file)
-#    
-#            if not os.path.exists(src):
-#                messagebox.showerror("Missing File", f"'{file}' not found in current directory.")
-#                continue
-#    
-#            if os.path.exists(dst):
-#                overwrite = messagebox.askyesno("File Exists", f"'{file}' already exists in selected folder.\nOverwrite?")
-#                if not overwrite:
-#                    continue
-#    
-#            try:
-#                shutil.copy2(src, dst)
-#                messagebox.showinfo("Success", f"Copied PES2MP.py and PES2MP_driver.py to:\n{dest_folder}")
-#            except Exception as e:
-#                messagebox.showerror("Copy Failed", f"Could not copy '{file}' to selected folder:\n{e}")
 
 
     def run_script(self, script):
