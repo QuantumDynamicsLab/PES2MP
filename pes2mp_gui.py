@@ -126,9 +126,11 @@ class PES2MPGUI:
 
         self.folder_entry.grid(row=1, column=1, sticky="ew")
         self.folder_entry.xview_moveto(1)  # Auto-scroll to rightmost position
+ 
+        ttk.Button(settings_frame, text="Select Folder & Copy PES2MP Files", command=self.select_folder).grid(row=1, column=2, columnspan=2, padx=5, pady=5)
         
-        ttk.Button(settings_frame, text="Browse", command=self.select_folder).grid(row=1, column=2, padx=5, pady=5)
-        ttk.Button(settings_frame, text="Copy PES2MP Files", command=self.copy_pes2mp_files).grid(row=1, column=3, padx=5, pady=5)
+#        ttk.Button(settings_frame, text="Browse", command=self.select_folder).grid(row=1, column=2, padx=5, pady=5)
+#        ttk.Button(settings_frame, text="Copy PES2MP Files", command=self.copy_pes2mp_files).grid(row=1, column=3, padx=5, pady=5)
 
 
         # Project Name
@@ -317,16 +319,20 @@ class PES2MPGUI:
         return None
 
     def select_folder(self):
-        initial_dir = os.getcwd()
+        try:
+            initial_dir = self.folder_var.get()
+        except:
+            initial_dir = os.getcwd()
         folder = filedialog.askdirectory(initialdir=initial_dir)
         if folder:
             self.folder_var.set(folder)
-            self.folder_entry.xview_moveto(1)  # <-- Add this line
+            self.folder_entry.xview_moveto(1) 
             #os.chdir(folder)
             messagebox.showinfo("Info", f"Working directory changed to:\n{folder}")
+            self.copy_pes2mp_files()
 
     def copy_pes2mp_files(self):
-        # Define source file paths
+        # source file paths
         src_file1 = os.path.join(os.getcwd(), "pes2mp.py")
         src_file2 = os.path.join(os.getcwd(), "pes2mp_driver.py")
         dest_folder = self.folder_var.get()  # Destination folder selected by the user
@@ -336,13 +342,52 @@ class PES2MPGUI:
         if missing_files:
             messagebox.showerror("Error", f"Source file(s) not found:\n{', '.join(missing_files)}")
             return
-
+            
+        # Destination file paths
+        dest_file1 = os.path.join(dest_folder, "pes2mp.py")
+        dest_file2 = os.path.join(dest_folder, "pes2mp_driver.py") 
+               
+        # Check for existing files
+        existing_files = [f for f in [dest_file1, dest_file2] if os.path.exists(f)]
+        if existing_files:
+            response = messagebox.askyesno(
+                "Overwrite Confirmation",
+                f"The following file(s) already exist:\n\n" +
+                "\n".join(os.path.basename(f) for f in existing_files) +
+                "\n\nDo you want to overwrite them?"
+            )
+            if not response:
+                return  # User chose not to overwrite
+            
         try:
             shutil.copy(src_file1, dest_folder)
             shutil.copy(src_file2, dest_folder)
             messagebox.showinfo("Success", f"Copied PES2MP.py and PES2MP_driver.py to:\n{dest_folder}")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to copy files:\n{e}")
+    
+#    def copy_pes2mp_files_auto(self):
+#        files_to_copy = ["pes2mp.py", "pes2mp_driver.py"] #source file paths
+#        dest_dir = self.folder_var.get()  # Destination folder selected by the user
+#        for file in files_to_copy:
+#            src = os.path.join(os.getcwd(), file)
+#            dst = os.path.join(dest_dir, file)
+#    
+#            if not os.path.exists(src):
+#                messagebox.showerror("Missing File", f"'{file}' not found in current directory.")
+#                continue
+#    
+#            if os.path.exists(dst):
+#                overwrite = messagebox.askyesno("File Exists", f"'{file}' already exists in selected folder.\nOverwrite?")
+#                if not overwrite:
+#                    continue
+#    
+#            try:
+#                shutil.copy2(src, dst)
+#                messagebox.showinfo("Success", f"Copied PES2MP.py and PES2MP_driver.py to:\n{dest_folder}")
+#            except Exception as e:
+#                messagebox.showerror("Copy Failed", f"Could not copy '{file}' to selected folder:\n{e}")
+
 
     def run_script(self, script):
         if not self.validate_project():
@@ -500,6 +545,11 @@ class PES2MPGUI:
             messagebox.showerror("Error", "Project name is required!")
             return
         folder_path = os.path.join(self.folder_var.get(), "Projects", project_name)
+        # Check if the folder exists
+        if not os.path.exists(folder_path):
+            messagebox.showerror("Error", f"The folder does not exist:\n{folder_path}")
+            return
+ 
         # Open the folder based on the OS
         try:
             if sys.platform == "darwin":
