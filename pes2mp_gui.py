@@ -362,7 +362,7 @@ class PES2MPGUI:
         try:
             shutil.copy(src_file1, dest_folder)
             shutil.copy(src_file2, dest_folder)
-            messagebox.showinfo("Success", f"Copied PES2MP.py and PES2MP_driver.py to:\n{dest_folder}")
+            #messagebox.showinfo("Success", f"Copied PES2MP.py and PES2MP_driver.py to:\n{dest_folder}")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to copy files:\n{e}")
 
