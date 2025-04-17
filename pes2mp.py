@@ -1826,8 +1826,8 @@ if NNGen:
             'NN_nodes'    : [64,32],      # search space for NN nodes per layer
             'NN_layers'   : [2,3,4],      # search space for NN layers 
             'NN_branches' : [2,4],        # search space for NN Branches: even only
-            'maxit_trial' : 250,          # max iterations during trial (100-500)
-            'maxit_base'  : 1000,         # max iterations: base model (500-5000)
+            'maxit_trial' : 500,          # max iterations during trial (100-500)
+            'maxit_base'  : 10000,         # max iterations: base model (500-5000)
             'maxit_ensemble' : 10000      # max iterations: ensemble model (5-10K)
         }
         
