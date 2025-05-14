@@ -6,7 +6,9 @@ import os
 path = os.getcwd()
 
 ##############################################################
+# Select CP/CBS Folder
 PES_folder = path + '/Molpro_CP/'
+#PES_folder = path + '/Molpro_CBS/'
 
 f1 = open(os.path.join(path, "PES.dat"), "w+")
 f2 = open(os.path.join(path, "PES_err.dat"), "w+")
@@ -19,7 +21,7 @@ if os.path.isdir(PES_folder):
     os.chdir(PES_folder)
 
 ct = 1
-for i in range (1,num_files+1,1):
+for i in range (0,num_files+1,1):
     if (os.path.isfile("%d.out" %(i))):
         f= open("%d.out" %(i),"r")
         pattern=re.compile("   R   ")
