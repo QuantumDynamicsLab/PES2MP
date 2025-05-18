@@ -412,6 +412,7 @@ class PES2MPGUI:
             f"source $(conda info --base)/etc/profile.d/conda.sh && "
             f"cd {folder} && "
             f"conda activate {env} && "
+            f"export Proj_name={project} && "
             f"python3 pes2mp.py {file_name} ; "
             f"exec $SHELL"
         )
