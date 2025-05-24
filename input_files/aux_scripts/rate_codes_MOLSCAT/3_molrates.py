@@ -15,49 +15,61 @@ path = os.getcwd()
 #################### Input parameters (make changes here) ########################
 ##################################################################################
 #--------------------------------------------------------------------------------#
-tmax = 200    # maximum temperature in kelvin
-redm = 1.9354 # reduced mass in amu
+tmax = 100    # maximum temperature in kelvin
+redm = 3.4309 # reduced mass in amu
 #--------------------------------------------------------------------------------#
 # File name for input (extract using result_extract_molscat.py)
 sigma_file = "sigma.dat"   # name of the (extracted) file containing cross-sections
 #--------------------------------------------------------------------------------#
 # File names for output (will contain rate coefficients till tmax)
-fr = f"k_py.dat"           # output rate file using summation method
-fr_int = f"intk_py.dat"    # output rate file using scipy integration
-sig_out = "sig_ij.csv"     # output cross-section file for selected transitions
+fr = f"k_dex.dat"           # output rate file using summation method
+fr_int = f"kint_dex.dat"    # output rate file using scipy integration
+sig_out = "sig_dex.csv"     # output cross-section file for selected transitions
 #--------------------------------------------------------------------------------#
 # transitions required! Set all_tr to false and select initial and final j
 all_tr = False    # calculate all transitions (not recommended: keep false)
 
 # molscat labels start from 1 (dont give ji/jf values with 0) [see templates below]
-ji = np.arange(2,5,1)     # 2 to 4      [2,3,4]
-jf = np.arange(1,4,1)     # 1 to 3      [1,2,3]
+
+ji1 = [2, 3, 4, 5, 6]     # use label for molscat
+jf1 = [1, 1, 1, 1, 1]     # 1->2, 1->3, 2->3 and 3->4 
+
+ji2 = [3, 4, 5, 6]     # use label for molscat
+jf2 = [2, 2, 2, 2]     # 1->2, 1->3, 2->3 and 3->4 
+
+ji3 = [4, 5, 6]     # use label for molscat
+jf3 = [3, 3, 3]     # 1->2, 1->3, 2->3 and 3->4 
+
+ji4 = [5, 6]     # use label for molscat
+jf4 = [4, 4]     # 1->2, 1->3, 2->3 and 3->4 
+
+ji5 = [6]     # use label for molscat
+jf5 = [5]     # 1->2, 1->3, 2->3 and 3->4 
+
+ji = ji1 + ji2 + ji3 + ji4 + ji5    # use label for molscat
+jf = jf1 + jf2 + jf3 + jf4 + jf5     # 1->2, 1->3, 2->3 and 3->4 
+
+print(ji)
+print(jf)
+
 #--------------------------------------------------------------------------------#
 # Remember molscat starts j from 1. Change labels to rotational states as shown:
-# To keep labels as it is, set all of them False.
+# To keep labels as it is, set both of them False.
 
-# If RR only has even values like C2, C3, etc.            set      even_j1 = True
-# If RR only has both even and odd values like CO, NCCN. set   subtract_1 = True
+# For He and H2 (P0: J=0 and O1: J=1) set    subtract_1 = True and even_j = False
+# Only for case: H2 (P2) i.e. (J=0,2) set    subtract_1 = False and even_j = True
 
-# If two J2 cases: P02 i.e. (J2=0,2)                      set       two_j2 = True
-#--------------------------------------------------------------------------------#
 # change label (x-1) to convert 1 to 0 and so on. (He and 1 rotational state of H2)
 subtract_1 = False       # 1-->0, 2-->1 , 3-->2, etc...
-#--------------------------------------------------------------------------------#
-# Special Cases
-#--------------------------------------------------------------------------------#
+
 # For cases when only even states are present for cases with I=0 like C2, C3 etc. 
-# Subtracting 1 from States and doubling to give J (Keep subtract_1 = False)
 even_j1    = True        # 1-->0, 2-->2 , 3-->4, etc...
-#--------------------------------------------------------------------------------#
+
 # change label (x-1)/2) (case where 2 rotational state of H2 are included in basis)
-# Subtracting 1 from States and halving to give J (Keep subtract_1 = False)
 two_j2     = False       # 1-->0, 2-->2 , 3-->4, etc...
 #--------------------------------------------------------------------------------#
-
-#--------------------------------------------------------------------------------#
 # subtract energy: take relative energy for (de-excitation transitions)
-sub_E = False   # If true, rotational energy (from pair_E file) is subtracted
+sub_E = True   # If true, rotational energy (from pair_E file) is subtracted
 pair_E = np.loadtxt("pair_E.dat")  # name for the file containing rotational energy
 ####################################################################################
 # Example template for de-excitation delta j=1 (first 20 transitions)
@@ -112,8 +124,8 @@ if all_tr:
     jf = []
     for i in range (1, max(j_i)+1):         # loop over j_i
         for j in range (1, max(j_f)+1):     # loop over j_i
-            ji.append(i)
-            jf.append(j)
+            ji = np.append(ji,i)
+            jf = np.append(ji,j)
     print("Total Transitions:", len(ji))
 
 else:
@@ -149,19 +161,13 @@ ct1=0
 ct2=0
 for i in tqdm(range (len(ji))):         # loop over j_i
     ctt=0
-    # Check for existing transitions in molout
-    transition_found = False
     for k in range (len(molout)):   # loop over input file rows
         if (int(molout[k,5]) == ji[i] and int(molout[k,4]) == jf[i]):
-            transition_found = True
             if ctt==0:
                 molout_i = molout[k]
                 ctt=1
             else:
                 molout_i = np.vstack([molout_i, molout[k]])
-    if not transition_found:
-        raise ValueError(f"Transition {ji[i]}->{jf[i]} does not exist in {sigma_file}! ")
-
     #print("Transition No: ", i)
     #print(len(molout_i))
     #sys.exit(0)
@@ -171,12 +177,7 @@ for i in tqdm(range (len(ji))):         # loop over j_i
     energ = molout_i[:,0]
 
     if sub_E == True:
-        mask = (pair_E[:, 0] == ji[i])
-        if not np.any(mask):
-            raise ValueError(f"Energy entry for ji={ji[i]} not found in pair_E.dat")
-        E_ji = pair_E[mask, 1][0]  # Extract energy value
-        print(f"Subtracting {E_ji} corresponding to ji={ji[i]}: Total Energies --> Kinetic Energies!")
-        en_j = (energ-E_ji)*inv_cm_j
+        en_j = (energ-pair_E[ji[i]-1,1])*inv_cm_j
         neg_val_index = np.where(en_j <= 0)
         en_j = np.delete(en_j, neg_val_index)
         cr_cm2 = np.delete(cr_cm2, neg_val_index)
@@ -196,14 +197,14 @@ for i in tqdm(range (len(ji))):         # loop over j_i
     if ct1==0:
         arr = np.stack((temp, rate), axis=1)
         if sub_E == True:
-            arr_sigma = [(energ-E_ji), sigma]
+            arr_sigma = [(energ-pair_E[ji[i]-1,1]), sigma]
         else:
             arr_sigma = [energ, sigma]
         ct1=1
     else:
         arr = np.c_[arr, rate]
         if sub_E == True:
-            arr_sigma += [(energ-E_ji), sigma]
+            arr_sigma += [(energ-pair_E[ji[i]-1,1]), sigma]
         else:
             arr_sigma += [energ, sigma]
 
@@ -211,7 +212,7 @@ for i in tqdm(range (len(ji))):         # loop over j_i
     # rate by integration
     def integrand(e_j, sigma, t):
         akboltz = scipy.constants.Boltzmann    # boltzmann const in J K-1
-        return sigma*e_j*np.exp(-e_j/(akboltz*t))
+        return sigma*en_j*np.exp(-e_j/(akboltz*t))
 
     for tp in range (1,tmax+1,1):
         res = integrand(en_j,cr_cm2,tp)
