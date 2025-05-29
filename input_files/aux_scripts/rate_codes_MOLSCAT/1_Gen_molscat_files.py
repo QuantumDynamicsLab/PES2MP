@@ -35,12 +35,16 @@ def loop(start,fin,step,j):
         # creating jobscript file in each folder
         f1= open("%d" %(j),"w+")
         potf = open("MOLSCAT_POT.txt", "r+") # POT: reads potential from 'MOLSCAT_POT.txt' file
+        if (step < 1):
+            energy = i * step
+        else:
+            energy = i
 
-        f1.write('  &input ured = 1.94051, nnrg=1, energy=%.4f\n' %(i* step))
+        f1.write('  &input ured = 1.94051, nnrg=1, energy=%.4f\n' %(energy))
 
-        if (i*stp < 10):
+        if (energy < 10):
             f1.write('   intflg=8, steps=100, rmin=1.5, rmax=50.0, BCYOMN=10000, \n')
-        elif ( (i*stp > 10) and (i*stp < 30) ):
+        elif ( (energy > 10) and (energy < 30) ):
             f1.write('   intflg=8, steps=50, rmin=1.5, rmax=50.0, BCYOMN=10000, \n')
         else:
             f1.write('   intflg=8, steps=20, rmin=1.5, rmax=50.0, BCYOMN=10000, \n')
