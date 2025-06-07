@@ -1,5 +1,7 @@
-''' Keep this file with .keras (NN_model_en) file and copy pes2mp.driver
-file in the same folder. '''
+''' Gets result from trained ensemble NN model for PES_ND model. 
+1) Keep this file with the NN_model_en.keras file in the NN folder. 
+2) Copy the pes2mp_driver.py file to the same folder (with this file). 
+The scaling files are automatically read from the NN folder.'''
 
 
 import numpy as np
