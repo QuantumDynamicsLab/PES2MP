@@ -40,6 +40,6 @@ for i in range (0,num_files+1,1):
                     f1.write(next(f))
             f.close()
     else:
-        f2.write("%d.out does not exist" %(i) )
+        f2.write("%d.out does not exist \n" %(i) )
 f1.close()
 f2.close()
