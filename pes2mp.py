@@ -1130,9 +1130,12 @@ if (direct_plot == True or Plot_PES == True):
 
     elif coll_2D:
         df_res = df_out1.loc[(df_out1[df_out1.columns[1]].isin(inp.thetax))]
+        # plot 1D with user entered thetas
         z1_3d = df_res.pivot(index=df_res.columns[0], columns=df_res.columns[1], values=df_res.columns[2])
         z1_3d.to_csv(out_data + '2D_PES_psi4_cm_matrix.dat', header=True,sep='\t')
         driver.plot_1D(df_out1,z1_3d,out_plots, inp, 2)
+        # plot 2D with all thetas
+        z1_3d = df_out1.pivot(index=df_out1.columns[0], columns=df_out1.columns[1], values=df_out1.columns[2])
         z1_3d = driver.mirror(df_out1,df_out1.columns[1],z1_3d)              # mirroring to 360 degrees
         driver.plot_2D_proj(df_out1, z1_3d, out_data, out_plots, inp)
 
