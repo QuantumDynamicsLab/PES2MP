@@ -85,10 +85,6 @@ The program can be run by keeping the input file (e.g. pesgen1D.py) and Python p
 - `$ python3 python_script .sh`
   </details>
 
-To be updated:
-- (a) Full programmer's guide 
-- :mailbox_with_mail: dhilip@iitrpr.ac.in
-
 
 <p align="center">
   <img src="img/pes2mp_gui.png" alt="screenshot" width="750"/>
@@ -122,10 +118,10 @@ The curve fit produces an output that is MOLSCAT readable for direct utilization
 ## Plots :: Plot PES, residual, and curve fits.
 PES plots are available as 1D (R vs E) and polar (R, $\theta$ vs E). For 2D/4D PES, certain angle combinations can be chosen for plots to prevent cluttering. Residual (error) plots can be automatically generated for NN/radial-terms generated PES. The curve fit with various functions can also be visualized along with any extrapolation function (if used). Apart from these, many other relevant plots are also provided for the NN module.
 
-For any queries :envelope: [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in) cc: [Apoorv Kushwaha](mailto:kushwaha.apoorv@gmail.com)<br />  <br />
+For any queries :envelope: [Dr. T. J. Dhilip Kumar](mailto:dhilip@iitrpr.ac.in)  :mailbox_with_mail: dhilip@iitrpr.ac.in cc: [Apoorv Kushwaha](mailto:kushwaha.apoorv@gmail.com) :mailbox_with_mail: kushwaha.apoorv@gmail.com <br />  <br /> 
 
 Additional details about PES Generation, NN fitting, MP Expansion, and Scattering calculations can be found here: <br />
 2D collision: [Benchmarking C<sub>2</sub>-He and NCCN-He :monocle_face:](https://doi.org/10.1002/qua.27007), [PO<sup>+</sup>-He :monocle_face:](https://doi.org/10.1093/mnras/stad1735)   <br />
-4D collision: [NCCN-H<sub>2</sub> :monocle_face:](https://doi.org/10.1063/5.0161335), [CNCN-H<sub>2</sub> :monocle_face:](https://doi.org/10.1063/5.0220608), [C<sub>4</sub>-H<sub>2</sub> :monocle_face:](http://doi.org/10.1039/d3cp05424a), [C<sub>5</sub>-H<sub>2</sub> :monocle_face:](https://doi.org/10.1063/5.0235976), [PO<sup>+</sup>-H<sub>2</sub> :monocle_face:](https://doi.org/10.1093/mnras/stae2166)   <br />
+4D collision: [NCCN-H<sub>2</sub> :monocle_face:](https://doi.org/10.1063/5.0161335), [CNCN-H<sub>2</sub> :monocle_face:](https://doi.org/10.1063/5.0220608), [C<sub>4</sub>-H<sub>2</sub> :monocle_face:](http://doi.org/10.1039/d3cp05424a), [C<sub>5</sub>-H<sub>2</sub> :monocle_face:](https://doi.org/10.1063/5.0235976), [PO<sup>+</sup>-H<sub>2</sub> :monocle_face:](https://doi.org/10.1093/mnras/stae2166)[NCCNH<sup>+</sup>-H<sub>2</sub> :monocle_face:](https://doi.org/10.1002/jcc.70251)   <br />
 
 
