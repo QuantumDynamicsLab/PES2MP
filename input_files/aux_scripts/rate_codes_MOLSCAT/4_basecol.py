@@ -12,7 +12,7 @@ from tqdm import tqdm
 
 # ------------------------ User Parameters ------------------------
 tmax        = 100       # maximum temperature in kelvin
-redm        = 3.8267    # reduced mass in amu
+redm        = 3.4309    # reduced mass in amu
 
 sigma_file  = "sigma.dat"
 pair_e_file = "pair_E.dat"
@@ -23,7 +23,7 @@ dex_tr = True    # de-excitation transitions
 exc_tr = False   # excitation transitions
 el_tr  = False   # elastic transitions
 
-max_J = 11      # maximum J_i (0 = all available transitions)
+max_J = 5      # maximum J_i (0 = all available transitions)
 
 # Manual override of transitions (MOLSCAT labels) See 3_molrates.py to use them
 manual_ji = []  # e.g. [2,3,4]
@@ -36,16 +36,18 @@ even_j1    = False  # Symmetric, I=0 and 1Sigma (C2) x -> 2*(N-1)
 odd_j      = False  # Symmetric, I=0 and 3Sigma (C4) x -> 2*(N-1)+1
 
 ################################################################################
-two_j2     = True  # x -> (x-1)/2 For Two states of H2/collider p(0,2) or o(1,3)
+two_j2     = False  # x -> (x-1)/2 For Two states of H2/collider p(0,2) or o(1,3)
 ################################################################################
 
 # Subtract internal energy only for de-excitation
-sub_E = True
+sub_E = False
 
 # Integration option (False = summation, True = Simpson)
 use_integration = False
 
-# ------------------------ Helpers ------------------------
+# ------------------------ User Parameters Ends ------------------------
+
+
 def map_label(idx):
     """Convert Molscat index (1-based) to physical J."""
     if two_j2:
@@ -78,7 +80,7 @@ amu    = redm * uamu
 molout = np.loadtxt(sigma_file, skiprows=1)
 pair_E  = np.loadtxt(pair_e_file)
 
-# Build transition list
+# ------------------------ Build transition list ------------------------
 if manual_ji and manual_jf:
     if len(manual_ji) != len(manual_jf):
         sys.exit("manual_ji/jf lengths differ")
@@ -86,20 +88,28 @@ if manual_ji and manual_jf:
 else:
     all_j_raw = set(zip(molout[:,5].astype(int), molout[:,4].astype(int)))
     transitions = []
+
     for ji, jf in sorted(all_j_raw):
-        # Skip even-numbered Ji or Jf in two_j2 case (i.e., skip alternate MOLSCAT Ji)
+
+        # Skip even-numbered Ji or Jf in two_j2 case
         if two_j2 and (ji % 2 == 0 or jf % 2 == 0):
             continue
-        if   ji>jf and dex_tr and (max_J==0 or ji<=max_J):
+
+        # --- FIX: ensure both ji and jf obey max_J ---
+        limit = (max_J==0 or (ji <= max_J and jf <= max_J))
+
+        if   ji>jf and dex_tr and limit:
             transitions.append((ji,jf))
-        elif ji<jf and exc_tr and (max_J==0 or ji<=max_J):
+
+        elif ji<jf and exc_tr and limit:
             transitions.append((ji,jf))
-        elif ji==jf and el_tr and (max_J==0 or ji<=max_J):
+
+        elif ji==jf and el_tr and limit:
             transitions.append((ji,jf))
 
 print(f"Total transitions selected: {len(transitions)}")
 
-# Precompute temperature‐dependent constants
+# ------------------------ Precompute temperature constants ------------------------
 temps  = np.arange(1, tmax+1)
 vel    = np.sqrt(8*akb*temps/(np.pi*amu)) * 1e2
 prefac = vel * (akb*temps)**-2
@@ -107,14 +117,17 @@ prefac = vel * (akb*temps)**-2
 # Ensure output dirs
 os.makedirs("basecol", exist_ok=True)
 
-# Prepare storage
+# ------------------------ Storage ------------------------
 rates   = {'dex':[], 'exc':[], 'elastic':[]}
 basecol = {'dex':[], 'exc':[], 'elastic':[]}
+cross_sections = {'dex':[], 'exc':[], 'elastic':[]}
 
-# Main loop
+# ------------------------ Main loop ------------------------
 for ji, jf in tqdm(transitions, desc="Transitions"):
+
     Ni = map_label(ji-1)
     Nf = map_label(jf-1)
+
     print(f"  Molscat levels {ji}->{jf}  →  N = {Ni}->{Nf}")
 
     if   ji>jf:  ch = 'dex'
@@ -123,6 +136,7 @@ for ji, jf in tqdm(transitions, desc="Transitions"):
 
     mask = (molout[:,5].astype(int)==ji) & (molout[:,4].astype(int)==jf)
     sub  = molout[mask]
+
     Ecm = sub[:,0]
     sigma_cm2 = sub[:,6] * 1e-16
 
@@ -130,15 +144,20 @@ for ji, jf in tqdm(transitions, desc="Transitions"):
         Eint = pair_E[ji-1,1]
         Erel = (Ecm - Eint) * invcmJ
         good = Erel>0
+
         Erel = Erel[good]
         sigma_cm2 = sigma_cm2[good]
     else:
         Erel = Ecm * invcmJ
 
+    # ---------------- Rate calculation ----------------
     karr = np.zeros_like(temps, dtype=float)
+
     if not use_integration:
         for i,T in enumerate(temps):
-            karr[i] = prefac[i] * np.sum(sigma_cm2 * Erel * np.exp(-Erel/(akb*T))) / avag
+            karr[i] = prefac[i] * np.sum(
+                sigma_cm2 * Erel * np.exp(-Erel/(akb*T))
+            ) / avag
     else:
         for i,T in enumerate(temps):
             integrand = sigma_cm2 * Erel * np.exp(-Erel/(akb*T))
@@ -148,43 +167,57 @@ for ji, jf in tqdm(transitions, desc="Transitions"):
     rates[ch].append((ji,jf,karr))
     basecol[ch].append([ji, jf, 1, 1] + karr.tolist())
 
-    # TO save labels in J format uncomment below line 
-    #basecol[ch].append([map_label(ji-1), map_label(jf-1), 1, 1] + karr.tolist())
+    # Store filtered σ used in rate calculation
+    cross_sections[ch].append((ji, jf, Erel, sigma_cm2))
 
-# Write per‐channel outputs
+# ------------------------ Write per-channel outputs ------------------------
 for ch, flag in [('dex',dex_tr), ('exc',exc_tr), ('elastic',el_tr)]:
+
     if not flag or not rates[ch]:
         continue
 
+    # ---- rate coefficients ----
     arr = np.column_stack([temps] + [k for _,_,k in rates[ch]])
-    hdr = 'T\t' + ''.join(f"{map_label(ji-1)}->{map_label(jf-1)}\t"
-                          for ji,jf,_ in rates[ch])
+
+    hdr = 'T\t' + ''.join(
+        f"{map_label(ji-1)}->{map_label(jf-1)}\t"
+        for ji,jf,_ in rates[ch]
+    )
+
     np.savetxt(rate_fname(ch), arr, header=hdr, comments='')
 
+    # ---- cross sections ----
     sigd = {}
-    for ji,jf,_ in rates[ch]:
-        mask = (molout[:,5].astype(int)==ji) & (molout[:,4].astype(int)==jf)
-        sub  = molout[mask]
-        sigd[f"E_{ji}->{jf}"]   = pd.Series(sub[:,0])
-        sigd[f"σ_{ji}->{jf}"]   = pd.Series(sub[:,6])
+
+    for ji, jf, Erel, sigma in cross_sections[ch]:
+
+        sigd[f"E_{map_label(ji-1)}->{map_label(jf-1)}"] = pd.Series(Erel / invcmJ)
+        sigd[f"σ_{map_label(ji-1)}->{map_label(jf-1)}"] = pd.Series(sigma / 1e-16)
+
     pd.DataFrame(sigd).to_csv(sig_fname(ch), index=False)
 
+    # ---- BASECOL output ----
     rows = basecol[ch]
     ncol = len(rows[0])
+
     fmt  = ['%d','%d','%d','%d'] + ['%.5e']*(ncol-4)
+
     header = 'I1 F1 I2 F2 ' + ' '.join(f"{T}" for T in temps)
+
     np.savetxt(basecol_fname(ch), rows, fmt=fmt, header=header, comments='')
 
-# Write pair_E_levels.dat
+# ------------------------ Write pair_E_levels.dat ------------------------
 with open('pair_E_levels.dat','w') as f:
+
     f.write("Level(I)\tEnergy (cm^-1)\tJ\n")
+
     for idx, (L, E) in enumerate(pair_E, start=1):
-        # Skip even labels if two_j2 is True
+
         if two_j2 and (idx % 2 == 0):
             continue
+
         J = map_label(idx-1)
+
         f.write(f"{idx}\t{E:.8f}\t{J}\n")
 
 print("All done.")
-
-
