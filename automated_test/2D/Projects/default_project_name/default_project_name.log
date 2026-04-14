@@ -1,0 +1,421 @@
+#####################################################################
+--- Date 2026-04-14 14:57:45 ---
+#####################################################################
+#####################    PES2MP Initiated    ########################
+#####################################################################
+ 
+ /data and /project folders created. 
+
+
+#-------------------------------------------------------------------#
+#-------------------#    Using PESGen module    #-------------------#
+#-------------------------------------------------------------------#
+
+
+Identifying collision type !!!: 
+ 	 RR1 has >1 atoms and RR2 has 1 atom: Using 2D Template for PES
+ 
+ The R coodinates are: 
+[  2.5   2.6   2.7   2.8   2.9   3.    3.1   3.2   3.3   3.4   3.5   3.6
+   3.7   3.8   3.9   4.    4.1   4.2   4.3   4.4   4.5   4.6   4.7   4.8
+   4.9   5.    5.1   5.2   5.3   5.4   5.5   5.6   5.7   5.8   5.9   6.
+   6.2   6.4   6.6   6.8   7.    7.2   7.4   7.6   7.8   8.    8.2   8.4
+   8.6   8.8   9.    9.5  10.   10.5  11.   11.5  12.   12.5  13.   13.5
+  14.   14.5  15.   16.   17.   18.   19.   20.   21.   22.   23.   24.
+  25.   50.  100. ]
+
+ Total number of data points in R coordinates are: 75 
+
+
+Creating matrix for 2D collision coordinates
+TQDM LOOP FINISHED:
+ |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| 100% |
+
+
+ Input coordinates (first 5, mid and last 5)
+
+[[ 2.5  0. ]
+ [ 2.5 30. ]
+ [ 2.5 60. ]
+ [ 2.5 90. ]
+ [ 2.6  0. ]]
+---
+[[ 6.2 90. ]
+ [ 6.4  0. ]
+ [ 6.4 30. ]
+ [ 6.4 60. ]
+ [ 6.4 90. ]]
+---
+[[ 50.  90.]
+ [100.   0.]
+ [100.  30.]
+ [100.  60.]
+ [100.  90.]]
+
+Total number of input coordinates : 300
+
+ Original Geometry without charge and multiplicity!
+-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
+        {} {}
+        C         0.000000        0.000000        0.000000
+        C         0.000000        0.000000         1.2425
+-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
+
+
+ Geometry after moving molecule to COM 
+-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x0 1
+ C    0.000000000000    0.000000000000   -0.621250000000
+ C    0.000000000000    0.000000000000    0.621250000000
+-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
+ The estimated rotational constant  [x y z]  by Psi4 in cm-1 : 
+[0.         1.81992064 1.81992064]
+Extracted COM coordinates for RR : 
+ ['C', 'C']
+[-0.62125, 0.62125]
+
+
+Saving input coordinates in 'Projects/default_project_name/2D_input_coordinates.dat'
+ Create_GAUSSIAN_input_files = False : Skipping Gaussian (CP) Input! 
+ 
+ Create_MOLPRO_input_files = False : Skipping Molpro (CP) Input! 
+ 
+ Create_MOLPRO_CBS_input_files = False : Skipping Molpro (CBS) Input! 
+ 
+ Create_MOLPRO_custom_input_files = False : Skipping Molpro (custom) Input! 
+ 
+ Create_Psi4_custom_input_files = False : Skipping Psi4 (custom) Input! 
+ Generating Psi4 PES! 
+ Psi4 Input : 
+ 0 1
+ C    0.000000000000    0.000000000000   -0.621250000000
+ C    0.000000000000    0.000000000000    0.621250000000
+He         {:.6f}           0.000000        {:.6f}
+ no_com 
+ no_reorient 
+
+ TQDM LOOP: Psi4 2D PES created:
+ |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| 100% |
+
+
+ Geometry at infinity: 
+ R = 200
+ Theta = 90
+
+ Energy at inifinity (Hartree): -78.24628814219241
+ Psi4 calculations finished! 
+ 
+#-------------------------------------------------------------------#
+#--------------#    PES Files Created Successfully    #-------------#
+#-------------------------------------------------------------------#
+
+
+#-------------------------------------------------------------------#
+#------------------#    Using PES Plot module    #------------------#
+#-------------------------------------------------------------------#
+
+
+Plotting PES from Psi4 output.
+
+If you have unconverged points, remove them, and replot PES using PESPlot input file! 
+
+      R  Gamma            E
+0  2.5      0  2774.381610
+1  2.5     30  2828.972232
+2  2.5     60  1477.910396
+3  2.5     90   963.113548
+4  2.6      0  2065.868050
+#-------------------------------------------------------------------#
+#--------------------#    PES Plots Updated    #--------------------#
+#-------------------------------------------------------------------#
+
+
+ NNGen = False : Skipping NN Model! 
+ 
+ MPExp = False : Skipping Multipole Expansion! 
+ 
+ FnFit = False : Skipping Analytical Fitting of Radial Coefficients! 
+ 
+#####################################################################
+#####################    PES2MP Finished     ########################
+#####################################################################
+Run time: 0 hours, 0 minutes, 43.71 seconds
+#####################################################################
+
+
+#####################################################################
+--- Date 2026-04-14 14:58:43 ---
+#####################################################################
+#####################    PES2MP Initiated    ########################
+#####################################################################
+ 
+ /data and /project folders created. 
+
+
+ Create_PES_input = False : Checking input for external Plots! 
+  
+ No plots created. Create_PES_input / Run_psi4 and Plot_PES are False 
+
+ NNGen = False : Skipping NN Model! 
+ 
+ MPExp = False : Skipping Multipole Expansion! 
+ 
+#-------------------------------------------------------------------#
+#----------------#    Using Function Fit module    #----------------#
+#-------------------------------------------------------------------#
+
+
+ Fitting PES data into analytical function! 
+
+
+The loaded PES: --> 
+     0     1            2
+1  2.5   0.0  2774.381610
+2  2.5  30.0  2828.972232
+3  2.5  60.0  1477.910396
+4  2.5  90.0   963.113548
+5  2.6   0.0  2065.868050
+ 2D Collision: Extracting end and start radial positions for each angular term: 
+
+ TQDM LOOP (end and start radial positions extracted from PES!) :
+ |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| 100% |
+
+Start End Positions: 
+Start Positions: 
+ [  0  75 150 225] 
+End Positions: 
+ [ 75 150 225 300] 
+ 
+
+ TQDM LOOP (R/Theta coordinates Generated!) :
+ |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| 100% |
+
+
+ Fitting PES each angle at a time: 
+
+
+Minima Fit:0 | Start position: 8 | Value (cm-1) 119.941082 
+
+
+ Coefficients for Angular coordinate: 0.0 
+
+ No High Energy fitting! 
+
+ No Long Range fitting! 
+
+
+ Using Custom Function for full range fitting!
+ Potential at initial R value: 3881.4388589528726
+ Fitting Coefficients for full region fit : 
+[ 5.92732020e+07  3.48438411e+06 -1.00219515e+05 -7.33896459e+02
+ -1.98352769e+00]
+
+Minima Fit:1 | Start position: 8 | Value (cm-1) 91.687892 
+
+
+ Coefficients for Angular coordinate: 30.0 
+
+ No High Energy fitting! 
+
+ No Long Range fitting! 
+
+
+ Using Custom Function for full range fitting!
+ Potential at initial R value: 2671.219246895821
+ Fitting Coefficients for full region fit : 
+[ 2.42604326e+07  4.18278372e+06 -1.02753627e+05 -6.12334838e+02
+ -1.68662988e+00]
+
+Minima Fit:2 | Start position: 6 | Value (cm-1) 115.655818 
+
+
+ Coefficients for Angular coordinate: 60.0 
+
+ No High Energy fitting! 
+
+ No Long Range fitting! 
+
+
+ Using Custom Function for full range fitting!
+ Potential at initial R value: 1222.67867872496
+ Fitting Coefficients for full region fit : 
+[-5.76842591e+06  3.98829452e+06 -1.02214816e+05 -3.86217843e+02
+ -1.44732674e+00]
+
+Minima Fit:3 | Start position: 5 | Value (cm-1) 110.368755 
+
+
+ Coefficients for Angular coordinate: 90.0 
+
+ No High Energy fitting! 
+
+ No Long Range fitting! 
+
+
+ Using Custom Function for full range fitting!
+ Potential at initial R value: 756.1900110578496
+ Fitting Coefficients for full region fit : 
+[-1.35259420e+07  3.81131437e+06 -1.05903370e+05 -2.84288435e+02
+ -1.32635031e+00]
+ TQDM LOOP (Function Fitting Done!) :
+ |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| 100% |
+
+
+
+Saving fitted PES (Fnfit_PES.dat) and residuals (residuals_Fnfit_PES.dat) to: 
+ /Volumes/Crucial_X6/Downloads/pes2mp_coeff/PES2MP-main 2 copy/test/2D/Projects/default_project_name/PESFnFit/ 
+
+
+Plotting residuals for E fit (R) at location: 
+ /Volumes/Crucial_X6/Downloads/pes2mp_coeff/PES2MP-main 2 copy/test/2D/Projects/default_project_name/PESFnFit/Plots/ 
+
+
+
+Saving a copy of fitted PES (Fnfit_PES.dat) to: 
+ /Volumes/Crucial_X6/Downloads/pes2mp_coeff/PES2MP-main 2 copy/test/2D/Projects/default_project_name/ 
+
+
+#-------------------------------------------------------------------#
+#-------#    2D PES Fitted into analytical expression!    #---------#
+#-------------------------------------------------------------------#
+
+
+#####################################################################
+#####################    PES2MP Finished     ########################
+#####################################################################
+Run time: 0 hours, 0 minutes, 4.57 seconds
+#####################################################################
+
+
+#####################################################################
+--- Date 2026-04-14 14:58:59 ---
+#####################################################################
+#####################    PES2MP Initiated    ########################
+#####################################################################
+ 
+ /data and /project folders created. 
+
+
+ Create_PES_input = False : Checking input for external Plots! 
+  
+ No plots created. Create_PES_input / Run_psi4 and Plot_PES are False 
+
+ NNGen = False : Skipping NN Model! 
+ 
+#-------------------------------------------------------------------#
+#----------------#    Using MP Expansion module    #----------------#
+#-------------------------------------------------------------------#
+
+
+
+The loaded PES: --> 
+     0    1            2
+0  2.5  0.0  3881.438859
+1  2.6  0.0  2622.948988
+2  2.7  0.0  1763.663499
+3  2.8  0.0  1177.678110
+4  2.9  0.0   778.840334
+ Generating new legendre coefficient from scratch and saving 2D_L_coeff.npy in --> 
+/Volumes/Crucial_X6/Downloads/pes2mp_coeff/PES2MP-main 2 copy/test/2D/Projects/default_project_name/MP_files/
+
+
+ A preview of radial terms: 
+      R            0            2           4          6
+0  2.5  1545.091429  1836.667827  415.392540  84.287062
+1  2.6  1079.028995  1235.027646  260.200839  48.691508
+2  2.7   745.929210   829.968371  160.716487  27.049432
+3  2.8   508.907014   557.195071   97.425835  14.150190
+4  2.9   341.159708   373.473984   57.541014   6.665627
+
+Saving final radial terms file 2D_Vlam.dat in above folder! 
+
+ Radial terms plots are available in above folder/MP_plots. 
+
+#-------------------------------------------------------------------#
+#---------------#    2D Mutipole Expansion Done!    #---------------#
+#-------------------------------------------------------------------#
+
+
+ FnFit = False : Skipping Analytical Fitting of Radial Coefficients! 
+ 
+#####################################################################
+#####################    PES2MP Finished     ########################
+#####################################################################
+Run time: 0 hours, 0 minutes, 1.97 seconds
+#####################################################################
+
+
+#####################################################################
+--- Date 2026-04-14 14:59:07 ---
+#####################################################################
+#####################    PES2MP Initiated    ########################
+#####################################################################
+ 
+ /data and /project folders created. 
+
+
+ Create_PES_input = False : Checking input for external Plots! 
+  
+ No plots created. Create_PES_input / Run_psi4 and Plot_PES are False 
+
+ NNGen = False : Skipping NN Model! 
+ 
+ MPExp = False : Skipping Multipole Expansion! 
+ 
+#-------------------------------------------------------------------#
+#----------------#    Using Function Fit module    #----------------#
+#-------------------------------------------------------------------#
+
+Fitting Radial coefficients obtained after multipole expansion!
+
+
+Minima Fit:0 | Start position: 0 | Value (cm-1) 1545.091428969458 
+
+RMSE 0 | 3.8820208613002465e-14 
+
+
+Minima Fit:1 | Start position: 0 | Value (cm-1) 1836.6678272460165 
+
+RMSE 1 | 3.6669461365440583e-14 
+
+
+Minima Fit:2 | Start position: 0 | Value (cm-1) 415.39254046085375 
+
+RMSE 2 | 2.4159890189615033e-14 
+
+
+Minima Fit:3 | Start position: 0 | Value (cm-1) 84.28706227654456 
+
+RMSE 3 | 3.144460696091527e-14 
+
+ Start position for fitting each radial term : 
+start_pos = 
+ [0. 0. 0. 0.] 
+
+ Mean RMS Error | 3.2773541782243336e-14 
+
+
+Saving analytically fitted V_lam data (FnFitted_Vlam.dat) at locations: 
+  /Volumes/Crucial_X6/Downloads/pes2mp_coeff/PES2MP-main 2 copy/test/2D/Projects/default_project_name/MP_files/ 
+ and 
+ /Volumes/Crucial_X6/Downloads/pes2mp_coeff/PES2MP-main 2 copy/test/2D/Projects/default_project_name/MP_files/VlamFnFit/ 
+
+The coefficients for custom functions are saved in Raw format in Proj_name folder. The same can be converted manually!
+
+Saving V_lam raw coefficients at location: 
+ /Volumes/Crucial_X6/Downloads/pes2mp_coeff/PES2MP-main 2 copy/test/2D/Projects/default_project_name/ 
+
+Saving MOLSCAT &POTL (MOLSCAT_POT.txt) at location: 
+ /Volumes/Crucial_X6/Downloads/pes2mp_coeff/PES2MP-main 2 copy/test/2D/Projects/default_project_name/ 
+
+#-------------------------------------------------------------------#
+#-----------------#    MOLSCAT &POTL Generated    #-----------------#
+#-------------------------------------------------------------------#
+
+
+#####################################################################
+#####################    PES2MP Finished     ########################
+#####################################################################
+Run time: 0 hours, 0 minutes, 1.57 seconds
+#####################################################################
+
+
