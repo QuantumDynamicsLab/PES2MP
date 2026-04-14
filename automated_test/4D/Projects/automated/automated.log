@@ -1,0 +1,115 @@
+#####################################################################
+--- Date 2026-04-14 18:34:25 ---
+#####################################################################
+#####################    PES2MP Initiated    ########################
+#####################################################################
+ 
+ /data and /project folders created. 
+
+
+ Create_PES_input = False : Checking input for external Plots! 
+  
+ No plots created. Create_PES_input / Run_psi4 and Plot_PES are False 
+
+ NNGen = False : Skipping NN Model! 
+ 
+ MPExp = False : Skipping Multipole Expansion! 
+ 
+ FnFit = False : Skipping Analytical Fitting of Radial Coefficients! 
+ 
+#-------------------------------------------------------------------#
+#-------------#    Using FnFit_automated module    #---------------#
+#-------------------------------------------------------------------#
+
+#####################################################################
+--- Date 2026-04-14 18:35:30 ---
+#####################################################################
+#####################    PES2MP Initiated    ########################
+#####################################################################
+ 
+ /data and /project folders created. 
+
+
+ Create_PES_input = False : Checking input for external Plots! 
+  
+ No plots created. Create_PES_input / Run_psi4 and Plot_PES are False 
+
+ NNGen = False : Skipping NN Model! 
+ 
+ MPExp = False : Skipping Multipole Expansion! 
+ 
+ FnFit = False : Skipping Analytical Fitting of Radial Coefficients! 
+ 
+#-------------------------------------------------------------------#
+#-------------#    Using FnFit_automated module    #---------------#
+#-------------------------------------------------------------------#
+
+
+
+ Number of Lambda terms are: 
+10
+
+The list of Lambda terms are: 
+[[0 0 0]
+ [0 2 2]
+ [2 0 2]
+ [2 2 0]
+ [2 2 2]
+ [2 2 4]
+ [4 0 4]
+ [4 2 2]
+ [4 2 4]
+ [4 2 6]]
+#####################################################################
+#####################    PES2MP Finished     ########################
+#####################################################################
+Run time: 0 hours, 0 minutes, 3.75 seconds
+#####################################################################
+
+
+#####################################################################
+--- Date 2026-04-14 18:37:18 ---
+#####################################################################
+#####################    PES2MP Initiated    ########################
+#####################################################################
+ 
+ /data and /project folders created. 
+
+
+ Create_PES_input = False : Checking input for external Plots! 
+  
+ No plots created. Create_PES_input / Run_psi4 and Plot_PES are False 
+
+ NNGen = False : Skipping NN Model! 
+ 
+ MPExp = False : Skipping Multipole Expansion! 
+ 
+ FnFit = False : Skipping Analytical Fitting of Radial Coefficients! 
+ 
+#-------------------------------------------------------------------#
+#-------------#    Using FnFit_automated module    #---------------#
+#-------------------------------------------------------------------#
+
+
+
+ Number of Lambda terms are: 
+10
+
+The list of Lambda terms are: 
+[[0 0 0]
+ [0 2 2]
+ [2 0 2]
+ [2 2 0]
+ [2 2 2]
+ [2 2 4]
+ [4 0 4]
+ [4 2 2]
+ [4 2 4]
+ [4 2 6]]
+#####################################################################
+#####################    PES2MP Finished     ########################
+#####################################################################
+Run time: 0 hours, 0 minutes, 3.61 seconds
+#####################################################################
+
+
