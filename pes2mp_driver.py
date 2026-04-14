@@ -1853,12 +1853,16 @@ def create_generic_model(hp, input_dim, num_outputs, NN_hyperpara):
 ###############################################################################
 
 # Plot raw data separately
-def plot_MP(lm, sym, R_arr, df_Vnf, MP_plots, inp):
+def plot_MP(lm, sym, R_arr, df_Vnf, MP_plots, inp, lam_labels=None):
+
+    if lam_labels is None:
+        lam_labels = [i * sym for i in range(lm)]   # old behavior
+
     df_Vnf.columns = df_Vnf.columns.astype(str)
     import matplotlib.pyplot as plt
     plt.rcParams.update({'font.size': 12})
     for i in range(0,lm):               # loop over V_lambda terms
-        y_dummy = df_Vnf['{}'.format(i*sym)]         # stores individual V_lambda for each loop
+        y_dummy = df_Vnf['{}'.format(lam_labels[i])]         # stores individual V_lambda for each loop
         plt.figure(figsize=(11,3))      # size of figure
 
         # Plot each V_lambda_separately to view features
@@ -1866,7 +1870,7 @@ def plot_MP(lm, sym, R_arr, df_Vnf, MP_plots, inp):
         plt.plot(R_arr, y_dummy)                    # first plot
         plt.grid(True,linestyle=':')                # grid on
         plt.minorticks_on()                         # minor ticks are on
-        plt.title("V_lambda = %d" %(i*sym))         # title of plot
+        plt.title("V_lambda = %d" %(lam_labels[i]))         # title of plot
         plt.xlabel(r'R $\mathrm{(\AA)}$')                      # X label (written in latex $...$ format)
         plt.ylabel(r'Energy $(\mathrm{cm}^{-1})$')             # Y label (written in latex $...$ format)
         min_E = int(y_dummy.min())-1
@@ -1879,7 +1883,7 @@ def plot_MP(lm, sym, R_arr, df_Vnf, MP_plots, inp):
         plt.plot(R_arr, y_dummy)
         plt.grid(True,linestyle=':')
         plt.minorticks_on()
-        plt.title("V_lambda = %d" %(i*sym))
+        plt.title("V_lambda = %d" %(lam_labels[i]))
         plt.xlabel(r'R $\mathrm{(\AA)}$')                      # X label (written in latex $...$ format)
         plt.ylabel(r'Energy $(\mathrm{cm}^{-1})$')             # Y label (written in latex $...$ format)
         plt.ylim(y_dummy.min(), y_dummy.max())
@@ -1889,7 +1893,7 @@ def plot_MP(lm, sym, R_arr, df_Vnf, MP_plots, inp):
         plt.plot(R_arr, y_dummy)
         plt.grid(True,linestyle=':')
         plt.minorticks_on()
-        plt.title("V_lambda = %d" %(i*sym))
+        plt.title("V_lambda = %d" %(lam_labels[i]))
         plt.xlabel(r'R $\mathrm{(\AA)}$')                      # X label (written in latex $...$ format)
         plt.ylabel(r'Energy $(\mathrm{cm}^{-1})$')             # Y label (written in latex $...$ format)
         plt.ylim(-1.0, 1.0)
@@ -1897,21 +1901,24 @@ def plot_MP(lm, sym, R_arr, df_Vnf, MP_plots, inp):
 
         plt.tight_layout()                      # tight layout
         # plt.savefig(out_plots+'Polar_plot.eps', format='eps')  # save polar contour in eps
-        plt.savefig(MP_plots+'V_lam_{}.'.format(i*sym)+inp.fmt, format=inp.fmt,bbox_inches='tight')  # save ploar plot in pdf
+        plt.savefig(MP_plots+'V_lam_{}.'.format(lam_labels[i])+inp.fmt, format=inp.fmt,bbox_inches='tight')  # save ploar plot in pdf
 
         #plt.show()                                            # preview off (use only for jupyter)
         plt.close()
 
 #-----------------------------------------------------------------------------#
 
-def plot_MP_combined(lm, sym, R_arr, df_Vnf, MP_plots, inp):
+def plot_MP_combined(lm, sym, R_arr, df_Vnf, MP_plots, inp, lam_labels=None):
+    if lam_labels is None:
+        lam_labels = [i * sym for i in range(lm)]   # old behavior
+
     import matplotlib.pyplot as plt
     plt.rcParams.update({'font.size': 14})
     df_Vnf.columns = df_Vnf.columns.astype(str)
     for i in range(0,lm):                                      # loop over V_lambda terms
-        y_dummy = df_Vnf['{}'.format(i*sym)]                   # stores individual V_lambda for each loop
+        y_dummy = df_Vnf['{}'.format(lam_labels[i])]                   # stores individual V_lambda for each loop
         # Plot the data
-        plt.plot(R_arr, y_dummy,label='{}'.format(i*sym))      # plot each V_lambda
+        plt.plot(R_arr, y_dummy,label='{}'.format(lam_labels[i]))      # plot each V_lambda
         plt.grid(True,linestyle=':')                           # grid on
         plt.minorticks_on()                                    # minor ticks on
         try:
@@ -1935,6 +1942,117 @@ def plot_MP_combined(lm, sym, R_arr, df_Vnf, MP_plots, inp):
         plt.xlim(inp.R_lim[0], inp.R_lim[1])                   # x limit (x_min, x_max)
     #plt.show()                                                 # to combine individual plots, plt.show() is used outside loop.
     plt.savefig(MP_plots+'Combined_V_lam.'+inp.fmt, format=inp.fmt,bbox_inches='tight')  # save combined figure
+    plt.close()
+
+#-----------------------------------------------------------------------------#
+
+def plot_MP_4D(lam_ref, R_arr, df_Vnf, MP_plots, inp):
+    """
+    Individual plots for 4D V_Lambda terms using labels from lam_ref.
+    lam_ref: array/list of shape (lm,3) or (lm,) labels
+    df_Vnf: DataFrame with lm columns in the same order as lam_ref
+    """
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    plt.rcParams.update({'font.size': 12})
+
+    lam_ref = np.asarray(lam_ref)
+    if lam_ref.ndim == 1:
+        labels = [str(int(x)) for x in lam_ref]
+    else:
+        labels = [f"{int(x[0])}_{int(x[1])}_{int(x[2])}" for x in lam_ref]
+
+    # force string column names
+    df_Vnf = df_Vnf.copy()
+    df_Vnf.columns = [str(c) for c in df_Vnf.columns]
+
+    # map by order (robust even if column names differ)
+    cols = list(df_Vnf.columns)
+    if len(cols) != len(labels):
+        raise ValueError("df_Vnf column count must match lam_ref length")
+
+    for i, lab in enumerate(labels):
+        y_dummy = df_Vnf[cols[i]]
+
+        plt.figure(figsize=(11,3))
+
+        plt.subplot(1,3,1)
+        plt.plot(R_arr, y_dummy)
+        plt.grid(True, linestyle=':')
+        plt.minorticks_on()
+        plt.title(f"V_Lambda = {lab}")
+        plt.xlabel(r'R $\mathrm{(\AA)}$')
+        plt.ylabel(r'Energy $(\mathrm{cm}^{-1})$')
+        min_E = int(y_dummy.min()) - 1
+        max_E = int(y_dummy.max()) + 1
+        plt_lim = min(abs(min_E), abs(max_E))
+        plt.ylim(-plt_lim, plt_lim)
+        plt.xlim(inp.R_lim[0], inp.R_lim[1])
+
+        plt.subplot(1,3,2)
+        plt.plot(R_arr, y_dummy)
+        plt.grid(True, linestyle=':')
+        plt.minorticks_on()
+        plt.title(f"V_Lambda = {lab}")
+        plt.xlabel(r'R $\mathrm{(\AA)}$')
+        plt.ylabel(r'Energy $(\mathrm{cm}^{-1})$')
+        plt.ylim(y_dummy.min(), y_dummy.max())
+        plt.xlim(0.0, np.max(R_arr))
+
+        plt.subplot(1,3,3)
+        plt.plot(R_arr, y_dummy)
+        plt.grid(True, linestyle=':')
+        plt.minorticks_on()
+        plt.title(f"V_Lambda = {lab}")
+        plt.xlabel(r'R $\mathrm{(\AA)}$')
+        plt.ylabel(r'Energy $(\mathrm{cm}^{-1})$')
+        plt.ylim(-1.0, 1.0)
+        plt.xlim(inp.R_lim[0], inp.R_lim[1])
+
+        plt.tight_layout()
+        plt.savefig(MP_plots + f'V_lam_{lab}.' + inp.fmt, format=inp.fmt, bbox_inches='tight')
+        plt.close()
+
+
+def plot_MP_combined_4D(lam_ref, R_arr, df_Vnf, MP_plots, inp):
+    """
+    Combined plot for 4D V_Lambda terms using labels from lam_ref.
+    """
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    plt.rcParams.update({'font.size': 14})
+
+    lam_ref = np.asarray(lam_ref)
+    if lam_ref.ndim == 1:
+        labels = [str(int(x)) for x in lam_ref]
+    else:
+        labels = [f"{int(x[0])}_{int(x[1])}_{int(x[2])}" for x in lam_ref]
+
+    df_Vnf = df_Vnf.copy()
+    df_Vnf.columns = [str(c) for c in df_Vnf.columns]
+    cols = list(df_Vnf.columns)
+
+    if len(cols) != len(labels):
+        raise ValueError("df_Vnf column count must match lam_ref length")
+
+    ncol = getattr(inp, "ncol", 1)
+
+    for i, lab in enumerate(labels):
+        y_dummy = df_Vnf[cols[i]]
+        plt.plot(R_arr, y_dummy, label=lab)
+        plt.grid(True, linestyle=':')
+        plt.minorticks_on()
+
+    plt.legend(title=r'$\Lambda$', bbox_to_anchor=(0.5, -0.15),
+               loc='upper center', ncol=ncol, prop={'size': 12})
+    plt.title("Radial Coefficients")
+    plt.xlabel(r'R $\mathrm{(\AA)}$')
+    plt.ylabel(r'$V_\Lambda$ $(\mathrm{cm}^{-1})$')
+    plt.ylim(inp.E_lim[0], inp.E_lim[1])
+    plt.xlim(inp.R_lim[0], inp.R_lim[1])
+    plt.savefig(MP_plots + 'Combined_V_lam.' + inp.fmt, format=inp.fmt, bbox_inches='tight')
     plt.close()
 
 #-----------------------------------------------------------------------------#
@@ -2167,3 +2285,4 @@ def fit1D_Plot(Origi_E,predicted_energies,fit_name,R_arr,x_dummy,FnFit_plots,inp
     plt.tight_layout()                      # tight layout
     plt.savefig(FnFit_plots+f'{fit_name}_1D_PES_Fit_zoom.'+inp.fmt, format=inp.fmt,bbox_inches='tight')  # save polar plot in pdf
     plt.close()
+

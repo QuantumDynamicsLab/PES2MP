@@ -2555,7 +2555,7 @@ if MPExp:
                 Symm_2 = 2
             else:
                 Symm_2 = 1
-            Symm   = max(Symm_1,Symm_2)          # If both Symm_1 and Symm_2 are 2 (symmetric), use 2 else 1.
+            Symm   = max(Symm_1,Symm_2)          # If either Symm_1 and Symm_2 are 2 (symmetric), use 2 else 1.
 
             for i in range(0,L1max+1,Symm_1):        # loop for Lambda_1
                 for j in range(0,L2max+1,Symm_2):    # loop for Lambda_2
@@ -3758,6 +3758,363 @@ if FnFit:
 else:
     print(" \n FnFit = False : Skipping Analytical Fitting of Radial Coefficients \n")
     f.write('\n FnFit = False : Skipping Analytical Fitting of Radial Coefficients! \n ')
+
+
+# -------------------------------------------------------------------------
+# Automated Function Fit -> Multipole coefficients -> MOLSCAT format
+# -------------------------------------------------------------------------
+try:
+    FnFit_automated = inp.FnFit_automated
+except:
+    FnFit_automated = False
+
+if FnFit_automated:
+
+    print("#-------------------------------------------------------------------#")
+    print("#-------------#    Using FnFit_automated module    #---------------#")
+    print("#-------------------------------------------------------------------#")
+
+    f.write("\n#-------------------------------------------------------------------#")
+    f.write("\n#-------------#    Using FnFit_automated module    #---------------#")
+    f.write("\n#-------------------------------------------------------------------#\n\n")
+
+    from lmfit import Model
+    from scipy.special import legendre
+    import matplotlib.pyplot as plt
+    import math
+
+    E_inf = getattr(inp, "E_inf", None)
+    E_Hartree = E_inf is not None
+
+    FnFit_data = out_data + 'FnFit_auto/'
+    if not os.path.exists(FnFit_data):
+        os.makedirs(FnFit_data)
+
+    FnFit_plots = FnFit_data + 'Plots/'
+    if not os.path.exists(FnFit_plots):
+        os.makedirs(FnFit_plots)
+
+    df_inp = pd.read_csv(out_data + inp.filename, header=None, sep=inp.sep)
+    df_inp = df_inp.apply(pd.to_numeric, errors='coerce')
+    df_inp.dropna(inplace=True)
+
+    if E_Hartree and df_inp.shape[1] >= 3:
+        df_inp.iloc[:, -1] = (df_inp.iloc[:, -1] - E_inf) * 219474.63
+
+    # =====================================================================
+    # 2D CASE
+    # =====================================================================
+    if inp.PES_typ == '2D':
+        print("Running Automated 2D Function Fit...")
+        df_inp.columns = ['R', 'th', 'E']
+        df_inp.sort_values(by=['th', 'R'], inplace=True)
+        df_inp.reset_index(drop=True, inplace=True)
+
+        angmat = df_inp['th'].drop_duplicates().to_numpy()
+        R_arr = getattr(inp, 'New_R', np.sort(df_inp['R'].unique()))
+
+        ngm = len(angmat)
+        lm = getattr(inp, 'lam_max', ngm)
+
+        Mp_coeff_E0 = np.zeros((ngm, len(inp.initial_val)))
+        predicted_energies = np.zeros(len(df_inp))
+        predicted_energiesR = np.zeros(ngm * len(R_arr))
+
+        groups = df_inp.groupby('th', sort=False).indices
+        starts, ends = [], []
+        for th in angmat:
+            idx = np.array(groups[th])
+            starts.append(idx[0])
+            ends.append(idx[-1] + 1)
+
+        print("Fitting PES each angle at a time:")
+        f.write("\nFitting PES each angle at a time:\n")
+
+        for i in tqdm(range(ngm)):
+            st, en = starts[i], ends[i]
+            df_fit = df_inp.iloc[st:en].reset_index(drop=True)
+            y_dummy = df_fit['E'].to_numpy()
+            x_dummy = df_fit['R'].to_numpy()
+
+            if hasattr(inp, 'cutoff_pos'):
+                strt = max(np.argmin(y_dummy) - inp.cutoff_pos, 0)
+            else:
+                strt, _ = driver.find_nearest(y_dummy, value=inp.cutoff)
+
+            gmodel = Model(inp.fnfit_custom)
+            params = gmodel.make_params()
+
+            for keyi, key in enumerate(params.keys()):
+                if hasattr(inp, 'lower_bounds') and hasattr(inp, 'upper_bounds'):
+                    params[key].set(value=inp.initial_val[keyi],
+                                    min=inp.lower_bounds[keyi],
+                                    max=inp.upper_bounds[keyi])
+                else:
+                    params[key].set(value=inp.initial_val[keyi])
+
+            result = gmodel.fit(y_dummy[strt:], params, x=x_dummy[strt:])
+            best_vals = np.array(list(result.best_values.values()))
+            Mp_coeff_E0[i] = best_vals
+
+            # original grid for residuals
+            Efit_orig = inp.fnfit_custom(x_dummy, *best_vals)
+            predicted_energies[st:en] = Efit_orig
+
+            # common New_R grid for MP and MOLSCAT
+            Efit_newR = inp.fnfit_custom(R_arr, *best_vals)
+            predicted_energiesR[i * len(R_arr):(i + 1) * len(R_arr)] = Efit_newR
+
+        # Legendre matrix
+        P = np.zeros((ngm, lm))
+        sym = 2 if inp.symmetric else 1
+        for i, angdeg in enumerate(angmat):
+            ang = math.radians(angdeg)
+            for l in range(lm):
+                P[i, l] = legendre(l * sym)(math.cos(ang))
+
+        Bcoeff = np.linalg.pinv(P) @ Mp_coeff_E0
+
+        if len(inp.N_Vals) != Bcoeff.shape[1]:
+            raise ValueError("N_Vals must match number of fitted coefficients")
+
+        # Save common-grid fitted PES
+        rows = []
+        for i, ang in enumerate(angmat):
+            vals = predicted_energiesR[i * len(R_arr):(i + 1) * len(R_arr)]
+            for r, e in zip(R_arr, vals):
+                rows.append([r, ang, e])
+        final_data = np.array(rows)
+        np.savetxt(FnFit_data + "Fnfit_PES.dat", final_data,
+                   delimiter=",", fmt='%.4f,%.4f,%.8f')
+
+        # Residuals using original PES grid
+        residuals = predicted_energies - df_inp['E'].to_numpy()
+        residual_data = np.c_[df_inp['R'].to_numpy(), df_inp['th'].to_numpy(), residuals]
+        np.savetxt(FnFit_data + "residuals_Fnfit_PES.dat", residual_data,
+                   delimiter=",", fmt='%.6f,%.6f,%.12f')
+        driver.residual_plot_E(df_inp['E'].to_numpy(), residuals, FnFit_plots, inp, 'custom')
+        
+        # ===== Vlam dsave and plot =====
+        sym = 2 if inp.symmetric else 1
+        lm = Bcoeff.shape[0]
+        
+        # build V_lambda(R) from Bcoeff, N_Vals
+        exp_mat = np.exp(np.outer(R_arr, np.array(inp.N_Vals, dtype=float)))   # (nR, n_terms)
+        V_terms = exp_mat @ Bcoeff.T                                            # (nR, lm)
+        
+        # IMPORTANT: columns must match driver expectation: '0','2','4',...
+        lam_cols = [str(i * sym) for i in range(lm)]
+        df_Vnf = pd.DataFrame(V_terms, columns=lam_cols)
+        
+        # save + print
+        df_Vnf_save = pd.DataFrame({'R': R_arr})
+        for c in df_Vnf.columns:
+            df_Vnf_save[c] = df_Vnf[c].to_numpy()
+        df_Vnf_save.to_csv(FnFit_data + "V_lam_terms_from_B_2D.dat", index=False)
+        print(df_Vnf_save.head(10).to_string(index=False))
+        
+        # plot using ORIGINAL driver functions
+        if getattr(inp, "Ind_plot", False):
+            driver.plot_MP(lm, sym, R_arr, df_Vnf, FnFit_plots, inp)
+        driver.plot_MP_combined(lm, sym, R_arr, df_Vnf, FnFit_plots, inp)
+        
+
+        # MOLSCAT write
+        c_vals = np.array(inp.N_Vals, dtype=float)
+        Str3 = "LAMBDA = " + ','.join(map(str, range(0, lm * sym, sym))) + ',\n'
+        Str3 += 'NTERM  = ' + '{},'.format(len(c_vals)) * lm
+        Str3 += '\nNPOWER = ' + '0,' * (len(c_vals) * lm)
+        Str3 += '\nA = \n'
+        for i in range(lm):
+            Str3 += ','.join(f'{x:.16g}' for x in Bcoeff[i]) + ',\n'
+        Str3 += '\nE = \n'
+        for _ in range(lm):
+            Str3 += ','.join(f'{x:.16g}' for x in c_vals) + ',\n'
+
+        with open(out_data + "MOLSCAT_POT.txt", "w") as mol_file3:
+            mol_file3.write(Str3)
+
+    # =====================================================================
+    # 4D CASE
+    # =====================================================================
+    elif inp.PES_typ == '4D':
+        print("Running Automated 4D Function Fit...")
+        
+        df_inp.columns = ['R', 'phi', 'th2', 'th1', 'E']
+        df_inp.sort_values(by=['phi', 'th2', 'th1', 'R'], inplace=True)
+        df_inp.reset_index(drop=True, inplace=True)
+
+        angmat = df_inp[['phi', 'th2', 'th1']].drop_duplicates().to_numpy()
+        R_arr = getattr(inp, 'New_R', np.sort(df_inp['R'].unique()))
+
+        if getattr(inp, 'read_SH', False):
+            L_mat = np.loadtxt(FnFit_data + 'Lambda_ref.dat', dtype=int)
+            if L_mat.ndim == 1:
+                L_mat = L_mat.reshape(1, -1)
+        else:
+            Symm_1 = 2 if inp.Symm_1 else 1
+            Symm_2 = 2 if inp.Symm_2 else 1
+            
+            if Symm_1 == 1 and Symm_2 == 1:
+                Symm = 1
+            else:
+                Symm = 2
+
+            L_list = []
+            for i in range(0, inp.L1max + 1, Symm_1):
+                for j in range(0, inp.L2max + 1, Symm_2):
+                    for k in range(abs(i - j), i + j + 1, Symm):
+                        L_list.append([i, j, k])
+            L_mat = np.array(L_list, dtype=int)
+
+        lm = len(L_mat)
+        ngm = len(angmat)
+
+        f.write("\n\n Number of Lambda terms are: \n")
+        f.write(str(lm))
+        f.write("\n\nThe list of Lambda terms are: \n")
+        f.write(str(L_mat))
+        # saving radial coefficients for future reference (The final data does not contain V_lambda terms but the pointer in the first column)
+        # save 3-column physical lambda list
+        np.savetxt(
+            FnFit_data + "Lambda_ref.dat",
+            L_mat,
+            fmt='%i\t%i\t%i'
+        )
+        
+        # save 4-column numbered lambda list
+        lam_num = np.column_stack((
+            np.arange(1, len(L_mat) + 1),
+            L_mat
+        ))
+        
+        np.savetxt(
+            FnFit_data + "Lambda_ref_numbered.dat",
+            lam_num,
+            fmt='%i\t%i\t%i\t%i',
+            header='ID\tL1\tL2\tL',
+            comments=''
+        )
+
+        Mp_coeff_E0 = np.zeros((ngm, len(inp.initial_val)))
+        predicted_energies = np.zeros(len(df_inp))
+        predicted_energiesR = np.zeros(ngm * len(R_arr))
+
+        groups = df_inp.groupby(['phi', 'th2', 'th1'], sort=False).indices
+        starts, ends = [], []
+        for row in angmat:
+            idx = np.array(groups[tuple(row)])
+            starts.append(idx[0])
+            ends.append(idx[-1] + 1)
+
+        for i in tqdm(range(ngm)):
+            st, en = starts[i], ends[i]
+            df_fit = df_inp.iloc[st:en].reset_index(drop=True)
+            y_dummy = df_fit['E'].to_numpy()
+            x_dummy = df_fit['R'].to_numpy()
+
+            if hasattr(inp, 'cutoff_pos'):
+                strt = max(np.argmin(y_dummy) - inp.cutoff_pos, 0)
+            else:
+                strt, _ = driver.find_nearest(y_dummy, value=inp.cutoff)
+
+            gmodel = Model(inp.fnfit_custom)
+            params = gmodel.make_params()
+            for keyi, key in enumerate(params.keys()):
+                params[key].set(value=inp.initial_val[keyi])
+
+            result = gmodel.fit(y_dummy[strt:], params, x=x_dummy[strt:])
+            best_vals = np.array(list(result.best_values.values()))
+            Mp_coeff_E0[i] = best_vals
+
+            Efit_orig = inp.fnfit_custom(x_dummy, *best_vals)
+            predicted_energies[st:en] = Efit_orig
+
+            Efit_newR = inp.fnfit_custom(R_arr, *best_vals)
+            predicted_energiesR[i * len(R_arr):(i + 1) * len(R_arr)] = Efit_newR
+
+        # Save common-grid fitted PES
+        rows = []
+        for i, angs in enumerate(angmat):
+            vals = predicted_energiesR[i * len(R_arr):(i + 1) * len(R_arr)]
+            phi, th2, th1 = angs
+            for r, e in zip(R_arr, vals):
+                rows.append([r, phi, th2, th1, e])
+        final_data = np.array(rows)
+        np.savetxt(FnFit_data + "Fnfit_PES_4D.dat", final_data,
+                   delimiter=",", fmt='%.4f,%.4f,%.4f,%.4f,%.8f')
+
+        # Residuals
+        residuals = predicted_energies - df_inp['E'].to_numpy()
+        residual_data = np.c_[df_inp['R'].to_numpy(),df_inp['phi'].to_numpy(), \
+        df_inp['th2'].to_numpy(),df_inp['th1'].to_numpy(),residuals]
+        np.savetxt(
+            FnFit_data + "residuals_Fnfit_PES_4D.dat",
+            residual_data,
+            delimiter=",",
+            fmt='%.4f,%.4f,%.4f,%.4f,%.8f'
+        )
+        driver.residual_plot_E(df_inp['E'].to_numpy(), residuals, FnFit_plots, inp, 'custom')
+        
+        # Bispherical matrix and MOLSCAT
+        P = np.zeros((ngm, lm))
+        for i, row in enumerate(angmat):
+            phi, th2, th1 = row
+            for j in range(lm):
+                L1, L2, L = L_mat[j]
+                P[i, j] = driver.Bispher_SF(L1, L2, L, phi, th2, th1)
+
+        Bcoeff = np.linalg.pinv(P) @ Mp_coeff_E0
+        c_vals = np.array(inp.N_Vals, dtype=float)
+        
+        lm = Bcoeff.shape[0]
+        
+        exp_mat = np.exp(np.outer(R_arr, np.array(inp.N_Vals, dtype=float)))
+        V_terms = exp_mat @ Bcoeff.T
+                
+        # optional: print actual Lambda_ref mapping for your reference
+        lam_ref = np.loadtxt(FnFit_data + "Lambda_ref.dat", dtype=int)
+        lam_ref = np.atleast_2d(lam_ref)
+        # driver-compatible columns
+        df_Vnf = pd.DataFrame(
+            V_terms,
+            columns=[str(i) for i in range(lm)]
+        )
+        print("Lambda_ref mapping (driver index -> [L1,L2,L]):")
+        for i, row in enumerate(lam_ref):
+            print(f"{i} -> {row.tolist()}")
+        
+        # save + print
+        df_Vnf_save = pd.DataFrame({'R': R_arr})
+        for c in df_Vnf.columns:
+            df_Vnf_save[c] = df_Vnf[c].to_numpy()
+        df_Vnf_save.to_csv(FnFit_data + "V_lam_terms_from_B_4D.dat", index=False)
+        print(df_Vnf_save.head(10).to_string(index=False))
+        
+        # plot using ORIGINAL driver functions
+        lam_ref = np.loadtxt(FnFit_data + "Lambda_ref.dat", dtype=int)
+        if getattr(inp, "Ind_plot", False):
+            driver.plot_MP_4D(lam_ref, R_arr, df_Vnf, FnFit_plots, inp)
+        driver.plot_MP_combined_4D(lam_ref, R_arr, df_Vnf, FnFit_plots, inp)
+
+        # gemerating molscat input
+        with open(out_data + "MOLSCAT_POT.txt", "w") as mol_file3:
+            mol_file3.write("LAMBDA = \n")
+            for j in range(lm):
+                mol_file3.write(f"{L_mat[j,0]},{L_mat[j,1]},{L_mat[j,2]},\n")
+            mol_file3.write('NTERM  = ' + '{},'.format(len(c_vals)) * lm)
+            mol_file3.write('\nNPOWER = ' + '0,' * (len(c_vals) * lm))
+            mol_file3.write('\nA = \n')
+            for i in range(lm):
+                mol_file3.write(','.join(f'{x:.16g}' for x in Bcoeff[i]) + ',\n')
+            mol_file3.write('\nE = \n')
+            for _ in range(lm):
+                mol_file3.write(','.join(f'{x:.16g}' for x in c_vals) + ',\n')
+
+else:
+    print("FnFit_automated = False : Skipping Automated Function Fit")
+# -------------------------------------------------------------------------
+
 #################################################################################
 
     # Calculate the runtime.
